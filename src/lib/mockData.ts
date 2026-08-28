@@ -6,6 +6,46 @@ import {
 } from '@/types';
 
 export const MOCK_REPO_ANALYSIS: RepositoryAnalysis = {
+  owner: 'repomind-demo',
+  name: 'task-craft-api',
+  fullName: 'repomind-demo/task-craft-api',
+  description: 'High-performance collaborative task management service with real-time updates and role-based authorization.',
+  url: 'https://github.com/repomind-demo/task-craft-api',
+  defaultBranch: 'main',
+
+  stats: {
+    stars: 1240,
+    forks: 185,
+    openIssues: 12,
+    totalFiles: 42,
+  },
+
+  languages: {
+    TypeScript: 85200,
+    JavaScript: 12400,
+  },
+  primaryLanguage: 'TypeScript',
+  techStack: ['TypeScript', 'Next.js', 'PostgreSQL', 'Prisma', 'TailwindCSS', 'Redis'],
+  entryPoints: [
+    'src/app/page.tsx',
+    'src/app/api/tasks/route.ts',
+    'src/lib/auth/jwt.ts',
+    'src/lib/db/prisma.ts'
+  ],
+
+  importantFiles: [
+    {
+      path: 'package.json',
+      content: '{"name": "task-craft-api", "dependencies": {"next": "^14.0.0", "react": "^18.2.0"}}',
+      size: 1120
+    },
+    {
+      path: 'README.md',
+      content: '# TaskCraft API\nCollaborative task management backend.',
+      size: 2400
+    }
+  ],
+
   metadata: {
     owner: 'repomind-demo',
     name: 'task-craft-api',
@@ -22,12 +62,6 @@ export const MOCK_REPO_ANALYSIS: RepositoryAnalysis = {
     primaryLanguage: 'TypeScript'
   },
   summary: 'TaskCraft API is a full-stack Next.js project providing task workflows, real-time WebSocket syncing, and user team management.',
-  entryPoints: [
-    'src/app/page.tsx',
-    'src/app/api/tasks/route.ts',
-    'src/lib/auth/jwt.ts',
-    'src/lib/db/prisma.ts'
-  ],
   fileTree: [
     {
       name: 'src',
