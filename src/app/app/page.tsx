@@ -12,16 +12,14 @@ import IssueDetailView from '@/components/issues/IssueDetailView';
 import InvestigationView from '@/components/investigation/InvestigationView';
 import CodeExplorerView from '@/components/code/CodeExplorerView';
 import ArchitectureView from '@/components/architecture/ArchitectureView';
-import GitStoryView from '@/components/gitstory/GitStoryView';
-import SkillPatchView from '@/components/skillpatch/SkillPatchView';
+import QnaView from '@/components/qna/QnaView';
 
 // Types and Mock Data
 import { RepositoryAnalysis, RepositoryIssue } from '@/types/repo';
 import { InvestigationResult } from '@/types/investigation';
 import { 
   MOCK_REPO_ANALYSIS, 
-  MOCK_GITSTORY, 
-  MOCK_SKILLPATCH_RESPONSE 
+  MOCK_QNA_RESPONSE 
 } from '@/lib/mockData';
 
 function WorkspaceContent() {
@@ -55,8 +53,7 @@ function WorkspaceContent() {
       'investigations',
       'plan',
       'architecture',
-      'gitstory',
-      'skillpatch',
+      'qna',
     ];
     if (rawTab && validTabs.includes(rawTab)) {
       setActiveTab(rawTab);
@@ -149,8 +146,7 @@ function WorkspaceContent() {
     investigations: selectedIssue ? `Investigation #${selectedIssue.number}` : 'Investigations',
     plan: selectedIssue ? `Contribution Plan #${selectedIssue.number}` : 'Contribution Plan',
     architecture: 'Architecture',
-    gitstory: 'GitStory',
-    skillpatch: 'SkillPatch',
+    qna: 'Ask AI',
   };
 
   return (
@@ -286,7 +282,6 @@ function WorkspaceContent() {
                 investigation={investigationResult}
                 onNavigateCode={handleNavigateCode}
                 onNavigateArchitecture={() => setActiveTab('architecture')}
-                onNavigateGitStory={() => setActiveTab('gitstory')}
                 onBackToWorkspace={() => setActiveTab('contribute')}
               />
             )}
@@ -296,14 +291,9 @@ function WorkspaceContent() {
               <ArchitectureView data={analysisData.architecture} />
             )}
 
-            {/* 6. GitStory Evolution */}
-            {activeTab === 'gitstory' && (
-              <GitStoryView data={MOCK_GITSTORY} />
-            )}
-
-            {/* 7. SkillPatch Wiki Artifacts */}
-            {activeTab === 'skillpatch' && (
-              <SkillPatchView data={MOCK_SKILLPATCH_RESPONSE} />
+            {/* 6. Ask AI Q&A */}
+            {activeTab === 'qna' && (
+              <QnaView initialData={MOCK_QNA_RESPONSE} />
             )}
           </>
         )}
