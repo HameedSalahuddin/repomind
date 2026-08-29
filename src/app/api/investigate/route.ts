@@ -39,59 +39,12 @@ export async function POST(request: Request) {
     // 3. Construct LLM Messages
     const messages = buildInvestigationMessages(context);
 
-    // 4. Generate Structured JSON Completion via LLM
-    let rawResult: InvestigationResult;
-    try {
-      rawResult = await generateJSONCompletion<InvestigationResult>(messages, {
-        temperature: 0.2,
-        maxTokens: 2500,
-        jsonMode: true,
-      });
-    } catch (llmErr: any) {
-      const sourcePaths = context.sourceFiles.map((f) => f.path);
-      // Return structured fallback investigation if LLM key is missing or fails
-      return NextResponse.json({
-        success: true,
-        issueNumber,
-        fallback: true,
-        result: {
-          issueSummary: `Issue #${context.issue.number}: ${context.issue.title}`,
-          whatIsHappening: context.issue.body || 'No description provided.',
-          likelyCause: 'Automatic LLM key not configured or call failed. Review evidence context below.',
-          confidence: 'low',
-          affectedAreas: sourcePaths.map((p) => ({
-            path: p,
-            reason: 'Identified from deterministic path matching',
-          })),
-          keyEvidence: sourcePaths.map((p) => ({
-            path: p,
-            lineStart: null,
-            lineEnd: null,
-            explanation: 'File referenced in issue description or related architecture module',
-          })),
-          relatedIssues: context.relatedIssues.map((r) => ({
-            number: r.number,
-            reason: r.reason,
-          })),
-          investigationSteps: [
-            `1. Inspect file: ${sourcePaths[0] || 'repository entry point'}`,
-            `2. Read issue description for reproduction steps`,
-            `3. Run local unit tests`,
-          ],
-          suggestedFixDirection: 'Review related files and trace function execution paths.',
-          testingStrategy: ['Run existing unit tests for the affected module.'],
-          difficultyAssessment: {
-            level: (['beginner', 'intermediate', 'advanced'].includes(context.issue.difficulty)
-              ? context.issue.difficulty
-              : 'intermediate') as 'beginner' | 'intermediate' | 'advanced',
-            reason: 'Determined from GitHub labels and repository structure',
-          },
-          evidenceLimitations: [
-            llmErr?.message || 'Set OPENAI_API_KEY or GEMINI_API_KEY in .env.local for AI reasoning.',
-          ],
-        },
-      });
-    }
+    // 4. Generate Structured JSON Completion via Real Gemini API
+    const rawResult = await generateJSONCompletion<InvestigationResult>(messages, {
+      temperature: 0.1,
+      maxTokens: 8192,
+      jsonMode: true,
+    });
 
     // 5. Validate & Clean Citations against Real File Tree
     const targetIssue = analysis.issues.find((i) => i.number === issueNumber);
@@ -101,6 +54,7 @@ export async function POST(request: Request) {
       ...(targetIssue?.relatedPaths || []),
       ...analysis.fileTree.map((f) => f.path),
     ]));
+
     const cleanedResult = validateAndCleanCitations(rawResult, validFilePaths);
 
     return NextResponse.json({
@@ -109,8 +63,9 @@ export async function POST(request: Request) {
       result: cleanedResult,
     });
   } catch (error: any) {
+    const errorMessage = error?.message || 'An error occurred during issue investigation.';
     return NextResponse.json(
-      { success: false, error: error?.message || 'An error occurred during issue investigation.' },
+      { success: false, error: errorMessage },
       { status: 500 }
     );
   }

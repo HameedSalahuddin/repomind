@@ -31,8 +31,8 @@ export interface InvestigationContext {
   }>;
 }
 
-const MAX_SOURCE_FILES = 5;
-const MAX_FILE_CHARS = 12000;
+const MAX_SOURCE_FILES = 3;
+const MAX_FILE_CHARS = 3500;
 const MAX_RELATED_ISSUES = 5;
 
 function getGitHubHeaders(): Record<string, string> {

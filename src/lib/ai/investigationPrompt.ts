@@ -12,12 +12,13 @@ IMPORTANT INVESTIGATION RULES:
 4. Distinguish clearly between confirmed evidence and reasonable technical inferences.
 5. Do NOT generate a fictional fix code diff. Suggest fix direction and testing strategy.
 6. Target audience: A developer who may be a first-time contributor to this repository. Explain module concepts clearly.
+7. CONCISE JSON FORMAT: Keep text concise (max 2 sentences per field) so the complete JSON response fits comfortably within output limits. Do NOT use double quotes inside string property values — use single quotes or backticks for code references.
 
 You MUST respond with a single, valid JSON object following this exact schema:
 {
-  "issueSummary": "Clear 2-sentence summary of what the issue is reporting",
-  "whatIsHappening": "Detailed technical explanation of current behavior vs expected behavior",
-  "likelyCause": "Technical hypothesis explaining why this behavior occurs based on evidence",
+  "issueSummary": "Concise 2-sentence summary of what the issue reports",
+  "whatIsHappening": "Technical explanation of current vs expected behavior",
+  "likelyCause": "Hypothesis explaining why this behavior occurs based on evidence",
   "confidence": "high" | "medium" | "low",
   "affectedAreas": [
     {
@@ -30,20 +31,20 @@ You MUST respond with a single, valid JSON object following this exact schema:
       "path": "exact_file_path_from_evidence",
       "lineStart": number or null,
       "lineEnd": number or null,
-      "explanation": "what this code snippet or reference demonstrates"
+      "explanation": "what this code reference demonstrates"
     }
   ],
   "relatedIssues": [
     {
       "number": number,
-      "reason": "why this other issue is related"
+      "reason": "why this issue is related"
     }
   ],
   "investigationSteps": [
     "Step 1: Read ...",
     "Step 2: Inspect ..."
   ],
-  "suggestedFixDirection": "High-level architectural recommendation on how to approach fixing the issue",
+  "suggestedFixDirection": "High-level recommendation on how to fix the issue",
   "testingStrategy": [
     "Test 1: Run unit test ...",
     "Test 2: Verify scenario ..."
