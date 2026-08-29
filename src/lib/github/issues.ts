@@ -1,4 +1,4 @@
-import { RepositoryIssue } from '@/types/repo';
+import { RepositoryIssue, ContributionSignal, ArchitectureNode, InternalIssueMatchScore } from '@/types/repo';
 
 const GITHUB_API_BASE = 'https://api.github.com';
 
@@ -39,17 +39,53 @@ const ADVANCED_LABELS = new Set([
   'compiler',
 ]);
 
+// Generic filenames to ignore for filename-only matching to avoid false positives
+const GENERIC_FILENAMES = new Set([
+  'index.ts',
+  'index.js',
+  'index.tsx',
+  'index.jsx',
+  'page.tsx',
+  'layout.tsx',
+  'route.ts',
+  'package.json',
+  'tsconfig.json',
+  'readme.md',
+  'types.ts',
+  'main.go',
+  'main.rs',
+  'app.py',
+  'mod.rs',
+]);
+
+// Generic directory names to ignore for directory-only matching
+const GENERIC_DIRNAMES = new Set([
+  'src',
+  'lib',
+  'app',
+  'pages',
+  'components',
+  'utils',
+  'helpers',
+  'tests',
+  'test',
+  'docs',
+  'build',
+  'dist',
+  'code',
+  'file',
+  'data',
+]);
+
 export function classifyDifficulty(labels: string[], title: string, body: string): RepositoryIssue['difficulty'] {
   const lowerLabels = labels.map((l) => l.toLowerCase());
   const combinedText = `${title} ${body}`.toLowerCase();
 
-  // 1. Check explicit label signals
   for (const label of lowerLabels) {
     if (BEGINNER_LABELS.has(label)) return 'beginner';
     if (ADVANCED_LABELS.has(label)) return 'advanced';
   }
 
-  // 2. Check text keywords
   if (/good first issue|good-first-issue|beginner-friendly|easy fix/i.test(combinedText)) {
     return 'beginner';
   }
@@ -57,7 +93,6 @@ export function classifyDifficulty(labels: string[], title: string, body: string
     return 'advanced';
   }
 
-  // 3. Heuristic based on intermediate tags
   if (lowerLabels.some((l) => ['bug', 'enhancement', 'feature'].includes(l))) {
     return 'intermediate';
   }
@@ -65,42 +100,197 @@ export function classifyDifficulty(labels: string[], title: string, body: string
   return 'unknown';
 }
 
-export function extractRelatedPaths(title: string, body: string | null, validPaths: string[]): string[] {
-  if (!validPaths || validPaths.length === 0) return [];
+export function classifyContributionSignal(labels: string[], title: string, body: string): ContributionSignal {
+  const lowerLabels = labels.map((l) => l.toLowerCase());
+  const combinedText = `${title} ${body}`.toLowerCase();
 
-  const text = `${title} ${body || ''}`;
-  const pathSet = new Set(validPaths);
-  const matchedPaths = new Set<string>();
+  if (lowerLabels.some((l) => ['good first issue', 'good-first-issue', 'starter', 'easy'].includes(l))) {
+    return 'good-first-issue';
+  }
+  if (lowerLabels.some((l) => ['help wanted', 'help-wanted'].includes(l))) {
+    return 'help-wanted';
+  }
+  if (lowerLabels.some((l) => ['bug', 'defect', 'fix', 'error'].includes(l)) || /bug:|error:|crash/i.test(combinedText)) {
+    return 'bug';
+  }
+  if (lowerLabels.some((l) => ['enhancement', 'feature', 'proposal'].includes(l)) || /feature request|enhancement/i.test(combinedText)) {
+    return 'enhancement';
+  }
+  if (lowerLabels.some((l) => ['documentation', 'docs'].includes(l)) || /doc|readme/i.test(combinedText)) {
+    return 'documentation';
+  }
+  if (lowerLabels.some((l) => ['performance', 'perf', 'speed', 'memory'].includes(l)) || /leak|performance/i.test(combinedText)) {
+    return 'performance';
+  }
+  if (lowerLabels.some((l) => ['security', 'vulnerability', 'cve'].includes(l)) || /security/i.test(combinedText)) {
+    return 'security';
+  }
 
-  // Regex to extract backtick paths or standard path strings with extensions
-  const pathCandidates = text.match(/`([^`]+)`|([a-zA-Z0-9_.-]+\/[a-zA-Z0-9_./-]+\.[a-zA-Z0-9]+)/g) || [];
+  return 'unknown';
+}
 
-  for (let candidate of pathCandidates) {
-    // Strip surrounding backticks or whitespace
-    candidate = candidate.replace(/`/g, '').trim();
+export interface PathIndex {
+  exactPaths: Set<string>;
+  filenameToPaths: Map<string, string[]>;
+  nodesByPath: Map<string, ArchitectureNode>;
+  nodesByDirName: Map<string, ArchitectureNode[]>;
+}
 
-    // Check exact path match
-    if (pathSet.has(candidate)) {
-      matchedPaths.add(candidate);
-      continue;
+export function buildPathIndex(validPaths: string[], architectureNodes: ArchitectureNode[] = []): PathIndex {
+  const exactPaths = new Set<string>();
+  const filenameToPaths = new Map<string, string[]>();
+  const nodesByPath = new Map<string, ArchitectureNode>();
+  const nodesByDirName = new Map<string, ArchitectureNode[]>();
+
+  validPaths.forEach((path) => {
+    exactPaths.add(path);
+    const filename = path.split('/').pop()?.toLowerCase();
+    if (filename) {
+      if (!filenameToPaths.has(filename)) {
+        filenameToPaths.set(filename, []);
+      }
+      filenameToPaths.get(filename)!.push(path);
     }
+  });
 
-    // Check suffix match (e.g. "router/index.ts" matching "src/router/index.ts")
-    if (candidate.includes('/')) {
-      const match = validPaths.find((vp) => vp.endsWith(candidate) || vp.includes(candidate));
-      if (match) {
-        matchedPaths.add(match);
+  architectureNodes.forEach((node) => {
+    if (node.filePaths) {
+      node.filePaths.forEach((fp) => {
+        nodesByPath.set(fp, node);
+        const dirName = fp.split('/').pop()?.toLowerCase();
+        if (dirName && !GENERIC_DIRNAMES.has(dirName)) {
+          if (!nodesByDirName.has(dirName)) {
+            nodesByDirName.set(dirName, []);
+          }
+          nodesByDirName.get(dirName)!.push(node);
+        }
+      });
+    }
+  });
+
+  return { exactPaths, filenameToPaths, nodesByPath, nodesByDirName };
+}
+
+export function extractRelatedPathsAndNodes(
+  issueNumber: number,
+  title: string,
+  body: string | null,
+  index: PathIndex,
+  architectureNodes: ArchitectureNode[] = []
+): { relatedPaths: string[]; relatedNodes: string[]; matchScores: InternalIssueMatchScore[] } {
+  const text = `${title} ${body || ''}`;
+  const matchedPaths = new Set<string>();
+  const matchedNodes = new Set<string>();
+  const matchScores: InternalIssueMatchScore[] = [];
+
+  // Minimum confidence threshold to avoid noise
+  const CONFIDENCE_THRESHOLD = 0.70;
+
+  // 1. Signal A: Explicit Path or File:Line References
+  // Pattern: path/to/file.ext or path/to/file.ext:123
+  const pathMatches = text.match(/([a-zA-Z0-9_.-]+\/[a-zA-Z0-9_./-]+\.[a-zA-Z0-9]+)(?::\d+)?/g) || [];
+  for (let match of pathMatches) {
+    const candidatePath = match.split(':')[0].trim();
+    if (index.exactPaths.has(candidatePath)) {
+      matchedPaths.add(candidatePath);
+
+      // Find matching architecture node
+      const matchingNode = architectureNodes.find((n) =>
+        n.filePaths?.some((fp) => candidatePath === fp || candidatePath.startsWith(`${fp}/`) || fp.includes(candidatePath))
+      );
+      if (matchingNode) {
+        matchedNodes.add(matchingNode.id);
+        matchScores.push({
+          issueNumber,
+          nodeId: matchingNode.id,
+          confidence: 0.95,
+          matchedSignals: ['exact-path-reference'],
+        });
       }
     }
   }
 
-  return Array.from(matchedPaths);
+  // 2. Signal B: Backtick Code-Style Path/Module References
+  const backtickMatches = text.match(/`([^`]+)`/g) || [];
+  for (let match of backtickMatches) {
+    const candidate = match.replace(/`/g, '').trim();
+    if (index.exactPaths.has(candidate)) {
+      matchedPaths.add(candidate);
+      const matchingNode = architectureNodes.find((n) =>
+        n.filePaths?.some((fp) => candidate === fp || candidate.startsWith(`${fp}/`) || fp.includes(candidate))
+      );
+      if (matchingNode) {
+        matchedNodes.add(matchingNode.id);
+        matchScores.push({
+          issueNumber,
+          nodeId: matchingNode.id,
+          confidence: 0.90,
+          matchedSignals: ['backtick-path-reference'],
+        });
+      }
+    }
+  }
+
+  // 3. Signal C: Filename References (Excluding generic filenames)
+  const filenameMatches = text.match(/\b([a-zA-Z0-9_.-]+\.[a-zA-Z0-9]+)\b/g) || [];
+  for (let rawFn of filenameMatches) {
+    const filename = rawFn.toLowerCase().trim();
+    if (!GENERIC_FILENAMES.has(filename) && index.filenameToPaths.has(filename)) {
+      const candidates = index.filenameToPaths.get(filename)!;
+      candidates.forEach((cand) => {
+        matchedPaths.add(cand);
+        const matchingNode = architectureNodes.find((n) =>
+          n.filePaths?.some((fp) => cand === fp || cand.startsWith(`${fp}/`) || fp.includes(cand))
+        );
+        if (matchingNode) {
+          matchedNodes.add(matchingNode.id);
+          matchScores.push({
+            issueNumber,
+            nodeId: matchingNode.id,
+            confidence: 0.80,
+            matchedSignals: ['filename-reference'],
+          });
+        }
+      });
+    }
+  }
+
+  // 4. Signal D: Architecture Directory & Module Terminology References
+  architectureNodes.forEach((node) => {
+    if (!node.filePaths) return;
+    node.filePaths.forEach((fp) => {
+      const dirName = fp.split('/').pop()?.toLowerCase();
+      if (dirName && !GENERIC_DIRNAMES.has(dirName) && dirName.length >= 4) {
+        // Regex word boundary match for directory name
+        const dirRegex = new RegExp(`\\b${dirName.replace(/[^a-z0-9]/gi, '\\$&')}\\b`, 'i');
+        if (dirRegex.test(text)) {
+          matchedNodes.add(node.id);
+          matchScores.push({
+            issueNumber,
+            nodeId: node.id,
+            confidence: 0.75,
+            matchedSignals: ['architecture-dir-terminology'],
+          });
+        }
+      }
+    });
+  });
+
+  // Filter match scores by confidence threshold
+  const validScores = matchScores.filter((ms) => ms.confidence >= CONFIDENCE_THRESHOLD);
+
+  return {
+    relatedPaths: Array.from(matchedPaths),
+    relatedNodes: Array.from(matchedNodes),
+    matchScores: validScores,
+  };
 }
 
 export async function fetchRepositoryIssues(
   owner: string,
   repo: string,
-  validFilePaths: string[] = []
+  validFilePaths: string[] = [],
+  architectureNodes: ArchitectureNode[] = []
 ): Promise<RepositoryIssue[]> {
   const headers = getGitHubHeaders();
 
@@ -118,11 +308,13 @@ export async function fetchRepositoryIssues(
       return [];
     }
 
-    // Filter out pull requests and format into RepositoryIssue
+    // Build fast indexed path lookup
+    const index = buildPathIndex(validFilePaths, architectureNodes);
+
     const filteredIssues: RepositoryIssue[] = [];
 
     for (const raw of rawIssues) {
-      // GitHub Issues API returns PRs with a `pull_request` object property
+      // Exclude pull requests
       if (raw.pull_request) {
         continue;
       }
@@ -137,7 +329,15 @@ export async function fetchRepositoryIssues(
       const body = raw.body || '';
 
       const difficulty = classifyDifficulty(labelNames, title, body);
-      const relatedPaths = extractRelatedPaths(title, body, validFilePaths);
+      const contributionSignal = classifyContributionSignal(labelNames, title, body);
+
+      const { relatedPaths, relatedNodes } = extractRelatedPathsAndNodes(
+        raw.number,
+        title,
+        body,
+        index,
+        architectureNodes
+      );
 
       filteredIssues.push({
         id: raw.id,
@@ -154,13 +354,14 @@ export async function fetchRepositoryIssues(
         locked: Boolean(raw.locked),
         isPullRequest: false,
         relatedPaths,
+        relatedNodes,
         difficulty,
+        contributionSignal,
       });
     }
 
     return filteredIssues;
   } catch (error) {
-    // Return empty array on network or parsing error to keep ingestion resilient
     return [];
   }
 }

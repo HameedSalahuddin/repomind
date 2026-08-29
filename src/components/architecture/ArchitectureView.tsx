@@ -26,7 +26,7 @@ export default function ArchitectureView({ data }: ArchitectureViewProps) {
         <div>
           <h1 className="text-xl font-bold text-[#E6E8EC] tracking-tight">Architecture Spatial Neural Map</h1>
           <p className="text-xs text-[#8B929E]">
-            Spatial AI-assisted node map of packages, modules, and data flow relationships.
+            Spatial AI-assisted node map of packages, modules, and contribution issue signals.
           </p>
         </div>
         <div className="text-xs font-mono text-[#5A606C] flex items-center gap-3">
@@ -103,6 +103,7 @@ export default function ArchitectureView({ data }: ArchitectureViewProps) {
 
                 const radius = isPkg ? 5 : isSvc ? 4 : 3.5;
                 const strokeColor = isSelected ? '#06B6D4' : isPkg ? '#7C3AED' : isSvc ? '#06B6D4' : '#5A606C';
+                const hasIssues = (node.issueCount || 0) > 0;
 
                 return (
                   <g
@@ -112,6 +113,20 @@ export default function ArchitectureView({ data }: ArchitectureViewProps) {
                     onMouseLeave={() => setHoveredNodeId(null)}
                     onClick={() => setSelectedNode(node)}
                   >
+                    {/* Outer Issue Signal Halo */}
+                    {hasIssues && (
+                      <circle
+                        cx={coords.cx}
+                        cy={coords.cy}
+                        r={radius * 1.5}
+                        fill="none"
+                        stroke="#8B5CF6"
+                        strokeWidth="0.3"
+                        strokeDasharray="1,1"
+                        opacity="0.8"
+                      />
+                    )}
+
                     {/* Node Circle */}
                     <circle
                       cx={coords.cx}
@@ -140,7 +155,7 @@ export default function ArchitectureView({ data }: ArchitectureViewProps) {
                       fontWeight={isSelected ? 'bold' : 'normal'}
                       className="select-none pointer-events-none transition-colors"
                     >
-                      {node.label}
+                      {node.label} {hasIssues ? `(${node.issueCount})` : ''}
                     </text>
                   </g>
                 );
@@ -159,23 +174,46 @@ export default function ArchitectureView({ data }: ArchitectureViewProps) {
           {selectedNode ? (
             <div className="space-y-4">
               <div className="pb-3 border-b border-[#1E222A] space-y-1">
-                <span className="text-[10px] font-mono text-[#8B5CF6] uppercase tracking-wider">
-                  Node Inspector
-                </span>
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-mono text-[#8B5CF6] uppercase tracking-wider">
+                    Node Inspector
+                  </span>
+                  {selectedNode.issueCount && selectedNode.issueCount > 0 ? (
+                    <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[#8B5CF6]/20 text-[#8B5CF6] border border-[#8B5CF6]/30">
+                      {selectedNode.issueCount} Open Issue{selectedNode.issueCount === 1 ? '' : 's'}
+                    </span>
+                  ) : null}
+                </div>
                 <h3 className="font-bold text-sm text-[#E6E8EC]">{selectedNode.label}</h3>
                 <span className="inline-block text-[10px] font-mono text-[#8B929E] bg-[#14171D] px-2 py-0.5 rounded border border-[#1E222A]">
-                  Semantic Depth: {selectedNode.type}
+                  Type: {selectedNode.type}
                 </span>
               </div>
 
               <div className="space-y-2">
                 <span className="text-[11px] font-mono text-[#5A606C] uppercase tracking-wider block">
-                  Module Description
+                  Description
                 </span>
                 <p className="text-xs text-[#8B929E] leading-relaxed">
                   {selectedNode.description || 'Module boundary verified via static dependency parsing.'}
                 </p>
               </div>
+
+              {/* Mapped Issue IDs */}
+              {selectedNode.issueIds && selectedNode.issueIds.length > 0 && (
+                <div className="pt-3 border-t border-[#1E222A] space-y-2">
+                  <span className="text-[11px] font-mono text-[#8B5CF6] uppercase tracking-wider block">
+                    Mapped Contribution Issues
+                  </span>
+                  <div className="flex flex-wrap gap-1.5 font-mono text-xs">
+                    {selectedNode.issueIds.map((issueNum) => (
+                      <span key={issueNum} className="px-2 py-1 rounded bg-[#14171D] border border-[#1E222A] text-[#E6E8EC]">
+                        #{issueNum}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               <div className="pt-3 border-t border-[#1E222A] space-y-2">
                 <span className="text-[11px] font-mono text-[#5A606C] uppercase tracking-wider block">

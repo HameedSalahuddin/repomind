@@ -62,7 +62,8 @@ export const MOCK_REPO_ANALYSIS: RepositoryAnalysis = {
       locked: false,
       isPullRequest: false,
       relatedPaths: ['src/lib/auth.ts'],
-      difficulty: 'beginner'
+      difficulty: 'beginner',
+      contributionSignal: 'good-first-issue',
     }
   ],
 

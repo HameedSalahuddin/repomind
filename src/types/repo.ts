@@ -32,9 +32,10 @@ export interface ArchitectureNode {
   level?: number;
   fileCount?: number;
 
-  // Issue / Contributor signals
+  // Contributor / Issue signals
   issueCount?: number;
-  issues?: number[];
+  issueIds?: number[];
+  issues?: number[]; // Kept for backward compatibility
 }
 
 export interface ArchitectureEdge {
@@ -56,6 +57,16 @@ export interface ImportantFile {
   size?: number;
 }
 
+export type ContributionSignal = 
+  | 'good-first-issue'
+  | 'help-wanted'
+  | 'bug'
+  | 'enhancement'
+  | 'documentation'
+  | 'performance'
+  | 'security'
+  | 'unknown';
+
 export interface RepositoryIssue {
   id: number;
   number: number;
@@ -73,8 +84,19 @@ export interface RepositoryIssue {
   updatedAt: string;
   locked: boolean;
   isPullRequest: boolean;
+
   relatedPaths: string[];
+  relatedNodes?: string[];
+
   difficulty: 'beginner' | 'intermediate' | 'advanced' | 'unknown';
+  contributionSignal: ContributionSignal;
+}
+
+export interface InternalIssueMatchScore {
+  issueNumber: number;
+  nodeId: string;
+  confidence: number;
+  matchedSignals: string[];
 }
 
 export interface RepositoryAnalysis {

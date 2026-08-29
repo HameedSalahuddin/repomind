@@ -72,6 +72,7 @@ export function extractArchitectureGraph(input: ArchitectureExtractionInput): Ar
     description: `Repository root with ${cleanPaths.length} source files`,
     filePaths: [repoName],
     issueCount: 0,
+    issueIds: [],
     issues: [],
   });
   addedNodeIds.add(rootId);
@@ -133,6 +134,7 @@ export function extractArchitectureGraph(input: ArchitectureExtractionInput): Ar
         description: `Directory '${dirName}' containing ${count} files`,
         filePaths: [dirPath],
         issueCount: 0,
+        issueIds: [],
         issues: [],
       });
       addedNodeIds.add(nodeId);
@@ -163,6 +165,7 @@ export function extractArchitectureGraph(input: ArchitectureExtractionInput): Ar
           description: `Submodule '${subName}' (${subCount} files)`,
           filePaths: [subPath],
           issueCount: 0,
+          issueIds: [],
           issues: [],
         });
         addedNodeIds.add(subNodeId);
@@ -191,6 +194,7 @@ export function extractArchitectureGraph(input: ArchitectureExtractionInput): Ar
         description: `Verified entry point (${epPath})`,
         filePaths: [epPath],
         issueCount: 0,
+        issueIds: [],
         issues: [],
       });
       addedNodeIds.add(epNodeId);
@@ -219,6 +223,7 @@ export function extractArchitectureGraph(input: ArchitectureExtractionInput): Ar
         type: 'database',
         description: `Inferred storage layer (${techStack.filter(t => ['Prisma', 'PostgreSQL', 'Redis', 'MongoDB'].includes(t)).join(', ')})`,
         issueCount: 0,
+        issueIds: [],
         issues: [],
       });
       addedNodeIds.add(dbNodeId);
@@ -234,37 +239,51 @@ export function extractArchitectureGraph(input: ArchitectureExtractionInput): Ar
     }
   }
 
-  // 5. Map Issues to Architecture Nodes based on relatedPaths
+  // 5. Map Issues & relatedNodes to Architecture Nodes
   issues.forEach((issue) => {
-    if (!issue.relatedPaths || issue.relatedPaths.length === 0) return;
+    if (!issue.relatedPaths && !issue.relatedNodes) return;
 
-    issue.relatedPaths.forEach((relatedPath) => {
-      // Find matching node whose filePaths matches or is a prefix of relatedPath
-      const targetNode = nodes.find((n) => {
-        if (!n.filePaths) return false;
-        return n.filePaths.some(
-          (fp) => relatedPath === fp || relatedPath.startsWith(`${fp}/`) || fp.includes(relatedPath)
-        );
-      });
-
-      if (targetNode) {
-        targetNode.issueCount = (targetNode.issueCount || 0) + 1;
-        if (!targetNode.issues) targetNode.issues = [];
-        if (!targetNode.issues.includes(issue.number)) {
-          targetNode.issues.push(issue.number);
-        }
-      } else {
-        // Fallback: Increment root issue count
-        const rootNode = nodes.find((n) => n.id === rootId);
-        if (rootNode) {
-          rootNode.issueCount = (rootNode.issueCount || 0) + 1;
-          if (!rootNode.issues) rootNode.issues = [];
-          if (!rootNode.issues.includes(issue.number)) {
-            rootNode.issues.push(issue.number);
+    // A. Map by relatedNodes if present
+    if (issue.relatedNodes && issue.relatedNodes.length > 0) {
+      issue.relatedNodes.forEach((nodeId) => {
+        const targetNode = nodes.find((n) => n.id === nodeId);
+        if (targetNode) {
+          if (!targetNode.issueIds) targetNode.issueIds = [];
+          if (!targetNode.issueIds.includes(issue.number)) {
+            targetNode.issueIds.push(issue.number);
+            targetNode.issueCount = targetNode.issueIds.length;
+            targetNode.issues = targetNode.issueIds;
           }
         }
-      }
-    });
+      });
+    }
+
+    // B. Map by relatedPaths as backup/supplement
+    if (issue.relatedPaths && issue.relatedPaths.length > 0) {
+      issue.relatedPaths.forEach((relatedPath) => {
+        const targetNode = nodes.find((n) => {
+          if (!n.filePaths) return false;
+          return n.filePaths.some(
+            (fp) => relatedPath === fp || relatedPath.startsWith(`${fp}/`) || fp.includes(relatedPath)
+          );
+        });
+
+        if (targetNode) {
+          if (!targetNode.issueIds) targetNode.issueIds = [];
+          if (!targetNode.issueIds.includes(issue.number)) {
+            targetNode.issueIds.push(issue.number);
+            targetNode.issueCount = targetNode.issueIds.length;
+            targetNode.issues = targetNode.issueIds;
+          }
+
+          // Populate issue.relatedNodes if not already included
+          if (!issue.relatedNodes) issue.relatedNodes = [];
+          if (!issue.relatedNodes.includes(targetNode.id)) {
+            issue.relatedNodes.push(targetNode.id);
+          }
+        }
+      });
+    }
   });
 
   return { nodes, edges };

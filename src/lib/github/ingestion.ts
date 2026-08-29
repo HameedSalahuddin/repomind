@@ -207,10 +207,25 @@ export async function fetchRepositoryAnalysis(rawUrl: string): Promise<Ingestion
 
   const entryPoints = detectEntryPoints(filePaths, importantContents);
 
-  // 6. Fetch Open Repository Issues for Contributor Mapping
-  const issues = await fetchRepositoryIssues(parsed.owner, parsed.repo, filePaths);
+  // 6. Build Initial Architecture Graph
+  const initialArch = extractArchitectureGraph({
+    repoName: parsed.repo,
+    filePaths,
+    entryPoints,
+    techStack,
+    importantFiles: importantContents,
+    issues: [],
+  });
 
-  // 7. Real Deterministic Architecture Graph Extraction with Issue Signals
+  // 7. Fetch Open Repository Issues & Extract Related Paths & Nodes
+  const issues = await fetchRepositoryIssues(
+    parsed.owner,
+    parsed.repo,
+    filePaths,
+    initialArch.nodes
+  );
+
+  // 8. Re-extract Architecture Graph with Mapped Issue Signals
   const architecture = extractArchitectureGraph({
     repoName: parsed.repo,
     filePaths,
