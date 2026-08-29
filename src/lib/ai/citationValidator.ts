@@ -1,4 +1,4 @@
-import { InvestigationResult } from '@/types/investigation';
+import { InvestigationResult, LearningPath, RelevantFile } from '@/types/investigation';
 
 export function validateAndCleanCitations(
   result: InvestigationResult,
@@ -23,6 +23,36 @@ export function validateAndCleanCitations(
     ev && isPathValid(ev.path)
   );
 
+  // Validate Learning Path Files
+  let validLearningPath: LearningPath | undefined = undefined;
+  if (result.learningPath) {
+    const validFiles: RelevantFile[] = (result.learningPath.files || []).filter((f) =>
+      f && isPathValid(f.path)
+    );
+
+    // If Gemini provided valid files, keep them; otherwise fallback to validAffectedAreas
+    if (validFiles.length > 0) {
+      validLearningPath = {
+        goal: result.learningPath.goal || 'Understand relevant codebase execution paths.',
+        files: validFiles,
+        concepts: result.learningPath.concepts || [],
+        questions: result.learningPath.questions || [],
+      };
+    } else if (validAffectedAreas.length > 0) {
+      validLearningPath = {
+        goal: 'Understand the primary affected files in this repository.',
+        files: validAffectedAreas.map((area, idx) => ({
+          path: area.path,
+          reason: area.reason,
+          relevance: idx === 0 ? 'primary' : 'supporting',
+          estimatedMinutes: 5,
+        })),
+        concepts: result.learningPath.concepts || [],
+        questions: result.learningPath.questions || [],
+      };
+    }
+  }
+
   // Track if LLM attempted hallucinated paths
   const invalidPathsDetected: string[] = [];
 
@@ -41,6 +71,7 @@ export function validateAndCleanCitations(
 
   return {
     ...result,
+    learningPath: validLearningPath,
     affectedAreas: validAffectedAreas,
     keyEvidence: validKeyEvidence,
     evidenceLimitations,

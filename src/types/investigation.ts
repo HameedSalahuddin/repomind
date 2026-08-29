@@ -20,11 +20,29 @@ export interface InvestigationDifficulty {
   reason: string;
 }
 
+export interface RelevantFile {
+  path: string;
+  reason: string;
+  relevance: 'primary' | 'supporting' | 'context';
+  symbols?: string[];
+  lineStart?: number | null;
+  lineEnd?: number | null;
+  estimatedMinutes?: number;
+}
+
+export interface LearningPath {
+  goal: string;
+  files: RelevantFile[];
+  concepts: string[];
+  questions: string[];
+}
+
 export interface InvestigationResult {
   issueSummary: string;
   whatIsHappening: string;
   likelyCause: string;
   confidence: 'high' | 'medium' | 'low';
+  learningPath?: LearningPath;
   affectedAreas: InvestigationAffectedArea[];
   keyEvidence: InvestigationKeyEvidence[];
   relatedIssues: InvestigationRelatedIssue[];

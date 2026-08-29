@@ -1,8 +1,9 @@
-import { RepositoryAnalysis, RepositoryIssue, ArchitectureNode } from '@/types/repo';
+import { RepositoryAnalysis } from '@/types/repo';
 
 export interface SourceFileContent {
   path: string;
   content: string;
+  fileType: 'source' | 'test' | 'documentation';
 }
 
 export interface InvestigationContext {
@@ -31,8 +32,8 @@ export interface InvestigationContext {
   }>;
 }
 
-const MAX_SOURCE_FILES = 3;
-const MAX_FILE_CHARS = 3500;
+const MAX_SOURCE_FILES = 6;
+const MAX_FILE_CHARS = 5000;
 const MAX_RELATED_ISSUES = 5;
 
 function getGitHubHeaders(): Record<string, string> {
@@ -47,6 +48,17 @@ function getGitHubHeaders(): Record<string, string> {
   }
 
   return headers;
+}
+
+function determineFileType(path: string): 'source' | 'test' | 'documentation' {
+  const lower = path.toLowerCase();
+  if (lower.includes('test') || lower.includes('spec') || lower.includes('fixture')) {
+    return 'test';
+  }
+  if (lower.endsWith('.md') || lower.endsWith('.rst') || lower.startsWith('docs/')) {
+    return 'documentation';
+  }
+  return 'source';
 }
 
 export async function buildIssueInvestigationContext(
@@ -70,10 +82,10 @@ export async function buildIssueInvestigationContext(
       description: node.description,
     }));
 
-  // 2. Select Up to 5 Candidate Source Files
+  // 2. Extract Candidate Paths from Issue & Architecture
   const candidatePaths = new Set<string>();
 
-  // Add paths from relatedPaths
+  // Add paths from issue's relatedPaths
   (targetIssue.relatedPaths || []).forEach((p) => candidatePaths.add(p));
 
   // Add paths from related architecture nodes
@@ -81,21 +93,35 @@ export async function buildIssueInvestigationContext(
     .filter((node) => relatedNodeIds.includes(node.id))
     .forEach((node) => {
       (node.filePaths || []).forEach((fp) => {
-        // If fp is a file extension, add directly; if folder, skip raw file fetch
-        if (/\.[a-zA-Z0-9]+$/.test(fp) && !fp.toLowerCase().endsWith('.md')) {
+        if (/\.[a-zA-Z0-9]+$/.test(fp)) {
           candidatePaths.add(fp);
         }
       });
     });
 
-  // Filter out non-code or README files if code files exist
-  let selectedFilePaths = Array.from(candidatePaths)
-    .filter((p) => !p.toLowerCase().endsWith('.md') && !p.toLowerCase().endsWith('.json'))
-    .slice(0, MAX_SOURCE_FILES);
+  // Search repository file tree for related test/doc candidates if issue references a module
+  const issueText = `${targetIssue.title} ${targetIssue.body || ''}`.toLowerCase();
+  const allTreePaths = analysis.fileTree.map((f) => f.path);
 
-  if (selectedFilePaths.length === 0) {
-    selectedFilePaths = Array.from(candidatePaths).slice(0, MAX_SOURCE_FILES);
+  // Match test files
+  const testCandidates = allTreePaths.filter(
+    (p) => (p.toLowerCase().includes('test') || p.toLowerCase().includes('spec')) &&
+      Array.from(candidatePaths).some((cp) => {
+        const baseName = cp.split('/').pop()?.split('.')[0].toLowerCase();
+        return baseName && baseName.length > 3 && p.toLowerCase().includes(baseName);
+      })
+  );
+  testCandidates.slice(0, 2).forEach((tp) => candidatePaths.add(tp));
+
+  // Match doc files if issue refers to docs
+  if (/doc|readme|guide|usage|advanced/i.test(issueText)) {
+    const docCandidates = allTreePaths.filter(
+      (p) => p.startsWith('docs/') || p.endsWith('.rst') || p.endsWith('.md')
+    );
+    docCandidates.slice(0, 2).forEach((dp) => candidatePaths.add(dp));
   }
+
+  const selectedFilePaths = Array.from(candidatePaths).slice(0, MAX_SOURCE_FILES);
 
   // Fetch Source Code Contents concurrently from GitHub
   const headers = getGitHubHeaders();
@@ -113,6 +139,7 @@ export async function buildIssueInvestigationContext(
           sourceFiles.push({
             path: filePath,
             content: cappedText,
+            fileType: determineFileType(filePath),
           });
         }
       } catch {

@@ -12,7 +12,8 @@ IMPORTANT INVESTIGATION RULES:
 4. Distinguish clearly between confirmed evidence and reasonable technical inferences.
 5. Do NOT generate a fictional fix code diff. Suggest fix direction and testing strategy.
 6. Target audience: A developer who may be a first-time contributor to this repository. Explain module concepts clearly.
-7. CONCISE JSON FORMAT: Keep text concise (max 2 sentences per field) so the complete JSON response fits comfortably within output limits. Do NOT use double quotes inside string property values — use single quotes or backticks for code references.
+7. LEARNING PATH: Build an ordered step-by-step Learning Path recommending 3 to 5 specific files to read first (from easiest prerequisite to deepest implementation).
+8. CONCISE JSON FORMAT: Keep text concise (max 2 sentences per field) so the complete JSON response fits comfortably within output limits. Do NOT use double quotes inside string property values — use single quotes or backticks for code references.
 
 You MUST respond with a single, valid JSON object following this exact schema:
 {
@@ -20,6 +21,27 @@ You MUST respond with a single, valid JSON object following this exact schema:
   "whatIsHappening": "Technical explanation of current vs expected behavior",
   "likelyCause": "Hypothesis explaining why this behavior occurs based on evidence",
   "confidence": "high" | "medium" | "low",
+  "learningPath": {
+    "goal": "One sentence describing what the contributor will learn from this reading sequence",
+    "files": [
+      {
+        "path": "exact_file_path_from_evidence",
+        "reason": "Why read this file? What to look for?",
+        "relevance": "primary" | "supporting" | "context",
+        "symbols": ["symbol_or_function_name"],
+        "lineStart": number or null,
+        "lineEnd": number or null,
+        "estimatedMinutes": 5
+      }
+    ],
+    "concepts": [
+      "Concept Name: One sentence beginner-friendly explanation"
+    ],
+    "questions": [
+      "What is ...?",
+      "Where is ... configured?"
+    ]
+  },
   "affectedAreas": [
     {
       "path": "exact_file_path_from_evidence",
@@ -79,7 +101,7 @@ ${JSON.stringify(context.relatedArchitecture, null, 2)}
 ${
   context.sourceFiles.length > 0
     ? context.sourceFiles
-        .map((f) => `--- FILE: ${f.path} ---\n${f.content}\n`)
+        .map((f) => `--- FILE: ${f.path} (${f.fileType.toUpperCase()}) ---\n${f.content}\n`)
         .join('\n')
     : 'No source file content fetched directly.'
 }
