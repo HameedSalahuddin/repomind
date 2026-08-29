@@ -1,22 +1,49 @@
 import { NextResponse } from 'next/server';
-import { MOCK_REPO_ANALYSIS } from '@/lib/mockData';
+import { fetchRepositoryAnalysis } from '@/lib/github/ingestion';
 
 export async function POST(request: Request) {
   try {
     const body = await request.json().catch(() => ({}));
     const { repoUrl } = body;
 
-    // Placeholder check - returns mock analysis structure
+    if (!repoUrl || typeof repoUrl !== 'string') {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Missing or invalid "repoUrl" parameter in request body.',
+        },
+        { status: 400 }
+      );
+    }
+
+    const { analysis, diagnostics, cached } = await fetchRepositoryAnalysis(repoUrl);
+
     return NextResponse.json({
-      status: 'placeholder',
-      message: 'API route under development. Returning placeholder analysis.',
-      requestedRepoUrl: repoUrl || 'https://github.com/repomind-demo/task-craft-api',
-      data: MOCK_REPO_ANALYSIS
+      success: true,
+      repository: analysis,
+      cached,
+      diagnostics,
+      // Backward compatibility field
+      data: analysis,
     });
-  } catch (error) {
+  } catch (error: any) {
+    const errorMessage = error?.message || 'An unknown error occurred during repository analysis.';
+    
+    let status = 500;
+    if (errorMessage.includes('Invalid GitHub repository URL format')) {
+      status = 400;
+    } else if (errorMessage.includes('not found or is private')) {
+      status = 404;
+    } else if (errorMessage.includes('rate limit exceeded')) {
+      status = 429;
+    }
+
     return NextResponse.json(
-      { error: 'Failed to process repository analysis request.' },
-      { status: 500 }
+      {
+        success: false,
+        error: errorMessage,
+      },
+      { status }
     );
   }
 }
