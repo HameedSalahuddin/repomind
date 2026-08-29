@@ -4,17 +4,23 @@ import { Suspense, useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import SideNavBar, { WorkspaceTab } from '@/components/layout/SideNavBar';
 import TopAppBar from '@/components/layout/TopAppBar';
-import OverviewView from '@/components/overview/OverviewView';
+
+// Redesigned Views
+import StartContributingView from '@/components/contributions/StartContributingView';
+import ContributionPlanView from '@/components/contributions/ContributionPlanView';
+import IssueDetailView from '@/components/issues/IssueDetailView';
+import InvestigationView from '@/components/investigation/InvestigationView';
+import CodeExplorerView from '@/components/code/CodeExplorerView';
 import ArchitectureView from '@/components/architecture/ArchitectureView';
 import GitStoryView from '@/components/gitstory/GitStoryView';
-import QnaView from '@/components/qna/QnaView';
 import SkillPatchView from '@/components/skillpatch/SkillPatchView';
 
-import { RepositoryAnalysis } from '@/types/repo';
+// Types and Mock Data
+import { RepositoryAnalysis, RepositoryIssue } from '@/types/repo';
+import { InvestigationResult } from '@/types/investigation';
 import { 
   MOCK_REPO_ANALYSIS, 
   MOCK_GITSTORY, 
-  MOCK_QNA_RESPONSE, 
   MOCK_SKILLPATCH_RESPONSE 
 } from '@/lib/mockData';
 
@@ -23,17 +29,41 @@ function WorkspaceContent() {
   const rawTab = searchParams.get('tab') as WorkspaceTab;
   const rawRepo = searchParams.get('repo');
 
-  const [activeTab, setActiveTab] = useState<WorkspaceTab>('overview');
+  // Active Navigation Tab (Defaults to Start Contributing as primary destination)
+  const [activeTab, setActiveTab] = useState<WorkspaceTab>('contribute');
+
+  // Core Analysis State
   const [analysisData, setAnalysisData] = useState<RepositoryAnalysis>(MOCK_REPO_ANALYSIS);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Active Issue & Investigation State
+  const [selectedIssue, setSelectedIssue] = useState<RepositoryIssue | null>(null);
+  const [investigationResult, setInvestigationResult] = useState<InvestigationResult | null>(null);
+  const [investigationLoading, setInvestigationLoading] = useState<boolean>(false);
+  const [investigationError, setInvestigationError] = useState<string | null>(null);
+
+  // Selected Code Path
+  const [selectedFilePath, setSelectedFilePath] = useState<string | null>(null);
+
+  // Sync tab with URL search query param
   useEffect(() => {
-    if (rawTab && ['overview', 'architecture', 'gitstory', 'qna', 'skillpatch'].includes(rawTab)) {
+    const validTabs: WorkspaceTab[] = [
+      'contribute',
+      'issues',
+      'code',
+      'investigations',
+      'plan',
+      'architecture',
+      'gitstory',
+      'skillpatch',
+    ];
+    if (rawTab && validTabs.includes(rawTab)) {
       setActiveTab(rawTab);
     }
   }, [rawTab]);
 
+  // Fetch real repository analysis when repo URL is provided
   useEffect(() => {
     if (!rawRepo) return;
 
@@ -63,60 +93,215 @@ function WorkspaceContent() {
     fetchAnalysis();
   }, [rawRepo]);
 
+  // Trigger AI Investigation for an issue
+  const handleUnderstandIssue = async (issue: RepositoryIssue) => {
+    setSelectedIssue(issue);
+    setActiveTab('investigations');
+    setInvestigationLoading(true);
+    setInvestigationError(null);
+    setInvestigationResult(null);
+
+    try {
+      const targetRepoUrl = rawRepo || analysisData.url || 'https://github.com/expressjs/express';
+      const res = await fetch('/api/investigate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          repoUrl: targetRepoUrl,
+          issueNumber: issue.number,
+        }),
+      });
+
+      const json = await res.json();
+      if (json.success && json.result) {
+        setInvestigationResult(json.result);
+      } else {
+        setInvestigationError(json.error || 'Investigation could not be completed.');
+      }
+    } catch (err: any) {
+      setInvestigationError(err?.message || 'Failed to run AI investigation.');
+    } finally {
+      setInvestigationLoading(false);
+    }
+  };
+
+  // Open Issue Detail
+  const handleSelectIssueDetail = (issue: RepositoryIssue) => {
+    setSelectedIssue(issue);
+    setActiveTab('issues');
+  };
+
+  // Navigate directly to code file explorer
+  const handleNavigateCode = (filePath?: string) => {
+    if (filePath) {
+      setSelectedFilePath(filePath);
+    }
+    setActiveTab('code');
+  };
+
   const repoName = analysisData.fullName || (rawRepo ? decodeURIComponent(rawRepo) : MOCK_REPO_ANALYSIS.metadata.fullName);
 
+  // Tab Title helper
+  const tabTitles: Record<WorkspaceTab, string> = {
+    contribute: 'Start Contributing',
+    issues: selectedIssue ? `Issue #${selectedIssue.number}` : 'Issues',
+    code: 'Understand Code',
+    investigations: selectedIssue ? `Investigation #${selectedIssue.number}` : 'Investigations',
+    plan: selectedIssue ? `Contribution Plan #${selectedIssue.number}` : 'Contribution Plan',
+    architecture: 'Architecture',
+    gitstory: 'GitStory',
+    skillpatch: 'SkillPatch',
+  };
+
   return (
-    <div className="min-h-screen bg-background text-on-surface font-body-md flex">
-      {/* Sidebar Navigation */}
+    <div className="min-h-screen bg-[#131315] text-[#E5E1E4] font-body-base flex">
+      {/* Sidebar Navigation Rail */}
       <SideNavBar 
         activeTab={activeTab} 
         onTabChange={(tab) => setActiveTab(tab)} 
         repoUrl={repoName}
+        selectedIssueNumber={selectedIssue?.number}
       />
 
-      {/* Top App Bar Header */}
-      <TopAppBar repoName={repoName} />
+      {/* Top Application Bar Header */}
+      <TopAppBar 
+        repoName={repoName}
+        defaultBranch={analysisData.defaultBranch || 'main'}
+        activeTabTitle={tabTitles[activeTab]} 
+      />
 
-      {/* Main Workspace Content Canvas */}
-      <main className="ml-60 pt-16 px-8 py-6 flex-1 min-h-[calc(100vh-4rem)]">
+      {/* Main Workspace Canvas */}
+      <main className="ml-60 pt-20 px-8 py-6 flex-1 min-h-[calc(100vh-5rem)]">
         {loading ? (
-          <div className="flex flex-col items-center justify-center py-24 space-y-4 font-mono text-xs text-[#8B929E]">
-            <div className="w-8 h-8 rounded-full border-2 border-[#7C3AED] border-t-transparent animate-spin" />
-            <div>Ingesting and analyzing repository <span className="text-[#E6E8EC] font-semibold">{repoName}</span>...</div>
+          /* Redesigned Loading State with Progressive Indicators */
+          <div className="max-w-md mx-auto my-24 p-8 rounded-xl bg-[#1B1B1D] border border-[#2A2A2C] shadow-2xl space-y-6">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-full border-2 border-[#818CF8] border-t-transparent animate-spin shrink-0" />
+              <div>
+                <h2 className="text-sm font-semibold text-[#E5E1E4]">Analyzing Repository</h2>
+                <p className="text-xs text-[#908F9E] font-mono">{repoName}</p>
+              </div>
+            </div>
+
+            <div className="space-y-2.5 font-mono text-xs">
+              <div className="flex items-center gap-2 text-[#4DE082]">
+                <span className="material-symbols-outlined text-[16px]">check_circle</span>
+                <span>Repository found</span>
+              </div>
+              <div className="flex items-center gap-2 text-[#4DE082]">
+                <span className="material-symbols-outlined text-[16px]">check_circle</span>
+                <span>File structure loaded</span>
+              </div>
+              <div className="flex items-center gap-2 text-[#4DE082]">
+                <span className="material-symbols-outlined text-[16px]">check_circle</span>
+                <span>Technologies detected</span>
+              </div>
+              <div className="flex items-center gap-2 text-[#4DE082]">
+                <span className="material-symbols-outlined text-[16px]">check_circle</span>
+                <span>Issues discovered</span>
+              </div>
+              <div className="flex items-center gap-2 text-[#818CF8] animate-pulse">
+                <span className="material-symbols-outlined text-[16px]">motion_photos_on</span>
+                <span>Mapping contribution opportunities...</span>
+              </div>
+            </div>
           </div>
         ) : error ? (
-          <div className="max-w-xl mx-auto my-12 p-6 rounded-lg bg-[#0E1014] border border-red-500/40 text-center space-y-3">
-            <span className="material-symbols-outlined text-red-400 text-3xl">error</span>
-            <h3 className="text-sm font-bold text-[#E6E8EC]">Analysis Error</h3>
-            <p className="text-xs text-[#8B929E]">{error}</p>
-            <button
-              onClick={() => window.location.reload()}
-              className="px-4 py-2 bg-[#14171D] hover:bg-[#1E222A] text-xs font-mono text-[#E6E8EC] rounded border border-[#1E222A] transition-colors"
-            >
-              Retry
-            </button>
+          /* Redesigned Error Handling View */
+          <div className="max-w-lg mx-auto my-16 p-8 rounded-xl bg-[#1B1B1D] border border-[#FFB4AB]/40 text-center space-y-4">
+            <div className="w-12 h-12 rounded-full bg-[#FFB4AB]/10 text-[#FFB4AB] flex items-center justify-center mx-auto">
+              <span className="material-symbols-outlined text-2xl">error_outline</span>
+            </div>
+            <h3 className="text-base font-bold text-[#E5E1E4]">Repository Ingestion Error</h3>
+            <p className="text-xs text-[#908F9E] leading-relaxed">{error}</p>
+            <div className="pt-2">
+              <button
+                onClick={() => window.location.reload()}
+                className="px-4 py-2 bg-[#201F21] hover:bg-[#2A2A2C] text-xs font-mono text-[#E5E1E4] rounded-lg border border-[#353437] transition-colors"
+              >
+                Try again
+              </button>
+            </div>
           </div>
         ) : (
           <>
-            {activeTab === 'overview' && (
-              <OverviewView 
-                data={analysisData} 
-                onNavigateTab={(tab) => setActiveTab(tab)} 
+            {/* 1. Start Contributing Page */}
+            {activeTab === 'contribute' && (
+              <StartContributingView
+                analysis={analysisData}
+                onSelectIssue={(issue) => handleSelectIssueDetail(issue)}
+                onNavigateCode={handleNavigateCode}
               />
             )}
 
+            {/* 2. Issues & Issue Detail Page */}
+            {activeTab === 'issues' && (
+              selectedIssue ? (
+                <IssueDetailView
+                  issue={selectedIssue}
+                  onUnderstandIssue={handleUnderstandIssue}
+                  onBack={() => setSelectedIssue(null)}
+                  onNavigateCode={handleNavigateCode}
+                />
+              ) : (
+                <StartContributingView
+                  analysis={analysisData}
+                  onSelectIssue={(issue) => handleSelectIssueDetail(issue)}
+                  onNavigateCode={handleNavigateCode}
+                />
+              )
+            )}
+
+            {/* 3. Understand Code / File Explorer */}
+            {activeTab === 'code' && (
+              <CodeExplorerView
+                analysis={analysisData}
+                initialFilePath={selectedFilePath}
+                onSelectIssue={(issueNum) => {
+                  const found = analysisData.issues.find((i) => i.number === issueNum);
+                  if (found) handleSelectIssueDetail(found);
+                }}
+              />
+            )}
+
+            {/* 4. Investigation Workspace */}
+            {activeTab === 'investigations' && (
+              <InvestigationView
+                issue={selectedIssue}
+                result={investigationResult}
+                loading={investigationLoading}
+                error={investigationError}
+                onNavigateCode={handleNavigateCode}
+                onStartContributionPlan={() => setActiveTab('plan')}
+                onRetry={() => selectedIssue && handleUnderstandIssue(selectedIssue)}
+                onBackToIssue={() => setActiveTab('issues')}
+              />
+            )}
+
+            {/* 4b. Contribution Plan View */}
+            {activeTab === 'plan' && selectedIssue && (
+              <ContributionPlanView
+                analysis={analysisData}
+                issue={selectedIssue}
+                investigation={investigationResult}
+                onNavigateCode={handleNavigateCode}
+                onNavigateArchitecture={() => setActiveTab('architecture')}
+                onNavigateGitStory={() => setActiveTab('gitstory')}
+                onBackToWorkspace={() => setActiveTab('contribute')}
+              />
+            )}
+
+            {/* 5. Architecture Graph */}
             {activeTab === 'architecture' && (
               <ArchitectureView data={analysisData.architecture} />
             )}
 
+            {/* 6. GitStory Evolution */}
             {activeTab === 'gitstory' && (
               <GitStoryView data={MOCK_GITSTORY} />
             )}
 
-            {activeTab === 'qna' && (
-              <QnaView initialData={MOCK_QNA_RESPONSE} />
-            )}
-
+            {/* 7. SkillPatch Wiki Artifacts */}
             {activeTab === 'skillpatch' && (
               <SkillPatchView data={MOCK_SKILLPATCH_RESPONSE} />
             )}
@@ -130,7 +315,7 @@ function WorkspaceContent() {
 export default function WorkspacePage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-background text-on-surface flex items-center justify-center font-mono text-xs text-[#8B5CF6]">
+      <div className="min-h-screen bg-[#131315] text-[#818CF8] flex items-center justify-center font-mono text-xs">
         Loading RepoMind Intelligence Platform...
       </div>
     }>

@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Contribution Plan - RepoMind</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&amp;family=Inter:wght@400;500&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-tertiary-fixed": "#00210c",
+                    "on-secondary-fixed-variant": "#62259b",
+                    "surface-tint": "#bdc2ff",
+                    "primary-fixed": "#e0e0ff",
+                    "on-tertiary": "#003919",
+                    "outline-variant": "#454653",
+                    "on-surface": "#e5e1e4",
+                    "on-error": "#690005",
+                    "tertiary-fixed": "#6dfe9c",
+                    "surface-container-highest": "#353437",
+                    "tertiary": "#4de082",
+                    "on-tertiary-container": "#003617",
+                    "surface-container-lowest": "#0e0e10",
+                    "tertiary-fixed-dim": "#4de082",
+                    "secondary-container": "#62259b",
+                    "on-primary-fixed": "#000767",
+                    "primary-fixed-dim": "#bdc2ff",
+                    "primary": "#bdc2ff",
+                    "surface": "#131315",
+                    "secondary": "#ddb8ff",
+                    "error-container": "#93000a",
+                    "on-secondary": "#490081",
+                    "secondary-fixed": "#f0dbff",
+                    "surface-container-low": "#1b1b1d",
+                    "on-tertiary-fixed-variant": "#005227",
+                    "surface-bright": "#39393b",
+                    "on-secondary-container": "#d1a1ff",
+                    "inverse-surface": "#e5e1e4",
+                    "on-primary": "#131e8c",
+                    "inverse-on-surface": "#313032",
+                    "surface-container-high": "#2a2a2c",
+                    "error": "#ffb4ab",
+                    "on-primary-container": "#101b8a",
+                    "on-primary-fixed-variant": "#2f3aa3",
+                    "on-background": "#e5e1e4",
+                    "outline": "#908f9e",
+                    "inverse-primary": "#4953bc",
+                    "secondary-fixed-dim": "#ddb8ff",
+                    "surface-container": "#201f21",
+                    "on-surface-variant": "#c6c5d5",
+                    "primary-container": "#818cf8",
+                    "surface-dim": "#131315",
+                    "tertiary-container": "#00ac58",
+                    "on-secondary-fixed": "#2c0051",
+                    "background": "#131315",
+                    "on-error-container": "#ffdad6",
+                    "surface-variant": "#353437"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "gutter": "1px",
+                    "unit": "4px",
+                    "xs": "4px",
+                    "lg": "24px",
+                    "sidebar-collapsed": "56px",
+                    "xl": "32px",
+                    "sidebar": "240px",
+                    "sm": "8px",
+                    "md": "12px",
+                    "base": "16px",
+                    "inspector": "340px"
+            },
+            "fontFamily": {
+                    "label-caps": [
+                            "JetBrains Mono"
+                    ],
+                    "code-sm": [
+                            "JetBrains Mono"
+                    ],
+                    "headline-md": [
+                            "Geist"
+                    ],
+                    "display-lg": [
+                            "Geist"
+                    ],
+                    "headline-sm": [
+                            "Geist"
+                    ],
+                    "body-medium": [
+                            "Inter"
+                    ],
+                    "display-xl": [
+                            "Geist"
+                    ],
+                    "body-base": [
+                            "Inter"
+                    ],
+                    "body-sm": [
+                            "Inter"
+                    ],
+                    "code-base": [
+                            "JetBrains Mono"
+                    ]
+            },
+            "fontSize": {
+                    "label-caps": [
+                            "11px",
+                            {
+                                    "lineHeight": "16px",
+                                    "letterSpacing": "0.05em",
+                                    "fontWeight": "500"
+                            }
+                    ],
+                    "code-sm": [
+                            "12px",
+                            {
+                                    "lineHeight": "18px",
+                                    "letterSpacing": "0",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "headline-md": [
+                            "18px",
+                            {
+                                    "lineHeight": "26px",
+                                    "letterSpacing": "-0.015em",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "display-lg": [
+                            "24px",
+                            {
+                                    "lineHeight": "32px",
+                                    "letterSpacing": "-0.02em",
+                                    "fontWeight": "700"
+                            }
+                    ],
+                    "headline-sm": [
+                            "15px",
+                            {
+                                    "lineHeight": "22px",
+                                    "letterSpacing": "-0.01em",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "body-medium": [
+                            "14px",
+                            {
+                                    "lineHeight": "22px",
+                                    "letterSpacing": "-0.005em",
+                                    "fontWeight": "500"
+                            }
+                    ],
+                    "display-xl": [
+                            "32px",
+                            {
+                                    "lineHeight": "40px",
+                                    "letterSpacing": "-0.025em",
+                                    "fontWeight": "700"
+                            }
+                    ],
+                    "body-base": [
+                            "14px",
+                            {
+                                    "lineHeight": "22px",
+                                    "letterSpacing": "-0.005em",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "body-sm": [
+                            "12px",
+                            {
+                                    "lineHeight": "18px",
+                                    "letterSpacing": "0",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "code-base": [
+                            "13px",
+                            {
+                                    "lineHeight": "20px",
+                                    "letterSpacing": "0",
+                                    "fontWeight": "400"
+                            }
+                    ]
+            }
+    },
+        },
+      }
+    </script>
+<style>
+        body { background-color: #0D0D0F; }
+        .checklist-item-transition { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .checklist-checkbox:checked + div {
+            text-decoration: line-through;
+            opacity: 0.6;
+            color: #908f9e; /* outline */
+        }
+        .glow-hover:hover {
+            box-shadow: 0 0 15px rgba(129, 140, 248, 0.15);
+        }
+        .progress-line {
+            transition: background-color 0.5s ease;
+        }
+        .progress-icon {
+            transition: all 0.5s ease;
+        }
+        .link-hover-effect {
+            position: relative;
+        }
+        .link-hover-effect::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            transform: scaleX(0);
+            height: 1px;
+            bottom: -2px;
+            left: 0;
+            background-color: currentColor;
+            transform-origin: bottom right;
+            transition: transform 0.25s ease-out;
+        }
+        .link-hover-effect:hover::after {
+            transform: scaleX(1);
+            transform-origin: bottom left;
+        }
+    </style>
+</head>
+<body class="text-on-surface font-body-base min-h-screen flex selection:bg-primary-container/30 selection:text-primary">
+<!-- SideNavBar -->
+<nav class="hidden md:flex flex-col h-screen fixed left-0 top-0 z-40 bg-surface dark:bg-surface text-primary dark:text-primary font-label-caps text-label-caps docked left-0 h-full w-sidebar border-r border-outline-variant flat no shadows">
+<div class="flex items-center gap-md p-base border-b border-outline-variant/50">
+<div class="w-8 h-8 rounded bg-surface-container-high flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-on-surface" data-icon="terminal" data-weight="fill" style="font-variation-settings: 'FILL' 1;">terminal</span>
+</div>
+<div class="flex flex-col overflow-hidden">
+<span class="font-headline-sm text-headline-sm font-bold text-on-surface truncate">expressjs/express</span>
+<span class="text-on-surface-variant text-code-sm truncate">Main Branch</span>
+</div>
+</div>
+<div class="flex-1 overflow-y-auto py-sm px-xs space-y-xs">
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-primary border-l-4 border-primary bg-primary-container/10 transition-colors duration-200 scale-95 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="rocket_launch">rocket_launch</span>
+<span>Start Contributing</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors duration-200 scale-95 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="bug_report">bug_report</span>
+<span>Issues</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors duration-200 scale-95 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="psychology">psychology</span>
+<span>Understand Code</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors duration-200 scale-95 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="search_check">search_check</span>
+<span>Investigations</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors duration-200 scale-95 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="account_tree">account_tree</span>
+<span>Architecture</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors duration-200 scale-95 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+<span>GitStory</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors duration-200 scale-95 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="auto_fix_high">auto_fix_high</span>
+<span>SkillPatch</span>
+</a>
+</div>
+<div class="p-base border-t border-outline-variant/50">
+<button class="w-full flex items-center justify-center gap-sm bg-primary-container text-[#000000] font-body-medium text-body-medium px-md py-sm rounded-DEFAULT hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined text-[18px]" data-icon="add">add</span>
+                New Investigation
+            </button>
+</div>
+</nav>
+<!-- Main Content Wrapper -->
+<div class="flex-1 md:ml-sidebar flex flex-col min-h-screen">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center h-16 px-lg sticky top-0 z-50 w-full bg-surface/75 backdrop-blur-md text-primary dark:text-primary font-headline-sm text-headline-sm docked top-0 w-full border-b border-outline-variant flat no shadows">
+<div class="flex items-center gap-lg">
+<span class="font-display-lg text-display-lg font-bold text-on-surface">RepoMind</span>
+<nav class="hidden sm:flex gap-lg">
+<a class="text-primary font-bold hover:text-primary transition-colors cursor-pointer active:opacity-70" href="#">Docs</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors cursor-pointer active:opacity-70" href="#">Settings</a>
+</nav>
+</div>
+<div class="flex items-center gap-base">
+<div class="relative hidden sm:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant" data-icon="search">search</span>
+<input class="bg-surface-container-high border-outline-variant/30 text-on-surface placeholder:text-on-surface-variant/50 rounded-full pl-10 pr-4 py-1.5 text-body-sm font-body-sm focus:border-primary-container focus:ring-1 focus:ring-primary-container outline-none w-64 transition-all" placeholder="Search..." type="text"/>
+</div>
+<button class="text-on-surface-variant hover:text-primary transition-colors cursor-pointer active:opacity-70 flex items-center justify-center w-8 h-8 rounded-full hover:bg-surface-container-high">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors cursor-pointer active:opacity-70 flex items-center justify-center w-8 h-8 rounded-full hover:bg-surface-container-high overflow-hidden">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="A small circular avatar placeholder image with a dark minimalist abstract pattern representing a user profile in a developer tool context." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCN_AnH7q_aWIno8XviWCcgBvgbq7Tj1p58NVZLo0MdF9hDugdq7OzdKYu0Dlc0ffJYaMmq0z8WRtma9g5zVjNoMmeYgjPIdkEUI9zu-Sn5iyJzGu_yzrYS_JTyl1OVAYxh87QVAX0C0tDFsEd-Yk2r1dwCTKUj1ZQ6FgtrP2yKf1G8ajUJYVHK53fPJePqxdF26FB-1zCzUDzBBHbIsKu8z9XBIJmoWPId07fyovzo1kTTYCqJnaLm"/>
+</button>
+</div>
+</header>
+<!-- Main Canvas -->
+<main class="flex-1 p-lg lg:p-xl max-w-[1200px] w-full mx-auto pb-32">
+<!-- Context Header -->
+<div class="mb-lg">
+<div class="flex items-center gap-sm text-on-surface-variant font-code-sm text-code-sm mb-xs">
+<span>Issue #7427</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span>Contribution Plan</span>
+</div>
+<h1 class="font-display-xl text-display-xl text-on-surface mb-sm tracking-tight">router.use() silently accepts express() sub-apps without prototype restoration</h1>
+</div>
+<!-- Progress Indicator -->
+<div class="bg-surface rounded-xl border border-outline-variant p-base mb-xl flex items-center justify-between">
+<div class="flex items-center flex-1" id="progress-container">
+<!-- Step 1 (Active/Completed) -->
+<div class="flex flex-col items-center relative group w-1/5" data-step="1">
+<div class="progress-icon w-8 h-8 rounded-full bg-tertiary-container/20 border border-tertiary flex items-center justify-center mb-xs z-10">
+<span class="material-symbols-outlined text-tertiary text-[18px]" data-icon="check">check</span>
+</div>
+<span class="font-label-caps text-label-caps text-tertiary">Understand</span>
+<div class="progress-line absolute top-4 left-1/2 w-full h-[1px] bg-tertiary" id="line-1"></div>
+</div>
+<!-- Step 2 (Current) -->
+<div class="flex flex-col items-center relative group w-1/5" data-step="2">
+<div class="progress-icon w-8 h-8 rounded-full bg-primary-container/20 border-2 border-primary-container flex items-center justify-center mb-xs z-10 shadow-[0_0_10px_rgba(129,140,248,0.2)]">
+<span class="material-symbols-outlined text-primary-container text-[18px]" data-icon="target">target</span>
+</div>
+<span class="font-label-caps text-label-caps text-primary-container">Investigate</span>
+<div class="progress-line absolute top-4 left-1/2 w-full h-[1px] bg-outline-variant/30" id="line-2"></div>
+</div>
+<!-- Step 3 -->
+<div class="flex flex-col items-center relative group w-1/5" data-step="3">
+<div class="progress-icon w-8 h-8 rounded-full bg-surface-container-high border border-outline-variant flex items-center justify-center mb-xs z-10">
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]" data-icon="code">code</span>
+</div>
+<span class="font-label-caps text-label-caps text-on-surface-variant">Implement</span>
+<div class="progress-line absolute top-4 left-1/2 w-full h-[1px] bg-outline-variant/30" id="line-3"></div>
+</div>
+<!-- Step 4 -->
+<div class="flex flex-col items-center relative group w-1/5" data-step="4">
+<div class="progress-icon w-8 h-8 rounded-full bg-surface-container-high border border-outline-variant flex items-center justify-center mb-xs z-10">
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]" data-icon="science">science</span>
+</div>
+<span class="font-label-caps text-label-caps text-on-surface-variant">Test</span>
+<div class="progress-line absolute top-4 left-1/2 w-full h-[1px] bg-outline-variant/30" id="line-4"></div>
+</div>
+<!-- Step 5 -->
+<div class="flex flex-col items-center relative group w-1/5" data-step="5">
+<div class="progress-icon w-8 h-8 rounded-full bg-surface-container-high border border-outline-variant flex items-center justify-center mb-xs z-10">
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]" data-icon="publish">publish</span>
+</div>
+<span class="font-label-caps text-label-caps text-on-surface-variant">Submit</span>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 xl:grid-cols-3 gap-lg">
+<!-- Left Column: Checklists -->
+<div class="xl:col-span-2 space-y-lg">
+<!-- 1. Before you code -->
+<section class="bg-[#18181D] rounded-xl border border-outline-variant overflow-hidden glow-hover transition-shadow" data-section="1">
+<div class="px-base py-md border-b border-outline-variant bg-surface-container-low flex items-center gap-sm">
+<span class="material-symbols-outlined text-tertiary" data-icon="book">book</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">1. Before you code</h2>
+<span class="ml-auto text-xs font-label-caps text-on-surface-variant bg-surface-container-high px-2 py-0.5 rounded">Prerequisites</span>
+</div>
+<div class="p-base space-y-sm">
+<p class="font-body-base text-body-base text-on-surface-variant mb-4">Review these resources to understand the historical context of sub-app mounting.</p>
+<label class="flex items-start gap-md p-sm hover:bg-surface-container/50 rounded-lg cursor-pointer checklist-item-transition group">
+<input class="mt-1 checklist-checkbox w-4 h-4 rounded-sm border-outline-variant text-tertiary bg-transparent focus:ring-tertiary focus:ring-offset-surface task-checkbox" data-id="task-1-1" type="checkbox"/>
+<div class="flex-1 font-body-base text-body-base text-on-surface-variant">
+                                    Read <code class="font-code-sm text-code-sm text-on-surface bg-surface-container-high px-1 rounded mx-1">lib/application.js</code> mounting logic.
+                                </div>
+<a class="opacity-0 group-hover:opacity-100 transition-opacity text-primary-container hover:text-primary link-hover-effect" href="#"><span class="material-symbols-outlined text-[18px]" data-icon="open_in_new">open_in_new</span></a>
+</label>
+<label class="flex items-start gap-md p-sm hover:bg-surface-container/50 rounded-lg cursor-pointer checklist-item-transition group">
+<input class="mt-1 checklist-checkbox w-4 h-4 rounded-sm border-outline-variant text-tertiary bg-transparent focus:ring-tertiary focus:ring-offset-surface task-checkbox" data-id="task-1-2" type="checkbox"/>
+<div class="flex-1 font-body-base text-body-base text-on-surface-variant">
+                                    Review GitStory milestone: <span class="italic">"Introduction of express.Router"</span>
+</div>
+<a class="opacity-0 group-hover:opacity-100 transition-opacity text-primary-container hover:text-primary link-hover-effect" href="#"><span class="material-symbols-outlined text-[18px]" data-icon="history">history</span></a>
+</label>
+</div>
+</section>
+<!-- 2. Reproduce and investigate -->
+<section class="bg-[#18181D] rounded-xl border border-primary-container/30 shadow-[0_4px_24px_rgba(129,140,248,0.05)] overflow-hidden relative glow-hover transition-shadow" data-section="2">
+<!-- Active indicator line -->
+<div class="absolute left-0 top-0 bottom-0 w-[3px] bg-primary-container"></div>
+<div class="px-base py-md border-b border-outline-variant bg-surface-container-low flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary-container animate-pulse" data-icon="search">search</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">2. Reproduce and investigate</h2>
+<span class="ml-auto text-xs font-label-caps text-primary-container bg-primary-container/10 border border-primary-container/20 px-2 py-0.5 rounded">Active</span>
+</div>
+<div class="p-base space-y-sm">
+<label class="flex items-start gap-md p-sm hover:bg-surface-container/50 rounded-lg cursor-pointer checklist-item-transition group">
+<input class="mt-1 checklist-checkbox w-4 h-4 rounded-sm border-outline-variant text-tertiary bg-transparent focus:ring-tertiary focus:ring-offset-surface task-checkbox" data-id="task-2-1" type="checkbox"/>
+<div class="flex-1 font-body-base text-body-base text-on-surface">
+                                    Reproduce the issue locally using the provided snippet in #7427.
+                                </div>
+<button class="opacity-0 group-hover:opacity-100 transition-opacity text-primary-container hover:text-primary text-xs font-label-caps border border-outline-variant rounded px-2 py-1 hover:border-primary-container">Copy Snippet</button>
+</label>
+<label class="flex items-start gap-md p-sm hover:bg-surface-container/50 rounded-lg cursor-pointer checklist-item-transition group">
+<input class="mt-1 checklist-checkbox w-4 h-4 rounded-sm border-outline-variant text-tertiary bg-transparent focus:ring-tertiary focus:ring-offset-surface task-checkbox" data-id="task-2-2" type="checkbox"/>
+<div class="flex-1 font-body-base text-body-base text-on-surface">
+                                    Set debugger breakpoint in <code class="font-code-sm text-code-sm text-secondary bg-surface-container-high px-1 rounded mx-1">router.use()</code>.
+                                </div>
+</label>
+<label class="flex items-start gap-md p-sm hover:bg-surface-container/50 rounded-lg cursor-pointer checklist-item-transition group">
+<input class="mt-1 checklist-checkbox w-4 h-4 rounded-sm border-outline-variant text-tertiary bg-transparent focus:ring-tertiary focus:ring-offset-surface task-checkbox" data-id="task-2-3" type="checkbox"/>
+<div class="flex-1 font-body-base text-body-base text-on-surface">
+                                    Trace the mounting flow to identify where the sub-app's prototype is lost.
+                                </div>
+</label>
+</div>
+</section>
+</div>
+<!-- Right Column: Context & Actions -->
+<div class="space-y-lg">
+<!-- 3. What you're likely going to change -->
+<section class="bg-[#18181D] rounded-xl border border-outline-variant overflow-hidden glow-hover transition-shadow">
+<div class="px-base py-md border-b border-outline-variant bg-surface-container-low">
+<h2 class="font-headline-sm text-headline-sm text-on-surface flex items-center gap-sm">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="folder_open">folder_open</span>
+                                Target Files
+                            </h2>
+</div>
+<div class="p-base">
+<div class="flex items-center justify-between p-sm border border-outline-variant/50 rounded-lg bg-surface-container-lowest mb-sm group cursor-pointer hover:border-primary-container/50 transition-colors">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-secondary text-[18px]" data-icon="javascript">javascript</span>
+<span class="font-code-sm text-code-sm text-on-surface">lib/application.js</span>
+</div>
+<button class="text-xs font-label-caps text-primary-container group-hover:text-primary transition-colors flex items-center gap-xs link-hover-effect">
+                                    Explore <span class="material-symbols-outlined text-[14px]" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+                                Modifications will likely occur near the <code class="text-on-surface">app.use()</code> implementation to ensure sub-app prototypes are merged or retained before attaching to the router.
+                            </p>
+</div>
+</section>
+<!-- 4. Suggested Direction (AI) -->
+<section class="bg-surface-container-low rounded-xl border border-secondary/30 overflow-hidden relative shadow-[0_4px_24px_rgba(98,37,155,0.1)]">
+<div class="px-base py-md border-b border-outline-variant/50 flex items-center gap-sm bg-gradient-to-r from-secondary-container/20 to-transparent">
+<span class="material-symbols-outlined text-secondary" data-icon="auto_awesome">auto_awesome</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Possible Approach</h2>
+</div>
+<div class="p-base">
+<p class="font-body-base text-body-base text-on-surface mb-md">
+                                Consider checking if the passed handler to <code class="font-code-sm text-code-sm text-on-surface bg-surface-container-high px-1 rounded">router.use()</code> is an instance of an Express app before attempting to mount it as a standard middleware function.
+                            </p>
+<div class="bg-surface-container-lowest rounded border border-outline-variant/30 p-sm mb-md">
+<pre class="font-code-sm text-code-sm text-on-surface-variant overflow-x-auto"><code>if (fn.name === 'app' &amp;&amp; fn.handle) {
+  // restore prototype logic here
+}</code></pre>
+</div>
+<div class="flex items-start gap-sm p-sm rounded bg-error-container/10 border border-error/20">
+<span class="material-symbols-outlined text-error text-[16px] mt-0.5" data-icon="info">info</span>
+<p class="font-body-sm text-body-sm text-error/90">
+                                    AI suggestions are experimental. Verify against Express's specific internal architecture before implementation.
+                                </p>
+</div>
+</div>
+</section>
+<!-- 5. Verification -->
+<section class="bg-[#18181D] rounded-xl border border-outline-variant overflow-hidden glow-hover transition-shadow" data-section="4">
+<div class="px-base py-md border-b border-outline-variant bg-surface-container-low">
+<h2 class="font-headline-sm text-headline-sm text-on-surface flex items-center gap-sm">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="fact_check">fact_check</span>
+                                Verification
+                            </h2>
+</div>
+<div class="p-base space-y-sm">
+<label class="flex items-start gap-md p-sm hover:bg-surface-container/50 rounded-lg cursor-pointer checklist-item-transition group">
+<input class="mt-1 checklist-checkbox w-4 h-4 rounded-sm border-outline-variant text-tertiary bg-transparent focus:ring-tertiary focus:ring-offset-surface task-checkbox" data-id="task-4-1" type="checkbox"/>
+<div class="flex-1 font-body-sm text-body-sm text-on-surface">
+                                    Add regression tests in <code class="font-code-sm text-code-sm">test/app.use.js</code>
+</div>
+</label>
+<label class="flex items-start gap-md p-sm hover:bg-surface-container/50 rounded-lg cursor-pointer checklist-item-transition group">
+<input class="mt-1 checklist-checkbox w-4 h-4 rounded-sm border-outline-variant text-tertiary bg-transparent focus:ring-tertiary focus:ring-offset-surface task-checkbox" data-id="task-4-2" type="checkbox"/>
+<div class="flex-1 font-body-sm text-body-sm text-on-surface">
+                                    Run full test suite (<code class="font-code-sm text-code-sm">npm test</code>)
+                                </div>
+</label>
+</div>
+</section>
+</div>
+</div>
+<!-- Bottom Action Bar (Pre-PR) -->
+<div class="mt-xl p-base bg-surface-container-low border border-outline-variant rounded-xl flex items-center justify-between">
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-on-surface-variant text-[32px]" data-icon="task_alt">task_alt</span>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Ready to submit?</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Ensure all steps are completed before opening a PR.</p>
+</div>
+</div>
+<div class="flex gap-md">
+<button class="px-base py-sm rounded-DEFAULT border border-outline-variant text-on-surface font-body-medium text-body-medium hover:bg-surface-container-high transition-colors">
+                        View Repository
+                    </button>
+<button class="px-base py-sm rounded-DEFAULT bg-primary-container text-[#000000] font-body-medium text-body-medium hover:opacity-90 transition-opacity flex items-center gap-xs">
+                        Open on GitHub
+                        <span class="material-symbols-outlined text-[18px]" data-icon="open_in_new">open_in_new</span>
+</button>
+</div>
+</div>
+</main>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const checkboxes = document.querySelectorAll('.task-checkbox');
+        
+        // Load state
+        checkboxes.forEach(cb => {
+            const id = cb.getAttribute('data-id');
+            const stored = localStorage.getItem(`repomind-${id}`);
+            if (stored !== null) {
+                cb.checked = stored === 'true';
+            }
+        });
+
+        const updateProgress = () => {
+            const sections = {
+                1: [ 'task-1-1', 'task-1-2' ],
+                2: [ 'task-2-1', 'task-2-2', 'task-2-3' ],
+                4: [ 'task-4-1', 'task-4-2' ]
+            };
+
+            let currentActiveStep = 1;
+
+            // Check sections
+            const s1Done = sections[1].every(id => document.querySelector(`[data-id="${id}"]`).checked);
+            const s2Done = sections[2].every(id => document.querySelector(`[data-id="${id}"]`).checked);
+            const s4Done = sections[4].every(id => document.querySelector(`[data-id="${id}"]`).checked);
+
+            if (s1Done) currentActiveStep = 2;
+            if (s1Done && s2Done) currentActiveStep = 3;
+            if (s1Done && s2Done && s4Done) currentActiveStep = 5;
+
+            // Update UI lines and icons based on steps
+            for(let i = 1; i <= 4; i++) {
+                const line = document.getElementById(`line-${i}`);
+                if(line) {
+                    if(currentActiveStep > i) {
+                        line.classList.replace('bg-outline-variant/30', 'bg-tertiary');
+                    } else if (currentActiveStep === i) {
+                        line.classList.replace('bg-outline-variant/30', 'bg-tertiary');
+                        line.style.opacity = '0.5'; // partial fill visual
+                    } else {
+                        line.classList.replace('bg-tertiary', 'bg-outline-variant/30');
+                        line.style.opacity = '1';
+                    }
+                }
+            }
+        };
+
+        checkboxes.forEach(cb => {
+            cb.addEventListener('change', (e) => {
+                const id = e.target.getAttribute('data-id');
+                localStorage.setItem(`repomind-${id}`, e.target.checked);
+                updateProgress();
+            });
+        });
+
+        // Init
+        updateProgress();
+    });
+</script>
+</body></html>
