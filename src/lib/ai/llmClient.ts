@@ -50,9 +50,9 @@ async function callGeminiNative<T>(
   messages: LLMMessage[],
   options: LLMOptions
 ): Promise<T> {
-  const preferredModel = process.env.GEMINI_MODEL || 'gemini-3.5-flash';
+  const preferredModel = process.env.GEMINI_MODEL || 'gemini-3.5-flash-lite';
   const candidateModels = Array.from(
-    new Set([preferredModel, 'gemini-3.5-flash', 'gemini-3.6-flash', 'gemini-3.7-flash', 'gemini-flash-latest'])
+    new Set([preferredModel, 'gemini-3.5-flash-lite', 'gemini-3.1-flash-lite', 'gemini-3.5-flash', 'gemini-3.7-flash'])
   );
 
   const systemPrompt = messages.find((m) => m.role === 'system')?.content || '';
@@ -62,7 +62,7 @@ async function callGeminiNative<T>(
     .join('\n\n');
 
   let lastErrorText = '';
-  const timeoutMs = options.timeoutMs ?? 25000;
+  const timeoutMs = options.timeoutMs ?? 20000;
 
   for (const model of candidateModels) {
     const controller = new AbortController();
@@ -82,7 +82,7 @@ async function callGeminiNative<T>(
           ],
           generationConfig: {
             temperature: options.temperature ?? 0.1,
-            maxOutputTokens: options.maxTokens ?? 4096,
+            maxOutputTokens: options.maxTokens ?? 2048,
             responseMimeType: 'application/json',
           },
         }),
@@ -109,8 +109,8 @@ async function callGeminiNative<T>(
     } catch (err: any) {
       clearTimeout(timeoutId);
       const isTimeout = err?.name === 'AbortError' || err?.message?.includes('aborted');
-      if (isTimeout || err?.message?.includes('503') || err?.message?.includes('404')) {
-        lastErrorText = `Attempt on ${model} timed out or unavailable. Trying next model...`;
+      if (isTimeout || err?.message?.includes('503') || err?.message?.includes('404') || err?.message?.includes('429')) {
+        lastErrorText = `Attempt on ${model} timed out, rate limited, or unavailable. Trying next model...`;
         if (model !== candidateModels[candidateModels.length - 1]) {
           continue;
         }
@@ -137,7 +137,7 @@ async function callOpenAI<T>(
       model: 'gpt-4o-mini',
       messages,
       temperature: options.temperature ?? 0.1,
-      max_tokens: options.maxTokens ?? 2500,
+      max_tokens: options.maxTokens ?? 2000,
       response_format: options.jsonMode !== false ? { type: 'json_object' } : undefined,
     }),
   });
