@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>RepoMind - Issue #7427</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;600;700&amp;family=Inter:wght@400;500&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "error-container": "#93000a",
+                        "tertiary": "#4de082",
+                        "on-primary-container": "#101b8a",
+                        "outline-variant": "#454653",
+                        "surface-container-highest": "#353437",
+                        "primary": "#bdc2ff",
+                        "on-tertiary-fixed": "#00210c",
+                        "surface-dim": "#131315",
+                        "outline": "#908f9e",
+                        "surface-container-high": "#2a2a2c",
+                        "on-primary-fixed-variant": "#2f3aa3",
+                        "surface-container-lowest": "#0e0e10",
+                        "error": "#ffb4ab",
+                        "on-secondary-fixed": "#2c0051",
+                        "on-primary": "#131e8c",
+                        "secondary-container": "#62259b",
+                        "on-error": "#690005",
+                        "on-error-container": "#ffdad6",
+                        "on-tertiary-fixed-variant": "#005227",
+                        "on-surface-variant": "#c6c5d5",
+                        "primary-fixed-dim": "#bdc2ff",
+                        "surface-container-low": "#1b1b1d",
+                        "secondary-fixed": "#f0dbff",
+                        "tertiary-fixed-dim": "#4de082",
+                        "background": "#131315",
+                        "on-secondary-fixed-variant": "#62259b",
+                        "on-tertiary-container": "#003617",
+                        "secondary": "#ddb8ff",
+                        "surface-container": "#201f21",
+                        "inverse-primary": "#4953bc",
+                        "inverse-on-surface": "#313032",
+                        "tertiary-container": "#00ac58",
+                        "tertiary-fixed": "#6dfe9c",
+                        "on-background": "#e5e1e4",
+                        "inverse-surface": "#e5e1e4",
+                        "on-secondary": "#490081",
+                        "surface-variant": "#353437",
+                        "secondary-fixed-dim": "#ddb8ff",
+                        "surface-tint": "#bdc2ff",
+                        "primary-fixed": "#e0e0ff",
+                        "on-tertiary": "#003919",
+                        "on-secondary-container": "#d1a1ff",
+                        "on-primary-fixed": "#000767",
+                        "surface-bright": "#39393b",
+                        "primary-container": "#818cf8",
+                        "surface": "#131315",
+                        "on-surface": "#e5e1e4"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "inspector": "340px",
+                        "unit": "4px",
+                        "md": "12px",
+                        "xs": "4px",
+                        "sidebar-collapsed": "56px",
+                        "gutter": "1px",
+                        "lg": "24px",
+                        "xl": "32px",
+                        "base": "16px",
+                        "sm": "8px",
+                        "sidebar": "240px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Geist"],
+                        "label-caps": ["JetBrains Mono"],
+                        "body-medium": ["Inter"],
+                        "display-lg": ["Geist"],
+                        "code-sm": ["JetBrains Mono"],
+                        "code-base": ["JetBrains Mono"],
+                        "headline-sm": ["Geist"],
+                        "display-xl": ["Geist"],
+                        "body-sm": ["Inter"],
+                        "body-base": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["18px", { "lineHeight": "26px", "letterSpacing": "-0.015em", "fontWeight": "600" }],
+                        "label-caps": ["11px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "body-medium": ["14px", { "lineHeight": "22px", "letterSpacing": "-0.005em", "fontWeight": "500" }],
+                        "display-lg": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "code-sm": ["12px", { "lineHeight": "18px", "letterSpacing": "0", "fontWeight": "400" }],
+                        "code-base": ["13px", { "lineHeight": "20px", "letterSpacing": "0", "fontWeight": "400" }],
+                        "headline-sm": ["15px", { "lineHeight": "22px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "display-xl": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.025em", "fontWeight": "700" }],
+                        "body-sm": ["12px", { "lineHeight": "18px", "letterSpacing": "0", "fontWeight": "400" }],
+                        "body-base": ["14px", { "lineHeight": "22px", "letterSpacing": "-0.005em", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.fill {
+            font-variation-settings: 'FILL' 1;
+        }
+        
+        /* Markdown Styles */
+        .markdown-body h1, .markdown-body h2 { @apply text-on-surface font-headline-md mt-6 mb-4 pb-2 border-b border-outline-variant; }
+        .markdown-body p { @apply text-on-surface-variant font-body-base mb-4 leading-relaxed; }
+        .markdown-body code { @apply bg-surface-container-high text-primary font-code-sm px-1.5 py-0.5 rounded border border-outline-variant; }
+        .markdown-body pre { @apply bg-surface-container-lowest p-4 rounded-lg border border-outline-variant overflow-x-auto mb-4; }
+        .markdown-body pre code { @apply bg-transparent border-0 p-0 text-on-surface-variant; }
+        .markdown-body a { @apply text-primary hover:underline; }
+        .markdown-body ul { @apply list-disc list-inside mb-4 text-on-surface-variant font-body-base; }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #353437; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #454653; }
+        
+        /* Sparkle Animation */
+        @keyframes sparkle {
+            0% { transform: scale(0.8) rotate(0deg); opacity: 0.5; }
+            50% { transform: scale(1.2) rotate(15deg); opacity: 1; }
+            100% { transform: scale(0.8) rotate(0deg); opacity: 0.5; }
+        }
+        .sparkle-icon { animation: sparkle 2s ease-in-out infinite; }
+    </style>
+</head>
+<body class="bg-background text-on-surface flex overflow-hidden min-h-screen selection:bg-primary-container selection:text-on-primary-container">
+<!-- SideNavBar (Docked Left) -->
+<nav class="hidden md:flex flex-col h-screen fixed left-0 top-0 z-40 bg-surface dark:bg-surface border-r border-outline-variant w-sidebar">
+<!-- Header -->
+<div class="p-lg border-b border-outline-variant flex items-center gap-sm">
+<div class="w-8 h-8 rounded bg-surface-container-high flex items-center justify-center border border-outline-variant">
+<span class="material-symbols-outlined text-on-surface" style="font-size: 18px;">folder_zip</span>
+</div>
+<div>
+<h2 class="font-headline-sm text-headline-sm font-bold text-on-surface leading-none">expressjs/express</h2>
+<p class="font-label-caps text-label-caps text-on-surface-variant mt-1">Main Branch</p>
+</div>
+</div>
+<!-- Tabs -->
+<div class="flex-1 overflow-y-auto py-sm px-sm flex flex-col gap-unit">
+<a class="flex items-center gap-md px-sm py-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors duration-200 group" href="#">
+<span class="material-symbols-outlined" style="font-size: 20px;">rocket_launch</span>
+<span class="font-label-caps text-label-caps tracking-wider">Start Contributing</span>
+</a>
+<!-- ACTIVE TAB -->
+<a class="flex items-center gap-md px-sm py-2 rounded-lg text-primary border-l-4 border-primary bg-primary-container/10 group" href="#">
+<span class="material-symbols-outlined fill" style="font-size: 20px;">bug_report</span>
+<span class="font-label-caps text-label-caps tracking-wider">Issues</span>
+</a>
+<a class="flex items-center gap-md px-sm py-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors duration-200 group" href="#">
+<span class="material-symbols-outlined" style="font-size: 20px;">psychology</span>
+<span class="font-label-caps text-label-caps tracking-wider">Understand Code</span>
+</a>
+<a class="flex items-center gap-md px-sm py-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors duration-200 group" href="#">
+<span class="material-symbols-outlined" style="font-size: 20px;">search_check</span>
+<span class="font-label-caps text-label-caps tracking-wider">Investigations</span>
+</a>
+<a class="flex items-center gap-md px-sm py-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors duration-200 group" href="#">
+<span class="material-symbols-outlined" style="font-size: 20px;">account_tree</span>
+<span class="font-label-caps text-label-caps tracking-wider">Architecture</span>
+</a>
+<a class="flex items-center gap-md px-sm py-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors duration-200 group" href="#">
+<span class="material-symbols-outlined" style="font-size: 20px;">history</span>
+<span class="font-label-caps text-label-caps tracking-wider">GitStory</span>
+</a>
+<a class="flex items-center gap-md px-sm py-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors duration-200 group" href="#">
+<span class="material-symbols-outlined" style="font-size: 20px;">auto_fix_high</span>
+<span class="font-label-caps text-label-caps tracking-wider">SkillPatch</span>
+</a>
+</div>
+<!-- CTA -->
+<div class="p-md mt-auto border-t border-outline-variant">
+<button class="w-full bg-surface-container-high hover:bg-surface-bright text-on-surface border border-outline-variant rounded-lg py-2 flex items-center justify-center gap-sm transition-colors">
+<span class="material-symbols-outlined" style="font-size: 18px;">add</span>
+<span class="font-label-caps text-label-caps">New Investigation</span>
+</button>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col h-screen md:ml-sidebar relative z-10 bg-background">
+<!-- TopAppBar (Floating/Sticky) -->
+<header class="flex justify-between items-center h-16 px-lg sticky top-0 z-50 w-full bg-surface/75 backdrop-blur-md border-b border-outline-variant">
+<div class="flex items-center gap-lg">
+<!-- Mobile Menu Trigger -->
+<button class="md:hidden text-on-surface-variant hover:text-on-surface">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">hub</span>
+<span class="font-display-lg text-display-lg font-bold text-on-surface tracking-tight">RepoMind</span>
+</div>
+</div>
+<!-- Global Search & Actions -->
+<div class="flex items-center gap-md">
+<div class="hidden lg:flex items-center bg-surface-container-lowest border border-outline-variant rounded-full px-sm py-1.5 focus-within:border-primary focus-within:ring-1 focus-within:ring-primary transition-all">
+<span class="material-symbols-outlined text-on-surface-variant ml-2" style="font-size: 18px;">search</span>
+<input class="bg-transparent border-none text-on-surface text-body-medium focus:ring-0 w-64 placeholder:text-on-surface-variant/50 ml-2" placeholder="Search codebase, issues..." type="text"/>
+<div class="flex gap-1 mr-1">
+<kbd class="bg-surface-container-high text-on-surface-variant font-code-sm px-1.5 py-0.5 rounded border border-outline-variant text-[10px]">⌘</kbd>
+<kbd class="bg-surface-container-high text-on-surface-variant font-code-sm px-1.5 py-0.5 rounded border border-outline-variant text-[10px]">K</kbd>
+</div>
+</div>
+<div class="flex items-center gap-sm ml-2">
+<a class="text-on-surface-variant hover:text-primary transition-colors font-headline-sm text-headline-sm hidden sm:block" href="#">Docs</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-headline-sm text-headline-sm hidden sm:block mr-2" href="#">Settings</a>
+<button class="w-8 h-8 rounded-full hover:bg-surface-container flex items-center justify-center text-on-surface-variant transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-1 right-1 w-2 h-2 bg-primary rounded-full border border-surface"></span>
+</button>
+<button class="w-8 h-8 rounded-full border border-outline-variant overflow-hidden ml-2 cursor-pointer active:opacity-70">
+<img class="w-full h-full object-cover" data-alt="A macro photograph of a sleek, dark metallic surface with an etched glowing blue circuit pattern. The lighting is dramatic and low-key, creating a moody, futuristic developer aesthetic with deep shadows and sharp, luminous cyan accents." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBXfgE8Ru1E8oVT8WtBhd09MP_Y4K7rrH2H7mTxAAdAJ3hr-zLv720stpd8dLtxTRfqbVe7ajpSHIZYbt927lrjOzYfj41iq8CreIk1Ur7jKqED8AApV9ueommmNvtVDGBPn1vDG8G0aQy2ZdyJyVTHcVfjNnGYbO_s-IDO1Di0oxOzhxTGG467ddHCcg3w0XgMUD4mM7SqiO7jZVUsr8aNp08aEs4THpvSWdXqecMQpBjdN5syD4Y1"/>
+</button>
+</div>
+</div>
+</header>
+<!-- Canvas / Split Pane -->
+<div class="flex-1 flex flex-col lg:flex-row overflow-hidden relative">
+<!-- Left Pane: Issue Content -->
+<div class="flex-1 overflow-y-auto border-r border-outline-variant/0 lg:border-outline-variant flex flex-col">
+<!-- Back Navigation & Breadcrumb -->
+<div class="px-lg py-md border-b border-outline-variant bg-surface-dim/50 flex items-center gap-sm sticky top-0 z-10 backdrop-blur-sm">
+<button class="text-on-surface-variant hover:text-primary transition-colors flex items-center text-sm font-body-medium">
+<span class="material-symbols-outlined mr-1" style="font-size: 16px;">arrow_back</span>
+                        Back to Issues
+                    </button>
+<span class="text-outline-variant">/</span>
+<span class="text-on-surface font-code-sm">#7427</span>
+</div>
+<!-- Issue Canvas -->
+<div class="p-lg max-w-4xl mx-auto w-full">
+<!-- Issue Header -->
+<div class="mb-xl">
+<div class="flex items-start justify-between gap-4 mb-4">
+<h1 class="font-display-xl text-display-xl font-bold text-on-surface leading-tight">
+                                Fix route parameters parsing with special characters
+                            </h1>
+</div>
+<div class="flex flex-wrap items-center gap-x-6 gap-y-2 text-on-surface-variant font-body-medium">
+<div class="flex items-center gap-2">
+<span class="flex items-center gap-1 text-tertiary bg-tertiary/10 px-2 py-1 rounded-full border border-tertiary/20 text-xs font-semibold">
+<span class="material-symbols-outlined fill" style="font-size: 14px;">adjust</span>
+                                    Open
+                                </span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined" style="font-size: 16px;">person</span>
+<span class="font-code-sm text-on-surface">johndoe</span>
+<span>opened this issue 3 days ago</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined" style="font-size: 16px;">forum</span>
+<span>4 comments</span>
+</div>
+<!-- Tags -->
+<div class="flex gap-2 ml-auto">
+<span class="bg-surface-container-high text-on-surface-variant px-2 py-0.5 rounded text-xs font-code-sm border border-outline-variant">bug</span>
+<span class="bg-surface-container-high text-on-surface-variant px-2 py-0.5 rounded text-xs font-code-sm border border-outline-variant">router</span>
+</div>
+</div>
+</div>
+<!-- Issue Body (Markdown) -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg mb-xl relative">
+<div class="absolute top-4 right-4 text-outline-variant">
+<span class="material-symbols-outlined" style="font-size: 20px;">format_quote</span>
+</div>
+<div class="markdown-body">
+<p>When using Express v4.x, if a route parameter contains certain encoded special characters (like <code>%2F</code> for slash, or <code>%2B</code> for plus), the router fails to decode them correctly before passing them to the request handler, resulting in a 404 or incorrect parameter matching.</p>
+<h2>Steps to reproduce</h2>
+<ol class="list-decimal list-inside mb-4 text-on-surface-variant font-body-base space-y-1">
+<li>Create a basic express app with a parametrized route: <code>app.get('/api/users/:id', ...)</code></li>
+<li>Send a request to <code>/api/users/user%2Bname</code></li>
+<li>Check the value of <code>req.params.id</code></li>
+</ol>
+<h2>Expected Behavior</h2>
+<p>The parameter <code>req.params.id</code> should be correctly decoded as <code>user+name</code>.</p>
+<h2>Actual Behavior</h2>
+<p>It remains encoded as <code>user%2Bname</code>, breaking downstream logic that expects the decoded string.</p>
+<h2>Code Snippet</h2>
+<pre><code>const express = require('express');
+const app = express();
+
+app.get('/user/:id', (req, res) =&gt; {
+    // req.params.id is not fully decoded if it contains %2B
+    console.log(req.params.id); 
+    res.send(req.params.id);
+});
+
+app.listen(3000);</code></pre>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Pane: AI Context & Actions (Inspector) -->
+<div class="w-full lg:w-inspector bg-surface border-l border-outline-variant flex flex-col shrink-0 h-full relative z-20 shadow-[-8px_0_32px_rgba(0,0,0,0.2)] lg:shadow-none">
+<div class="p-lg flex-1 overflow-y-auto">
+<!-- AI Insight Header -->
+<div class="flex items-center gap-sm mb-6">
+<div class="w-8 h-8 rounded-full bg-primary-container/20 border border-primary/30 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary sparkle-icon" style="font-size: 16px;">auto_awesome</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-primary">AI Context</h3>
+</div>
+<!-- Where it lives (Architecture Mapping) -->
+<div class="mb-8">
+<h4 class="font-label-caps text-label-caps text-on-surface-variant mb-4 tracking-widest uppercase">Related Files</h4>
+<div class="space-y-3">
+<!-- Node 1 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-3 hover:border-secondary-container transition-colors cursor-pointer group">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-secondary-container/20 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined" style="font-size: 18px;">account_tree</span>
+</div>
+<div class="flex-1 min-w-0">
+<p class="font-code-sm text-on-surface truncate">lib/router/index.js</p>
+<p class="font-body-sm text-on-surface-variant mt-0.5">Core Router Logic</p>
+</div>
+<span class="material-symbols-outlined text-outline-variant group-hover:text-secondary opacity-0 group-hover:opacity-100 transition-opacity" style="font-size: 16px;">arrow_forward</span>
+</div>
+</div>
+<!-- Node 2 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-3 hover:border-primary-container transition-colors cursor-pointer group">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-primary-container/20 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" style="font-size: 18px;">apps</span>
+</div>
+<div class="flex-1 min-w-0">
+<p class="font-code-sm text-on-surface truncate">lib/application.js</p>
+<p class="font-body-sm text-on-surface-variant mt-0.5">App Instance</p>
+</div>
+<span class="material-symbols-outlined text-outline-variant group-hover:text-primary opacity-0 group-hover:opacity-100 transition-opacity" style="font-size: 16px;">arrow_forward</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Difficulty/Complexity -->
+<div class="mb-8 p-4 rounded-lg bg-surface-container-high border border-outline-variant">
+<div class="flex justify-between items-center mb-2">
+<span class="font-body-sm text-on-surface-variant">Estimated Complexity</span>
+<span class="font-code-sm text-tertiary">Medium</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container-lowest rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-r from-tertiary to-primary w-2/5"></div>
+</div>
+<p class="font-body-sm text-on-surface-variant mt-3 leading-snug">
+                            Requires modifying the regex parameter parser in <code class="text-on-surface font-code-sm bg-surface-container-lowest px-1 rounded">lib/router/index.js</code>. Ensure backward compatibility with existing route definitions.
+                        </p>
+</div>
+</div>
+<!-- Sticky Actions Footer -->
+<div class="p-lg border-t border-outline-variant bg-surface/90 backdrop-blur-md">
+<!-- Primary CTA -->
+<button class="w-full bg-gradient-to-r from-primary-container to-secondary-container hover:from-primary hover:to-secondary text-on-primary-container font-headline-sm text-headline-sm font-bold py-3 px-4 rounded-lg flex items-center justify-center gap-2 mb-3 shadow-[0_0_15px_rgba(129,140,248,0.3)] transition-all transform hover:scale-[1.02] active:scale-[0.98]">
+<span class="material-symbols-outlined sparkle-icon" style="font-size: 18px;">psychology</span>
+                        Understand this issue
+                        <span class="material-symbols-outlined ml-1" style="font-size: 18px;">arrow_forward</span>
+</button>
+<!-- Secondary Action -->
+<a class="w-full bg-transparent border border-outline-variant hover:border-outline hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-body-medium py-2.5 px-4 rounded-lg flex items-center justify-center gap-2 transition-colors" href="#">
+<svg aria-hidden="true" class="w-4 h-4 fill-current" viewbox="0 0 24 24"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"></path></svg>
+                        Open on GitHub
+                        <span class="material-symbols-outlined ml-auto text-outline-variant" style="font-size: 16px;">open_in_new</span>
+</a>
+</div>
+</div>
+</div>
+</main>
+</body></html>

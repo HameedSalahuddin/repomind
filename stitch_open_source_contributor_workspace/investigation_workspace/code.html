@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>RepoMind - Investigation Workspace</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&amp;family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&amp;family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "error-container": "#93000a",
+                        "tertiary": "#4de082",
+                        "on-primary-container": "#101b8a",
+                        "outline-variant": "#454653",
+                        "surface-container-highest": "#353437",
+                        "primary": "#bdc2ff",
+                        "on-tertiary-fixed": "#00210c",
+                        "surface-dim": "#131315",
+                        "outline": "#908f9e",
+                        "surface-container-high": "#2a2a2c",
+                        "on-primary-fixed-variant": "#2f3aa3",
+                        "surface-container-lowest": "#0e0e10",
+                        "error": "#ffb4ab",
+                        "on-secondary-fixed": "#2c0051",
+                        "on-primary": "#131e8c",
+                        "secondary-container": "#62259b",
+                        "on-error": "#690005",
+                        "on-error-container": "#ffdad6",
+                        "on-tertiary-fixed-variant": "#005227",
+                        "on-surface-variant": "#c6c5d5",
+                        "primary-fixed-dim": "#bdc2ff",
+                        "surface-container-low": "#1b1b1d",
+                        "secondary-fixed": "#f0dbff",
+                        "tertiary-fixed-dim": "#4de082",
+                        "background": "#131315",
+                        "on-secondary-fixed-variant": "#62259b",
+                        "on-tertiary-container": "#003617",
+                        "secondary": "#ddb8ff",
+                        "surface-container": "#201f21",
+                        "inverse-primary": "#4953bc",
+                        "inverse-on-surface": "#313032",
+                        "tertiary-container": "#00ac58",
+                        "tertiary-fixed": "#6dfe9c",
+                        "on-background": "#e5e1e4",
+                        "inverse-surface": "#e5e1e4",
+                        "on-secondary": "#490081",
+                        "surface-variant": "#353437",
+                        "secondary-fixed-dim": "#ddb8ff",
+                        "surface-tint": "#bdc2ff",
+                        "primary-fixed": "#e0e0ff",
+                        "on-tertiary": "#003919",
+                        "on-secondary-container": "#d1a1ff",
+                        "on-primary-fixed": "#000767",
+                        "surface-bright": "#39393b",
+                        "primary-container": "#818cf8",
+                        "surface": "#131315",
+                        "on-surface": "#e5e1e4"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "inspector": "340px",
+                        "unit": "4px",
+                        "md": "12px",
+                        "xs": "4px",
+                        "sidebar-collapsed": "56px",
+                        "gutter": "1px",
+                        "lg": "24px",
+                        "xl": "32px",
+                        "base": "16px",
+                        "sm": "8px",
+                        "sidebar": "240px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Geist"],
+                        "label-caps": ["JetBrains Mono"],
+                        "body-medium": ["Inter"],
+                        "display-lg": ["Geist"],
+                        "code-sm": ["JetBrains Mono"],
+                        "code-base": ["JetBrains Mono"],
+                        "headline-sm": ["Geist"],
+                        "display-xl": ["Geist"],
+                        "body-sm": ["Inter"],
+                        "body-base": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["18px", { "lineHeight": "26px", "letterSpacing": "-0.015em", "fontWeight": "600" }],
+                        "label-caps": ["11px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "body-medium": ["14px", { "lineHeight": "22px", "letterSpacing": "-0.005em", "fontWeight": "500" }],
+                        "display-lg": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "code-sm": ["12px", { "lineHeight": "18px", "letterSpacing": "0", "fontWeight": "400" }],
+                        "code-base": ["13px", { "lineHeight": "20px", "letterSpacing": "0", "fontWeight": "400" }],
+                        "headline-sm": ["15px", { "lineHeight": "22px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "display-xl": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.025em", "fontWeight": "700" }],
+                        "body-sm": ["12px", { "lineHeight": "18px", "letterSpacing": "0", "fontWeight": "400" }],
+                        "body-base": ["14px", { "lineHeight": "22px", "letterSpacing": "-0.005em", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style type="text/tailwindcss">
+        @layer utilities {
+            .glass-panel {
+                @apply bg-[#18181D]/75 backdrop-blur-[12px] border border-white/5;
+            }
+            .scrollbar-hide::-webkit-scrollbar {
+                display: none;
+            }
+            .scrollbar-hide {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+            .glow-effect {
+                @apply relative;
+            }
+            .glow-effect::before {
+                content: '';
+                @apply absolute -inset-[1px] bg-gradient-to-r from-primary-container/30 to-secondary-container/30 rounded-lg blur-[2px] opacity-0 transition-opacity duration-300;
+                z-index: -1;
+            }
+            .glow-effect:hover::before {
+                @apply opacity-100;
+            }
+            
+            /* Custom Checkbox */
+            .task-checkbox:checked + label .check-icon {
+                @apply opacity-100 scale-100;
+            }
+            .task-checkbox:checked + label .box {
+                @apply bg-tertiary-container border-tertiary-container;
+            }
+        }
+    </style>
+</head>
+<body class="bg-[#0D0D0F] text-on-surface h-screen overflow-hidden flex flex-col font-body-base selection:bg-primary-container/30">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center h-16 px-lg sticky top-0 z-50 w-full bg-surface/75 backdrop-blur-md border-b border-[#1F1F23]">
+<div class="flex items-center gap-lg">
+<span class="font-display-lg text-display-lg font-bold text-on-surface">RepoMind</span>
+<!-- Breadcrumb -->
+<div class="hidden md:flex items-center gap-sm font-code-sm text-code-sm text-on-surface-variant">
+<span>expressjs/express</span>
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+<span>Investigations</span>
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+<span class="text-primary">#7427</span>
+</div>
+</div>
+<!-- Right Side -->
+<div class="flex items-center gap-md">
+<nav class="hidden md:flex items-center gap-lg mr-lg">
+<a class="text-on-surface-variant hover:text-primary transition-colors font-headline-sm text-headline-sm" href="#">Docs</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-headline-sm text-headline-sm" href="#">Settings</a>
+</nav>
+<button class="w-8 h-8 flex items-center justify-center rounded text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="w-8 h-8 rounded-full overflow-hidden border border-outline-variant hover:border-outline transition-colors">
+<img class="w-full h-full object-cover" data-alt="A macro shot of a sleek, dark metallic surface with an abstract, glowing blue geometric pattern reminiscent of a circuit board. The lighting is dramatic, casting deep shadows and highlighting the brushed metal texture. The overall mood is high-tech, precise, and futuristic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBg5HSxcSCqEWg8Fo1vlZ1eN5OfPs5qq_lmBIFzjl_hVzC7TwLw3-uL3DWD-iiCW7cTgkIV_A7jxjufta87fPxXVlVVyzC86ckvKzVtlm-kQ2-_k-nfGwpgls8eUraSfEW0TIok6WtivmbFfKkfcoQS8Kz7b221NzQXWyDZ4X64BUEJb9nR0rXy4snf0BORFG_F8ICthP6_9TWvA50G0PWwWRvdwrfIYGAFa1ITp1bbkKdQDVH5AIow"/>
+</button>
+</div>
+</header>
+<!-- Main Workspace Layout -->
+<div class="flex flex-1 overflow-hidden">
+<!-- SideNavBar -->
+<aside class="flex flex-col h-full w-[240px] bg-[#18181D] border-r border-[#1F1F23] shrink-0 z-40 hidden md:flex">
+<!-- Header/Repo Info -->
+<div class="p-base border-b border-[#1F1F23]">
+<div class="flex items-center gap-sm mb-xs">
+<img class="w-6 h-6 rounded bg-surface" data-alt="A minimalist logo design featuring a stylized, abstract 'E' shape formed by glowing white lines on a pitch-black background. The lines are precise and geometric, conveying a sense of speed and efficiency. The style is modern, technical, and clean." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCuEAQyHGhA2nFHvDjrhRRYYDylnhEzJseJ_qh_1sxUsefIuZGiDAXyu6xyz4dTvWzXkSQJ0cBs5lccl8dsex75Nnjaws0sltAdnnBq4OKflVOiI4hfrhDOpTwVM54kcGPAq_tGQnGaHBowKe6S6BzHQViixGzOZCufO1ma4Z_47B6jRyJmTYZw6ZKHlQUoFv7WyRt74Xu9NIRK23g0nqBcMi2Q62s6uGdbAIlyZA7pHrRxNULGcunX"/>
+<h2 class="font-headline-sm text-headline-sm font-bold text-on-surface truncate">expressjs/express</h2>
+</div>
+<div class="flex items-center gap-xs text-on-surface-variant">
+<span class="material-symbols-outlined text-[14px]">call_split</span>
+<span class="font-code-sm text-code-sm">Main Branch</span>
+</div>
+</div>
+<!-- CTA -->
+<div class="p-base">
+<button class="w-full flex items-center justify-center gap-sm py-sm bg-primary-container/10 border border-primary-container/30 text-primary rounded font-headline-sm text-headline-sm hover:bg-primary-container/20 transition-colors duration-200">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                    New Investigation
+                </button>
+</div>
+<!-- Navigation Tabs -->
+<nav class="flex-1 overflow-y-auto px-sm pb-base flex flex-col gap-unit">
+<a class="flex items-center gap-md px-sm py-sm rounded text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors duration-200 scale-95 active:scale-90 font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">rocket_launch</span>
+                    Start Contributing
+                </a>
+<a class="flex items-center gap-md px-sm py-sm rounded text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors duration-200 scale-95 active:scale-90 font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">bug_report</span>
+                    Issues
+                </a>
+<a class="flex items-center gap-md px-sm py-sm rounded text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors duration-200 scale-95 active:scale-90 font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">psychology</span>
+                    Understand Code
+                </a>
+<!-- ACTIVE TAB -->
+<a class="flex items-center gap-md px-sm py-sm rounded text-primary border-l-4 border-primary bg-primary-container/10 font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">search_check</span>
+                    Investigations
+                </a>
+<a class="flex items-center gap-md px-sm py-sm rounded text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors duration-200 scale-95 active:scale-90 font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">account_tree</span>
+                    Architecture
+                </a>
+<a class="flex items-center gap-md px-sm py-sm rounded text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors duration-200 scale-95 active:scale-90 font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">history</span>
+                    GitStory
+                </a>
+<a class="flex items-center gap-md px-sm py-sm rounded text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors duration-200 scale-95 active:scale-90 font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">auto_fix_high</span>
+                    SkillPatch
+                </a>
+</nav>
+</aside>
+<!-- Canvas Area -->
+<main class="flex-1 flex overflow-hidden relative">
+<!-- Center Content (Investigation Details) -->
+<div class="flex-1 overflow-y-auto p-lg scrollbar-hide">
+<!-- Investigation Header -->
+<div class="mb-xl max-w-4xl mx-auto">
+<div class="flex items-center gap-sm mb-md">
+<span class="px-sm py-xs bg-error-container/20 text-error border border-error-container rounded font-label-caps text-label-caps">BUG</span>
+<span class="font-code-sm text-code-sm text-on-surface-variant">Issue #7427</span>
+</div>
+<h1 class="font-display-xl text-display-xl text-on-surface mb-sm">router.use() mutates prototype chain improperly</h1>
+<div class="flex items-center gap-md text-on-surface-variant font-body-sm text-body-sm">
+<span class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-[16px]">schedule</span>
+                            Opened 2 days ago
+                        </span>
+<span class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-[16px]">account_circle</span>
+                            Reported by @dev-user
+                        </span>
+</div>
+</div>
+<!-- Main Grid Layout -->
+<div class="max-w-4xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-lg">
+<!-- Left Column (Wider) -->
+<div class="lg:col-span-2 space-y-lg">
+<!-- Section: What is happening? -->
+<section class="bg-[#18181D] border border-[#1F1F23] rounded-lg p-lg relative overflow-hidden glow-effect">
+<!-- Subtle decorative gradient top -->
+<div class="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-primary-container/50 to-transparent"></div>
+<h2 class="font-headline-md text-headline-md flex items-center gap-sm mb-md text-on-surface">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">info</span>
+                                What is happening?
+                            </h2>
+<p class="font-body-medium text-body-medium text-on-surface-variant leading-relaxed">
+                                When registering middleware via <code class="font-code-sm text-code-sm bg-surface-container-high px-1 py-0.5 rounded text-primary">router.use()</code>, the router attempts to inherit the prototype of the mounted application to support specific routing behaviors. However, if multiple routers are nested or if middleware throws an error early in the chain, the original prototype is not properly restored. This leads to downstream middleware receiving a polluted `req` object, causing intermittent `TypeError: req.someMethod is not a function` exceptions under load.
+                            </p>
+</section>
+<!-- Section: Evidence -->
+<section class="bg-[#18181D] border border-[#1F1F23] rounded-lg overflow-hidden flex flex-col">
+<div class="px-lg py-md border-b border-[#1F1F23] bg-surface-container flex items-center justify-between">
+<h2 class="font-headline-sm text-headline-sm flex items-center gap-sm text-on-surface">
+<span class="material-symbols-outlined text-tertiary">code</span>
+                                    Evidence
+                                </h2>
+<span class="font-code-sm text-code-sm text-on-surface-variant">lib/application.js</span>
+</div>
+<!-- Code Block Viewer -->
+<div class="relative bg-[#0D0D0F] overflow-x-auto font-code-base text-code-base leading-tight">
+<div class="flex py-md min-w-max">
+<!-- Line Numbers -->
+<div class="flex flex-col text-on-surface-variant/50 text-right select-none px-md border-r border-[#1F1F23] shrink-0 sticky left-0 bg-[#0D0D0F]">
+<span>210</span>
+<span>211</span>
+<span>212</span>
+<span>213</span>
+<span>214</span>
+<span>215</span>
+<span>216</span>
+<span class="text-error bg-error-container/10">217</span>
+<span class="text-error bg-error-container/10">218</span>
+<span>219</span>
+<span>220</span>
+</div>
+<!-- Code Lines -->
+<div class="flex flex-col px-md text-on-surface whitespace-pre">
+<span class="text-on-surface-variant">  // setup routing</span>
+<span> <span class="text-secondary-fixed">var</span> router = <span class="text-primary-container">this</span>._router;</span>
+<span> <span class="text-secondary-fixed">var</span> proto = req.__proto__;</span>
+<span></span>
+<span class="text-on-surface-variant">  // apply prototype</span>
+<span>  req.__proto__ = app.request;</span>
+<span></span>
+<div class="bg-error-container/10 -mx-md px-md border-l-2 border-error text-error w-full">  router.handle(req, res, <span class="text-secondary-fixed">function</span>(err) {
+    <span class="text-on-surface-variant">/* BUG: If err occurs here, proto is not restored before next() */</span></div><span>    req.__proto__ = proto;</span>
+<span>    next(err);</span>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Right Column (Sidebar-ish) -->
+<div class="space-y-lg">
+<!-- Direction / Assistant Panel -->
+<div class="glass-panel rounded-lg p-md relative">
+<!-- Subtle AI glow -->
+<div class="absolute -top-10 -right-10 w-32 h-32 bg-secondary-container/20 rounded-full blur-3xl pointer-events-none"></div>
+<div class="flex items-start gap-md mb-md">
+<div class="w-8 h-8 rounded bg-secondary-container/20 border border-secondary-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-secondary text-[18px]">auto_awesome</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-secondary mb-xs">Suggested Direction</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                                        The missing restoration occurs when <code class="text-primary text-[11px] font-code-sm">router.handle</code> yields an error abruptly. Investigate adding a `try/finally` block or attaching the restoration to an event listener on the response stream to guarantee execution.
+                                    </p>
+</div>
+</div>
+<div class="pt-sm border-t border-[#1F1F23] mt-sm">
+<div class="flex items-center justify-between font-label-caps text-label-caps text-on-surface-variant mb-xs">
+<span>Confidence Score</span>
+<span class="text-tertiary">High (85%)</span>
+</div>
+<!-- Progress bar -->
+<div class="h-1 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-tertiary w-[85%] rounded-full shadow-[0_0_8px_rgba(77,224,130,0.5)]"></div>
+</div>
+<p class="text-[10px] text-on-surface-variant/60 mt-xs italic">
+                                    Based on static analysis of main branch.
+                                </p>
+</div>
+</div>
+<!-- Checklist -->
+<div class="bg-[#18181D] border border-[#1F1F23] rounded-lg p-md">
+<h3 class="font-headline-sm text-headline-sm flex items-center gap-sm mb-md text-on-surface">
+<span class="material-symbols-outlined text-primary-container text-[18px]">fact_check</span>
+                                What should I investigate?
+                            </h3>
+<div class="space-y-sm">
+<!-- Task 1 -->
+<div class="relative flex items-start gap-sm group">
+<input class="task-checkbox sr-only" id="task1" type="checkbox"/>
+<label class="flex gap-sm cursor-pointer w-full p-sm rounded hover:bg-surface-container-high transition-colors" for="task1">
+<div class="box w-4 h-4 rounded-sm border border-outline-variant flex items-center justify-center mt-0.5 shrink-0 transition-colors">
+<span class="check-icon material-symbols-outlined text-[14px] text-on-tertiary-container opacity-0 scale-50 transition-all duration-200" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface group-hover:text-primary transition-colors">Trace router.use() handling in nested structures</span>
+</label>
+</div>
+<!-- Task 2 -->
+<div class="relative flex items-start gap-sm group">
+<input class="task-checkbox sr-only" id="task2" type="checkbox"/>
+<label class="flex gap-sm cursor-pointer w-full p-sm rounded hover:bg-surface-container-high transition-colors" for="task2">
+<div class="box w-4 h-4 rounded-sm border border-outline-variant flex items-center justify-center mt-0.5 shrink-0 transition-colors">
+<span class="check-icon material-symbols-outlined text-[14px] text-on-tertiary-container opacity-0 scale-50 transition-all duration-200" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface group-hover:text-primary transition-colors">Inspect prototype restoration mechanism</span>
+</label>
+</div>
+<!-- Task 3 -->
+<div class="relative flex items-start gap-sm group">
+<input class="task-checkbox sr-only" id="task3" type="checkbox"/>
+<label class="flex gap-sm cursor-pointer w-full p-sm rounded hover:bg-surface-container-high transition-colors" for="task3">
+<div class="box w-4 h-4 rounded-sm border border-outline-variant flex items-center justify-center mt-0.5 shrink-0 transition-colors">
+<span class="check-icon material-symbols-outlined text-[14px] text-on-tertiary-container opacity-0 scale-50 transition-all duration-200" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface group-hover:text-primary transition-colors">Review existing router test suites for error handling</span>
+</label>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom padding for scrollability -->
+<div class="h-xl"></div>
+</div>
+<!-- Right Edge Gutter (Hairline separator for potential inspector pane) -->
+<div class="w-px bg-[#1F1F23] h-full"></div>
+</main>
+</div>
+</body></html>

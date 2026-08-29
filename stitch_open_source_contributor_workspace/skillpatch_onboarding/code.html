@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>RepoMind - SkillPatch Onboarding</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-error-container": "#ffdad6",
+                        "on-primary": "#131e8c",
+                        "error-container": "#93000a",
+                        "on-secondary-container": "#d1a1ff",
+                        "tertiary-container": "#00ac58",
+                        "surface-container": "#201f21",
+                        "inverse-on-surface": "#313032",
+                        "on-secondary-fixed": "#2c0051",
+                        "surface-bright": "#39393b",
+                        "inverse-surface": "#e5e1e4",
+                        "on-primary-container": "#101b8a",
+                        "primary": "#bdc2ff",
+                        "on-error": "#690005",
+                        "inverse-primary": "#4953bc",
+                        "surface": "#131315",
+                        "surface-container-highest": "#353437",
+                        "on-tertiary-container": "#003617",
+                        "surface-container-high": "#2a2a2c",
+                        "on-secondary-fixed-variant": "#62259b",
+                        "on-surface-variant": "#c6c5d5",
+                        "secondary-fixed": "#f0dbff",
+                        "tertiary": "#4de082",
+                        "on-primary-fixed-variant": "#2f3aa3",
+                        "on-tertiary-fixed": "#00210c",
+                        "surface-container-lowest": "#0e0e10",
+                        "outline-variant": "#454653",
+                        "tertiary-fixed-dim": "#4de082",
+                        "surface-dim": "#131315",
+                        "primary-fixed-dim": "#bdc2ff",
+                        "secondary": "#ddb8ff",
+                        "on-tertiary-fixed-variant": "#005227",
+                        "on-background": "#e5e1e4",
+                        "on-surface": "#e5e1e4",
+                        "surface-container-low": "#1b1b1d",
+                        "surface-variant": "#353437",
+                        "tertiary-fixed": "#6dfe9c",
+                        "on-secondary": "#490081",
+                        "error": "#ffb4ab",
+                        "background": "#131315",
+                        "secondary-fixed-dim": "#ddb8ff",
+                        "on-tertiary": "#003919",
+                        "primary-fixed": "#e0e0ff",
+                        "on-primary-fixed": "#000767",
+                        "secondary-container": "#62259b",
+                        "surface-tint": "#bdc2ff",
+                        "outline": "#908f9e",
+                        "primary-container": "#818cf8"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "sidebar": "240px",
+                        "unit": "4px",
+                        "inspector": "340px",
+                        "sm": "8px",
+                        "gutter": "1px",
+                        "base": "16px",
+                        "xl": "32px",
+                        "sidebar-collapsed": "56px",
+                        "xs": "4px",
+                        "lg": "24px",
+                        "md": "12px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Geist", "sans-serif"],
+                        "body-medium": ["Inter", "sans-serif"],
+                        "display-lg": ["Geist", "sans-serif"],
+                        "label-caps": ["JetBrains Mono", "monospace"],
+                        "body-base": ["Inter", "sans-serif"],
+                        "code-sm": ["JetBrains Mono", "monospace"],
+                        "code-base": ["JetBrains Mono", "monospace"],
+                        "body-sm": ["Inter", "sans-serif"],
+                        "display-xl": ["Geist", "sans-serif"],
+                        "headline-sm": ["Geist", "sans-serif"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["18px", { "lineHeight": "26px", "letterSpacing": "-0.015em", "fontWeight": "600" }],
+                        "body-medium": ["14px", { "lineHeight": "22px", "letterSpacing": "-0.005em", "fontWeight": "500" }],
+                        "display-lg": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "label-caps": ["11px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "body-base": ["14px", { "lineHeight": "22px", "letterSpacing": "-0.005em", "fontWeight": "400" }],
+                        "code-sm": ["12px", { "lineHeight": "18px", "letterSpacing": "0", "fontWeight": "400" }],
+                        "code-base": ["13px", { "lineHeight": "20px", "letterSpacing": "0", "fontWeight": "400" }],
+                        "body-sm": ["12px", { "lineHeight": "18px", "letterSpacing": "0", "fontWeight": "400" }],
+                        "display-xl": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.025em", "fontWeight": "700" }],
+                        "headline-sm": ["15px", { "lineHeight": "22px", "letterSpacing": "-0.01em", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .glass-panel {
+            background: rgba(24, 24, 29, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
+        }
+        .ai-border-glow {
+            box-shadow: 0 0 12px rgba(192, 132, 252, 0.15);
+            border-color: rgba(192, 132, 252, 0.4);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-base antialiased overflow-hidden flex h-screen w-screen">
+<!-- Shared Component: SideNavBar -->
+<nav class="bg-surface dark:bg-surface border-r border-outline-variant fixed left-0 top-0 h-full flex flex-col py-lg z-50 w-sidebar">
+<div class="px-lg pb-lg mb-md">
+<div class="flex items-center gap-sm">
+<div class="w-8 h-8 rounded bg-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary" style="font-variation-settings: 'FILL' 1;">terminal</span>
+</div>
+<div>
+<h1 class="font-display-lg text-display-lg font-bold text-on-surface dark:text-on-surface">RepoMind</h1>
+<p class="font-label-caps text-label-caps text-on-surface-variant">AI Workspace</p>
+</div>
+</div>
+</div>
+<ul class="flex-1 flex flex-col gap-xs px-sm">
+<li>
+<a class="flex items-center justify-center text-on-surface-variant dark:text-on-surface-variant hover:text-on-surface dark:hover:text-on-surface hover:bg-surface-container-high transition-all duration-200 ease-in-out py-sm rounded-lg gap-base w-full" href="#">
+<span class="material-symbols-outlined w-6 text-center">rocket_launch</span>
+<span class="flex-1 text-left font-body-medium text-body-medium">Start Contributing</span>
+</a>
+</li>
+<li>
+<a class="flex items-center justify-center text-on-surface-variant dark:text-on-surface-variant hover:text-on-surface dark:hover:text-on-surface hover:bg-surface-container-high transition-all duration-200 ease-in-out py-sm rounded-lg gap-base w-full" href="#">
+<span class="material-symbols-outlined w-6 text-center">bug_report</span>
+<span class="flex-1 text-left font-body-medium text-body-medium">Issues</span>
+</a>
+</li>
+<li>
+<a class="flex items-center justify-center text-on-surface-variant dark:text-on-surface-variant hover:text-on-surface dark:hover:text-on-surface hover:bg-surface-container-high transition-all duration-200 ease-in-out py-sm rounded-lg gap-base w-full" href="#">
+<span class="material-symbols-outlined w-6 text-center">menu_book</span>
+<span class="flex-1 text-left font-body-medium text-body-medium">Understand Code</span>
+</a>
+</li>
+<li>
+<a class="flex items-center justify-center text-on-surface-variant dark:text-on-surface-variant hover:text-on-surface dark:hover:text-on-surface hover:bg-surface-container-high transition-all duration-200 ease-in-out py-sm rounded-lg gap-base w-full" href="#">
+<span class="material-symbols-outlined w-6 text-center">troubleshoot</span>
+<span class="flex-1 text-left font-body-medium text-body-medium">Investigations</span>
+</a>
+</li>
+<li>
+<a class="flex items-center justify-center text-on-surface-variant dark:text-on-surface-variant hover:text-on-surface dark:hover:text-on-surface hover:bg-surface-container-high transition-all duration-200 ease-in-out py-sm rounded-lg gap-base w-full" href="#">
+<span class="material-symbols-outlined w-6 text-center">account_tree</span>
+<span class="flex-1 text-left font-body-medium text-body-medium">Architecture</span>
+</a>
+</li>
+<li>
+<a class="flex items-center justify-center text-on-surface-variant dark:text-on-surface-variant hover:text-on-surface dark:hover:text-on-surface hover:bg-surface-container-high transition-all duration-200 ease-in-out py-sm rounded-lg gap-base w-full" href="#">
+<span class="material-symbols-outlined w-6 text-center">history</span>
+<span class="flex-1 text-left font-body-medium text-body-medium">GitStory</span>
+</a>
+</li>
+<!-- Active State -->
+<li>
+<a class="relative flex items-center justify-center text-primary dark:text-primary after:absolute after:left-0 after:h-8 after:w-1 after:bg-primary after:shadow-[0_0_8px_rgba(189,194,255,0.8)] transition-all duration-200 ease-in-out py-sm rounded-lg gap-base w-full bg-surface-container-low" href="#">
+<span class="material-symbols-outlined w-6 text-center" style="font-variation-settings: 'FILL' 1;">military_tech</span>
+<span class="flex-1 text-left font-headline-sm text-headline-sm">SkillPatch</span>
+</a>
+</li>
+</ul>
+<div class="px-lg mt-auto pt-lg border-t border-outline-variant/50">
+<div class="flex items-center gap-sm">
+<img alt="User Profile" class="w-8 h-8 rounded-full border border-outline-variant object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBciP5xgJMLfAK9Ksj0UhUaVkTO_HJAXlnWt7Z9LHo7_pfcRN1HWwVJH9qY-s0cW9xedgEijlM0Q4A7lQXgOzny1oeLooKRol9Vk6ZtRxSRQc36frL-UjqGC6pvx8MPZEV7v5qT2JPfu0VwtSZ3vA3uEf9Q0PdaTpZD8tVz00W_FXYkAltAe7vo0YtlcWxl-TvhrxEAh010ZDYYOtdx2cCBtSJLFEtLKW0HC5zGTrDubRXxrhjuMU-r"/>
+<div class="flex flex-col">
+<span class="font-body-medium text-body-medium text-on-surface">DevUser</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Pro Plan</span>
+</div>
+</div>
+</div>
+</nav>
+<!-- Main Content Area Container -->
+<div class="flex-1 flex flex-col ml-[240px] w-[calc(100vw-240px)]">
+<!-- Shared Component: TopAppBar -->
+<header class="bg-surface/75 dark:bg-surface/75 backdrop-blur-md border-b border-outline-variant fixed top-0 right-0 left-sidebar h-[64px] flex items-center justify-between px-lg z-40">
+<div class="flex items-center gap-sm">
+<!-- Breadcrumbs or contextual title could go here, left blank per layout flow -->
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest flex items-center gap-xs">
+<span class="material-symbols-outlined text-[16px]">military_tech</span>
+                    SkillPatch / Workspace
+                </span>
+</div>
+<div class="flex items-center gap-base">
+<!-- Search Bar (Right aligned) -->
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-sm top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">search</span>
+<input class="bg-surface-container border border-outline-variant rounded-lg pl-xl pr-sm py-xs text-body-medium focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/50 text-on-surface placeholder:text-on-surface-variant/50 w-64 transition-all transition-colors" placeholder="Search RepoMind..." type="text"/>
+<div class="absolute right-sm top-1/2 -translate-y-1/2 flex gap-xs">
+<kbd class="font-code-sm text-code-sm text-on-surface-variant bg-surface-container-high px-1 rounded border border-outline-variant/50">⌘</kbd>
+<kbd class="font-code-sm text-code-sm text-on-surface-variant bg-surface-container-high px-1 rounded border border-outline-variant/50">K</kbd>
+</div>
+</div>
+<!-- Trailing Icons -->
+<button class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-surface-container-highest/50 transition-colors text-on-surface-variant scale-95 active:scale-100 transition-transform">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-surface-container-highest/50 transition-colors text-on-surface-variant scale-95 active:scale-100 transition-transform">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</div>
+</header>
+<!-- Main Canvas Stage -->
+<main class="flex-1 overflow-y-auto mt-[64px] p-xl flex flex-col gap-xl relative">
+<!-- Hero / Command Center Section -->
+<section class="relative rounded-xl overflow-hidden border border-outline-variant bg-surface-container-low p-xl flex flex-col gap-lg z-10 ai-border-glow">
+<!-- Decorative AI background glow -->
+<div class="absolute -top-24 -right-24 w-96 h-96 bg-secondary-container/20 rounded-full blur-3xl pointer-events-none"></div>
+<div class="relative z-10 flex flex-col gap-sm max-w-2xl">
+<div class="flex items-center gap-sm mb-xs">
+<span class="material-symbols-outlined text-secondary">military_tech</span>
+<span class="font-label-caps text-label-caps text-secondary tracking-widest uppercase">SkillPatch Wiki-Architect Active</span>
+</div>
+<h2 class="font-display-xl text-display-xl font-bold text-on-surface">SkillPatch</h2>
+<p class="font-body-base text-body-base text-on-surface-variant leading-relaxed">
+                        Generate context-aware onboarding guides and documentation to kickstart your contributions. The AI analyzes the repository architecture to tailor guides specifically to your assigned issue or area of interest.
+                    </p>
+</div>
+<div class="relative z-10 flex items-center gap-base mt-sm">
+<!-- Primary AI Action Button -->
+<button class="bg-gradient-to-r from-secondary-container to-surface-container border border-secondary/50 text-on-surface flex items-center gap-sm px-lg py-md rounded-lg hover:shadow-[0_0_16px_rgba(192,132,252,0.3)] hover:border-secondary transition-all group">
+<span class="material-symbols-outlined text-secondary group-hover:animate-pulse" style="font-variation-settings: 'FILL' 1;">magic_button</span>
+<span class="font-body-medium text-body-medium font-semibold tracking-wide">Generate Contributor Guide</span>
+</button>
+<button class="flex items-center gap-sm px-lg py-md rounded-lg border border-outline-variant bg-surface-container hover:bg-surface-container-high transition-colors text-on-surface-variant hover:text-on-surface">
+<span class="material-symbols-outlined">tune</span>
+<span class="font-body-medium text-body-medium">Configure Architect Scope</span>
+</button>
+</div>
+</section>
+<!-- Generated Artifacts / Bento Grid -->
+<section class="flex flex-col gap-lg z-10">
+<div class="flex items-center justify-between border-b border-outline-variant/50 pb-sm">
+<h3 class="font-headline-md text-headline-md text-on-surface flex items-center gap-sm">
+<span class="material-symbols-outlined text-on-surface-variant">dataset</span>
+                        Generated Modules
+                    </h3>
+<div class="flex gap-sm">
+<span class="px-sm py-xs rounded bg-surface-container border border-outline-variant font-label-caps text-label-caps text-on-surface-variant">Repository: express/express</span>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-base">
+<!-- Card 1 -->
+<article class="glass-panel rounded-xl p-lg flex flex-col gap-base group cursor-pointer hover:bg-surface-container/80 transition-colors">
+<div class="flex items-start justify-between">
+<div class="w-10 h-10 rounded-lg bg-surface-container-high border border-outline-variant flex items-center justify-center group-hover:border-primary transition-colors">
+<span class="material-symbols-outlined text-primary">menu_book</span>
+</div>
+<span class="font-label-caps text-label-caps text-on-surface-variant bg-surface-container px-2 py-1 rounded border border-outline-variant/50">Concept</span>
+</div>
+<div class="flex flex-col gap-xs mt-sm">
+<h4 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary transition-colors">Express Core Concepts</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-3">
+                                A beginner-friendly overview of the Express architecture and request pipeline. Details the journey of an HTTP request through routing mechanisms.
+                            </p>
+</div>
+<div class="mt-auto pt-sm flex items-center justify-between text-on-surface-variant">
+<span class="font-code-sm text-code-sm flex items-center gap-xs"><span class="material-symbols-outlined text-[14px]">schedule</span> 5 min read</span>
+<span class="material-symbols-outlined opacity-0 group-hover:opacity-100 transition-opacity text-primary">arrow_forward</span>
+</div>
+</article>
+<!-- Card 2 -->
+<article class="glass-panel rounded-xl p-lg flex flex-col gap-base group cursor-pointer hover:bg-surface-container/80 transition-colors">
+<div class="flex items-start justify-between">
+<div class="w-10 h-10 rounded-lg bg-surface-container-high border border-outline-variant flex items-center justify-center group-hover:border-tertiary transition-colors">
+<span class="material-symbols-outlined text-tertiary">auto_fix_high</span>
+</div>
+<span class="font-label-caps text-label-caps text-on-surface-variant bg-surface-container px-2 py-1 rounded border border-outline-variant/50">Setup</span>
+</div>
+<div class="flex flex-col gap-xs mt-sm">
+<h4 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-tertiary transition-colors">Environment Setup</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-3">
+                                Automated guide for setting up the local development environment and running tests. Includes dependency mapping and mock database configuration.
+                            </p>
+</div>
+<div class="mt-auto pt-sm flex items-center justify-between text-on-surface-variant">
+<span class="font-code-sm text-code-sm flex items-center gap-xs"><span class="material-symbols-outlined text-[14px]">terminal</span> Interactive script</span>
+<span class="material-symbols-outlined opacity-0 group-hover:opacity-100 transition-opacity text-tertiary">arrow_forward</span>
+</div>
+</article>
+<!-- Card 3 -->
+<article class="glass-panel rounded-xl p-lg flex flex-col gap-base group cursor-pointer hover:bg-surface-container/80 transition-colors">
+<div class="flex items-start justify-between">
+<div class="w-10 h-10 rounded-lg bg-surface-container-high border border-outline-variant flex items-center justify-center group-hover:border-secondary transition-colors">
+<span class="material-symbols-outlined text-secondary">account_tree</span>
+</div>
+<span class="font-label-caps text-label-caps text-on-surface-variant bg-surface-container px-2 py-1 rounded border border-outline-variant/50">Deep Dive</span>
+</div>
+<div class="flex flex-col gap-xs mt-sm">
+<h4 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-secondary transition-colors">Middleware Pattern Guide</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-3">
+                                In-depth explanation of how to write and mount middleware in Express. Explores execution order, error handling middleware, and common anti-patterns.
+                            </p>
+</div>
+<div class="mt-auto pt-sm flex items-center justify-between text-on-surface-variant">
+<span class="font-code-sm text-code-sm flex items-center gap-xs"><span class="material-symbols-outlined text-[14px]">account_tree</span> 3 Nodes analyzed</span>
+<span class="material-symbols-outlined opacity-0 group-hover:opacity-100 transition-opacity text-secondary">arrow_forward</span>
+</div>
+</article>
+</div>
+</section>
+</main>
+</div>
+</body></html>

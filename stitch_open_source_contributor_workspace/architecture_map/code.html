@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>RepoMind - Architecture: expressjs/express</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;600;700&amp;family=Inter:wght@400;500&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "error-container": "#93000a",
+                    "tertiary": "#4de082",
+                    "on-primary-container": "#101b8a",
+                    "outline-variant": "#454653",
+                    "surface-container-highest": "#353437",
+                    "primary": "#bdc2ff",
+                    "on-tertiary-fixed": "#00210c",
+                    "surface-dim": "#131315",
+                    "outline": "#908f9e",
+                    "surface-container-high": "#2a2a2c",
+                    "on-primary-fixed-variant": "#2f3aa3",
+                    "surface-container-lowest": "#0e0e10",
+                    "error": "#ffb4ab",
+                    "on-secondary-fixed": "#2c0051",
+                    "on-primary": "#131e8c",
+                    "secondary-container": "#62259b",
+                    "on-error": "#690005",
+                    "on-error-container": "#ffdad6",
+                    "on-tertiary-fixed-variant": "#005227",
+                    "on-surface-variant": "#c6c5d5",
+                    "primary-fixed-dim": "#bdc2ff",
+                    "surface-container-low": "#1b1b1d",
+                    "secondary-fixed": "#f0dbff",
+                    "tertiary-fixed-dim": "#4de082",
+                    "background": "#131315",
+                    "on-secondary-fixed-variant": "#62259b",
+                    "on-tertiary-container": "#003617",
+                    "secondary": "#ddb8ff",
+                    "surface-container": "#201f21",
+                    "inverse-primary": "#4953bc",
+                    "inverse-on-surface": "#313032",
+                    "tertiary-container": "#00ac58",
+                    "tertiary-fixed": "#6dfe9c",
+                    "on-background": "#e5e1e4",
+                    "inverse-surface": "#e5e1e4",
+                    "on-secondary": "#490081",
+                    "surface-variant": "#353437",
+                    "secondary-fixed-dim": "#ddb8ff",
+                    "surface-tint": "#bdc2ff",
+                    "primary-fixed": "#e0e0ff",
+                    "on-tertiary": "#003919",
+                    "on-secondary-container": "#d1a1ff",
+                    "on-primary-fixed": "#000767",
+                    "surface-bright": "#39393b",
+                    "primary-container": "#818cf8",
+                    "surface": "#131315",
+                    "on-surface": "#e5e1e4"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "inspector": "340px",
+                    "unit": "4px",
+                    "md": "12px",
+                    "xs": "4px",
+                    "sidebar-collapsed": "56px",
+                    "gutter": "1px",
+                    "lg": "24px",
+                    "xl": "32px",
+                    "base": "16px",
+                    "sm": "8px",
+                    "sidebar": "240px"
+            },
+            "fontFamily": {
+                    "headline-md": ["Geist"],
+                    "label-caps": ["JetBrains Mono"],
+                    "body-medium": ["Inter"],
+                    "display-lg": ["Geist"],
+                    "code-sm": ["JetBrains Mono"],
+                    "code-base": ["JetBrains Mono"],
+                    "headline-sm": ["Geist"],
+                    "display-xl": ["Geist"],
+                    "body-sm": ["Inter"],
+                    "body-base": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-md": ["18px", {"lineHeight": "26px", "letterSpacing": "-0.015em", "fontWeight": "600"}],
+                    "label-caps": ["11px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                    "body-medium": ["14px", {"lineHeight": "22px", "letterSpacing": "-0.005em", "fontWeight": "500"}],
+                    "display-lg": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "code-sm": ["12px", {"lineHeight": "18px", "letterSpacing": "0", "fontWeight": "400"}],
+                    "code-base": ["13px", {"lineHeight": "20px", "letterSpacing": "0", "fontWeight": "400"}],
+                    "headline-sm": ["15px", {"lineHeight": "22px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "display-xl": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.025em", "fontWeight": "700"}],
+                    "body-sm": ["12px", {"lineHeight": "18px", "letterSpacing": "0", "fontWeight": "400"}],
+                    "body-base": ["14px", {"lineHeight": "22px", "letterSpacing": "-0.005em", "fontWeight": "400"}]
+            }
+          }
+        },
+      }
+    </script>
+<style>
+        .node-glow-core { box-shadow: 0 0 20px rgba(192, 132, 252, 0.4); }
+        .node-glow-middleware { box-shadow: 0 0 20px rgba(129, 140, 248, 0.4); }
+        
+        .pulse-ring {
+            animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+        }
+        @keyframes pulse-ring {
+            0% { transform: scale(0.95); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0; }
+            100% { transform: scale(0.95); opacity: 0; }
+        }
+
+        .line-dash {
+            stroke-dasharray: 4;
+            animation: dash-flow 20s linear infinite;
+        }
+        @keyframes dash-flow {
+            to { stroke-dashoffset: -100; }
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface h-screen overflow-hidden flex flex-col font-body-base">
+<!-- TopAppBar -->
+<header class="bg-surface/75 backdrop-blur-md flex justify-between items-center h-16 px-lg sticky top-0 z-50 w-full border-b border-outline-variant">
+<div class="flex items-center gap-md cursor-pointer active:opacity-70 transition-transform scale-95 active:scale-90">
+<span class="font-display-lg text-display-lg font-bold text-on-surface">RepoMind</span>
+</div>
+<div class="flex items-center gap-lg">
+<nav class="hidden md:flex gap-lg">
+<a class="text-on-surface-variant hover:text-primary transition-colors font-headline-sm text-headline-sm" href="#">Docs</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-headline-sm text-headline-sm" href="#">Settings</a>
+</nav>
+<div class="flex items-center gap-sm">
+<button class="text-on-surface-variant hover:text-primary transition-colors p-sm">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors p-sm rounded-full overflow-hidden">
+<img class="w-8 h-8 object-cover" data-alt="A small circular user profile avatar with a dark minimalist abstract background, professional developer tool aesthetic, deep obsidian blacks and subtle indigo highlights." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC5mRNQZeuJNodhAvsR7U2K0yArF5uvFPxj1lEaQ5BdnX3gBQCsshyfBSev3ME9nrFClplZnv3U4GS7x95Z9W43nQx-OxnltuIQ9unEQpX__w1aEuU9H9QYI8Me9M2qX3lhSzajG0DXungcbv6mgXqmqE6ppKW1ItjfiexUhO5DQbq6l7oJQMyzf0VWE47AP9iqUrF9obpmmwbVWbdSswbhyuJmvNjInghg1QinLNcp9GZlRL7rojpE"/>
+</button>
+</div>
+</div>
+</header>
+<div class="flex flex-1 h-[calc(100vh-64px)] overflow-hidden">
+<!-- SideNavBar -->
+<nav class="bg-surface dark:bg-surface border-r border-outline-variant flex flex-col h-full w-sidebar flex-shrink-0 z-40 hidden md:flex">
+<div class="p-base border-b border-outline-variant">
+<div class="flex items-center gap-sm mb-sm">
+<div class="w-6 h-6 rounded bg-surface-container-high flex items-center justify-center">
+<span class="material-symbols-outlined text-sm">book</span>
+</div>
+<div>
+<h2 class="font-headline-sm text-headline-sm font-bold truncate">expressjs/express</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Main Branch</p>
+</div>
+</div>
+<button class="w-full bg-primary-container text-black font-body-medium text-body-medium py-sm px-base rounded-lg hover:bg-primary-fixed transition-colors flex items-center justify-center gap-sm mt-md relative overflow-hidden group">
+<div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
+<span class="material-symbols-outlined text-sm">add</span>
+                    New Investigation
+                </button>
+</div>
+<div class="flex-1 overflow-y-auto py-sm">
+<a class="flex items-center gap-md px-lg py-sm text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors duration-200 group" href="#">
+<span class="material-symbols-outlined">rocket_launch</span>
+<span class="font-label-caps text-label-caps tracking-widest">Start Contributing</span>
+</a>
+<a class="flex items-center gap-md px-lg py-sm text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors duration-200 group" href="#">
+<span class="material-symbols-outlined">bug_report</span>
+<span class="font-label-caps text-label-caps tracking-widest">Issues</span>
+</a>
+<a class="flex items-center gap-md px-lg py-sm text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors duration-200 group" href="#">
+<span class="material-symbols-outlined">psychology</span>
+<span class="font-label-caps text-label-caps tracking-widest">Understand Code</span>
+</a>
+<a class="flex items-center gap-md px-lg py-sm text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors duration-200 group" href="#">
+<span class="material-symbols-outlined">search_check</span>
+<span class="font-label-caps text-label-caps tracking-widest">Investigations</span>
+</a>
+<!-- Active State -->
+<a class="flex items-center gap-md px-lg py-sm text-primary border-l-4 border-primary bg-primary-container/10 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">account_tree</span>
+<span class="font-label-caps text-label-caps tracking-widest">Architecture</span>
+</a>
+<a class="flex items-center gap-md px-lg py-sm text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors duration-200 group" href="#">
+<span class="material-symbols-outlined">history</span>
+<span class="font-label-caps text-label-caps tracking-widest">GitStory</span>
+</a>
+<a class="flex items-center gap-md px-lg py-sm text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors duration-200 group" href="#">
+<span class="material-symbols-outlined">auto_fix_high</span>
+<span class="font-label-caps text-label-caps tracking-widest">SkillPatch</span>
+</a>
+</div>
+</nav>
+<!-- Main Canvas (Architecture Graph) -->
+<main class="flex-1 relative bg-surface-dim overflow-hidden flex flex-col">
+<!-- Tools Header -->
+<div class="h-12 border-b border-outline-variant flex items-center justify-between px-base bg-surface-container-lowest shrink-0">
+<div class="flex items-center gap-sm">
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest">Graph View</span>
+<span class="text-outline-variant">/</span>
+<span class="font-body-medium text-body-medium text-on-surface">High-Level Topology</span>
+</div>
+<div class="flex items-center gap-sm">
+<button class="p-xs text-on-surface-variant hover:text-primary transition-colors bg-surface-container rounded border border-outline-variant hover:border-outline">
+<span class="material-symbols-outlined text-[18px]">zoom_in</span>
+</button>
+<button class="p-xs text-on-surface-variant hover:text-primary transition-colors bg-surface-container rounded border border-outline-variant hover:border-outline">
+<span class="material-symbols-outlined text-[18px]">zoom_out</span>
+</button>
+<button class="p-xs text-on-surface-variant hover:text-primary transition-colors bg-surface-container rounded border border-outline-variant hover:border-outline ml-sm">
+<span class="material-symbols-outlined text-[18px]">filter_list</span>
+</button>
+</div>
+</div>
+<!-- Graph Area -->
+<div class="flex-1 relative w-full h-full cursor-grab active:cursor-grabbing">
+<!-- Background Grid -->
+<div class="absolute inset-0" style="background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.05) 1px, transparent 0); background-size: 32px 32px;"></div>
+<!-- SVG Connections -->
+<svg class="absolute inset-0 w-full h-full pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<lineargradient id="lineGradCore" x1="0%" x2="100%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#C084FC" stop-opacity="0.6"></stop>
+<stop offset="100%" stop-color="#818CF8" stop-opacity="0.6"></stop>
+</lineargradient>
+<lineargradient id="lineGradDim" x1="0%" x2="100%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#454653" stop-opacity="0.4"></stop>
+<stop offset="100%" stop-color="#454653" stop-opacity="0.1"></stop>
+</lineargradient>
+<filter height="140%" id="glow" width="140%" x="-20%" y="-20%">
+<fegaussianblur result="blur" stddeviation="4"></fegaussianblur>
+<fecomposite in="SourceGraphic" in2="blur" operator="over"></fecomposite>
+</filter>
+</defs>
+<!-- Application to Router (Active) -->
+<path class="line-dash" d="M 300 200 C 450 200, 400 350, 550 350" fill="none" filter="url(#glow)" stroke="url(#lineGradCore)" stroke-width="2"></path>
+<!-- Application to Request -->
+<path d="M 300 200 C 400 200, 250 450, 350 450" fill="none" stroke="url(#lineGradDim)" stroke-width="1.5"></path>
+<!-- Application to Response -->
+<path d="M 300 200 C 350 150, 500 100, 600 150" fill="none" stroke="url(#lineGradDim)" stroke-width="1.5"></path>
+<!-- Router to Middleware -->
+<path class="opacity-50" d="M 550 350 C 700 350, 650 500, 800 500" fill="none" stroke="url(#lineGradCore)" stroke-dasharray="4,4" stroke-width="2"></path>
+</svg>
+<!-- Nodes -->
+<!-- Application Node -->
+<div class="absolute top-[180px] left-[150px] transform -translate-x-1/2 -translate-y-1/2 group">
+<div class="w-40 h-10 bg-surface border border-outline-variant rounded-full flex items-center justify-center gap-sm shadow-lg hover:border-[#C084FC] transition-colors cursor-pointer z-10 relative">
+<div class="w-3 h-3 rounded-full bg-[#C084FC]"></div>
+<span class="font-code-base text-code-base text-on-surface">Application</span>
+</div>
+</div>
+<!-- Request Node -->
+<div class="absolute top-[450px] left-[350px] transform -translate-x-1/2 -translate-y-1/2 group">
+<div class="w-32 h-10 bg-surface border border-outline-variant rounded-full flex items-center justify-center gap-sm shadow-lg hover:border-outline transition-colors cursor-pointer z-10 relative opacity-70 hover:opacity-100">
+<div class="w-2 h-2 rounded-full bg-outline"></div>
+<span class="font-code-base text-code-base text-on-surface-variant group-hover:text-on-surface">Request</span>
+</div>
+</div>
+<!-- Response Node -->
+<div class="absolute top-[150px] left-[600px] transform -translate-x-1/2 -translate-y-1/2 group">
+<div class="w-32 h-10 bg-surface border border-outline-variant rounded-full flex items-center justify-center gap-sm shadow-lg hover:border-outline transition-colors cursor-pointer z-10 relative opacity-70 hover:opacity-100">
+<div class="w-2 h-2 rounded-full bg-outline"></div>
+<span class="font-code-base text-code-base text-on-surface-variant group-hover:text-on-surface">Response</span>
+</div>
+</div>
+<!-- Router Node (SELECTED/HOVERED STATE) -->
+<div class="absolute top-[350px] left-[550px] transform -translate-x-1/2 -translate-y-1/2 z-20">
+<!-- Pulse Ring -->
+<div class="absolute inset-0 rounded-full border border-[#C084FC] pulse-ring pointer-events-none"></div>
+<!-- The Node -->
+<div class="w-40 h-12 bg-surface border-2 border-[#C084FC] rounded-full flex items-center justify-center gap-sm node-glow-core cursor-pointer relative">
+<div class="w-3 h-3 rounded-full bg-[#C084FC] shadow-[0_0_8px_#C084FC]"></div>
+<span class="font-code-base text-code-base text-white font-bold">Router</span>
+</div>
+<!-- Floating Inspector/Tooltip Panel -->
+<div class="absolute top-full left-1/2 transform -translate-x-1/2 mt-lg w-[280px] bg-[#18181D]/80 backdrop-blur-[12px] border border-white/10 rounded-xl p-base shadow-[0_8px_32px_rgba(0,0,0,0.45)] pointer-events-auto transition-all duration-300">
+<div class="flex items-start justify-between mb-sm">
+<h3 class="font-headline-sm text-headline-sm text-primary">Router Core</h3>
+<span class="bg-primary-container/20 text-primary-fixed px-sm py-xs rounded text-[10px] font-label-caps uppercase">Active Node</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-md leading-relaxed">
+                            Handles routing and middleware mounting. Core dispatcher for HTTP verbs.
+                        </p>
+<div class="flex items-center gap-md mb-md border-y border-outline-variant/30 py-sm">
+<div class="flex flex-col">
+<span class="font-label-caps text-label-caps text-outline">Files</span>
+<span class="font-code-base text-code-base text-on-surface">12</span>
+</div>
+<div class="w-px h-6 bg-outline-variant/30"></div>
+<div class="flex flex-col">
+<span class="font-label-caps text-label-caps text-outline">Open Issues</span>
+<span class="font-code-base text-code-base text-error">4</span>
+</div>
+</div>
+<div class="flex gap-sm">
+<button class="flex-1 bg-surface-container-high hover:bg-surface-bright text-on-surface font-body-sm text-body-sm py-sm rounded border border-outline-variant transition-colors flex items-center justify-center gap-xs">
+<span class="material-symbols-outlined text-[16px]">folder_open</span>
+                                Explore Files
+                            </button>
+<button class="flex-1 bg-surface-container-high hover:bg-surface-bright text-on-surface font-body-sm text-body-sm py-sm rounded border border-outline-variant transition-colors flex items-center justify-center gap-xs">
+<span class="material-symbols-outlined text-[16px]">bug_report</span>
+                                View Issues
+                            </button>
+</div>
+</div>
+</div>
+<!-- Middleware Node -->
+<div class="absolute top-[500px] left-[800px] transform -translate-x-1/2 -translate-y-1/2 group">
+<div class="w-36 h-10 bg-surface border border-outline-variant rounded-full flex items-center justify-center gap-sm shadow-lg hover:border-[#818CF8] hover:node-glow-middleware transition-all cursor-pointer z-10 relative">
+<div class="w-2 h-2 rounded-full bg-[#818CF8]"></div>
+<span class="font-code-base text-code-base text-on-surface">Middleware</span>
+</div>
+</div>
+</div>
+<!-- Legend (Bottom Right) -->
+<div class="absolute bottom-lg right-lg bg-surface-container-lowest/80 backdrop-blur-sm border border-outline-variant rounded-lg p-sm flex flex-col gap-xs z-30 pointer-events-none">
+<div class="flex items-center gap-sm">
+<div class="w-2 h-2 rounded-full bg-[#C084FC]"></div>
+<span class="font-label-caps text-label-caps text-on-surface-variant">Core Dispatch</span>
+</div>
+<div class="flex items-center gap-sm">
+<div class="w-2 h-2 rounded-full bg-[#818CF8]"></div>
+<span class="font-label-caps text-label-caps text-on-surface-variant">Handler / MW</span>
+</div>
+<div class="flex items-center gap-sm mt-xs pt-xs border-t border-outline-variant/50">
+<svg height="4" viewbox="0 0 24 4" width="24">
+<line stroke="#C084FC" stroke-dasharray="4,2" stroke-width="2" x1="0" x2="24" y1="2" y2="2"></line>
+</svg>
+<span class="font-label-caps text-label-caps text-on-surface-variant">Active Path</span>
+</div>
+</div>
+</main>
+<!-- Right Inspector (Collapsed/Hidden for space, but structural) -->
+<aside class="w-inspector bg-surface border-l border-outline-variant h-full flex flex-col hidden lg:flex">
+<div class="p-md border-b border-outline-variant flex items-center justify-between">
+<h3 class="font-headline-md text-headline-md font-semibold text-on-surface">AI Inspector</h3>
+<span class="material-symbols-outlined text-outline">smart_toy</span>
+</div>
+<div class="flex-1 p-md flex flex-col gap-md overflow-y-auto">
+<div class="bg-surface-container-low rounded-lg p-md border border-outline-variant relative overflow-hidden">
+<div class="absolute inset-0 opacity-10 bg-gradient-to-br from-primary to-secondary pointer-events-none"></div>
+<h4 class="font-headline-sm text-headline-sm text-primary mb-sm flex items-center gap-xs">
+<span class="material-symbols-outlined text-[16px]">lightbulb</span>
+                         Architecture Insight
+                     </h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-md">
+                         The <code class="font-code-sm bg-black/30 px-1 rounded">Router</code> node forms the backbone of Express. Modifying this core file has high ripple effects across 85% of middleware test suites.
+                     </p>
+<div class="h-1 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-error w-3/4 rounded-full"></div>
+</div>
+<div class="flex justify-between mt-xs font-label-caps text-[9px] text-outline">
+<span>Risk Level</span>
+<span class="text-error">High (75%)</span>
+</div>
+</div>
+<div class="border border-outline-variant rounded-lg overflow-hidden">
+<div class="bg-surface-container-low px-sm py-xs border-b border-outline-variant flex justify-between items-center">
+<span class="font-label-caps text-[10px] text-on-surface-variant">RECENT COMMITS (Router)</span>
+</div>
+<div class="p-sm flex flex-col gap-sm bg-surface">
+<div class="flex gap-sm items-start">
+<div class="w-2 h-2 rounded-full bg-tertiary mt-1.5 shrink-0"></div>
+<div>
+<p class="font-body-sm text-body-sm text-on-surface leading-tight">Refactor route matching logic for perf</p>
+<p class="font-code-sm text-[10px] text-outline mt-0.5">3a9f2b1 • 2 days ago</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</aside>
+</div>
+</body></html>

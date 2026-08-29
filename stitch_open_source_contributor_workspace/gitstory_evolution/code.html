@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>GitStory - RepoMind</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&amp;family=Inter:wght@100..900&amp;family=JetBrains+Mono:wght@100..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "tertiary-fixed": "#6dfe9c",
+                      "on-primary-container": "#101b8a",
+                      "on-secondary": "#490081",
+                      "on-tertiary": "#003919",
+                      "primary-container": "#818cf8",
+                      "error-container": "#93000a",
+                      "on-error": "#690005",
+                      "surface-bright": "#39393b",
+                      "background": "#131315",
+                      "on-surface-variant": "#c6c5d5",
+                      "primary-fixed-dim": "#bdc2ff",
+                      "outline": "#908f9e",
+                      "tertiary-container": "#00ac58",
+                      "primary": "#bdc2ff",
+                      "on-primary-fixed": "#000767",
+                      "inverse-on-surface": "#313032",
+                      "surface-tint": "#bdc2ff",
+                      "surface-variant": "#353437",
+                      "secondary-fixed": "#f0dbff",
+                      "surface-container-low": "#1b1b1d",
+                      "inverse-primary": "#4953bc",
+                      "inverse-surface": "#e5e1e4",
+                      "surface-container": "#201f21",
+                      "on-tertiary-container": "#003617",
+                      "on-primary-fixed-variant": "#2f3aa3",
+                      "on-secondary-fixed-variant": "#62259b",
+                      "surface-container-highest": "#353437",
+                      "on-secondary-fixed": "#2c0051",
+                      "on-error-container": "#ffdad6",
+                      "tertiary": "#4de082",
+                      "surface-container-high": "#2a2a2c",
+                      "on-primary": "#131e8c",
+                      "on-tertiary-fixed": "#00210c",
+                      "secondary-fixed-dim": "#ddb8ff",
+                      "error": "#ffb4ab",
+                      "on-background": "#e5e1e4",
+                      "surface": "#131315",
+                      "surface-dim": "#131315",
+                      "on-tertiary-fixed-variant": "#005227",
+                      "outline-variant": "#454653",
+                      "primary-fixed": "#e0e0ff",
+                      "on-surface": "#e5e1e4",
+                      "surface-container-lowest": "#0e0e10",
+                      "on-secondary-container": "#d1a1ff",
+                      "secondary": "#ddb8ff",
+                      "tertiary-fixed-dim": "#4de082",
+                      "secondary-container": "#62259b"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "md": "12px",
+                      "gutter": "1px",
+                      "lg": "24px",
+                      "xl": "32px",
+                      "sidebar-collapsed": "56px",
+                      "inspector": "340px",
+                      "sidebar": "240px",
+                      "sm": "8px",
+                      "xs": "4px",
+                      "unit": "4px",
+                      "base": "16px"
+              },
+              "fontFamily": {
+                      "display-xl": [
+                              "Geist"
+                      ],
+                      "label-caps": [
+                              "JetBrains Mono"
+                      ],
+                      "code-sm": [
+                              "JetBrains Mono"
+                      ],
+                      "body-sm": [
+                              "Inter"
+                      ],
+                      "body-base": [
+                              "Inter"
+                      ],
+                      "headline-sm": [
+                              "Geist"
+                      ],
+                      "headline-md": [
+                              "Geist"
+                      ],
+                      "display-lg": [
+                              "Geist"
+                      ],
+                      "code-base": [
+                              "JetBrains Mono"
+                      ],
+                      "body-medium": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {
+                      "display-xl": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "letterSpacing": "-0.025em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "label-caps": [
+                              "11px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "code-sm": [
+                              "12px",
+                              {
+                                      "lineHeight": "18px",
+                                      "letterSpacing": "0",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "body-sm": [
+                              "12px",
+                              {
+                                      "lineHeight": "18px",
+                                      "letterSpacing": "0",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "body-base": [
+                              "14px",
+                              {
+                                      "lineHeight": "22px",
+                                      "letterSpacing": "-0.005em",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-sm": [
+                              "15px",
+                              {
+                                      "lineHeight": "22px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-md": [
+                              "18px",
+                              {
+                                      "lineHeight": "26px",
+                                      "letterSpacing": "-0.015em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "display-lg": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "code-base": [
+                              "13px",
+                              {
+                                      "lineHeight": "20px",
+                                      "letterSpacing": "0",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "body-medium": [
+                              "14px",
+                              {
+                                      "lineHeight": "22px",
+                                      "letterSpacing": "-0.005em",
+                                      "fontWeight": "500"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+<style>
+        body {
+            background-color: #131315;
+            color: #e5e1e4;
+            /* Subtle neural net background */
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(129, 140, 248, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(192, 132, 252, 0.03) 0%, transparent 50%);
+            background-attachment: fixed;
+        }
+        .timeline-line::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 24px;
+            width: 2px;
+            background: linear-gradient(to bottom, #454653 0%, #454653 50%, rgba(69, 70, 83, 0) 100%);
+            z-index: 0;
+        }
+        .node-glow {
+            box-shadow: 0 0 12px 2px rgba(129, 140, 248, 0.4);
+        }
+        .inspector-glass {
+            background: rgba(24, 24, 29, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-left: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #131315;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #353437;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #454653;
+        }
+      </style>
+</head>
+<body class="font-body-base text-body-base flex h-screen overflow-hidden bg-background text-on-surface">
+<!-- SideNavBar -->
+<nav aria-label="Sidebar Navigation" class="bg-surface dark:bg-surface text-primary dark:text-primary font-label-caps text-label-caps docked left-0 h-full w-sidebar border-r border-outline-variant flat no shadows flex flex-col fixed left-0 top-0 z-40 hidden md:flex">
+<div class="p-lg border-b border-outline-variant flex items-center gap-sm">
+<div class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center border border-outline-variant flex-shrink-0 overflow-hidden">
+<span class="material-symbols-outlined text-[16px] text-primary" style="font-variation-settings: 'FILL' 1;">code</span>
+</div>
+<div class="min-w-0">
+<div class="font-headline-sm text-headline-sm font-bold text-on-surface truncate" title="expressjs/express">expressjs/express</div>
+<div class="text-on-surface-variant text-[10px] truncate">Main Branch</div>
+</div>
+</div>
+<div class="p-md">
+<button class="w-full bg-primary-container text-background py-sm px-md rounded-lg font-headline-sm flex items-center justify-center gap-sm hover:opacity-90 transition-opacity scale-95 active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                New Investigation
+            </button>
+</div>
+<div class="flex-1 overflow-y-auto py-sm px-md flex flex-col gap-xs">
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors duration-200 scale-95 active:scale-90 transition-transform group" href="#">
+<span class="material-symbols-outlined text-[20px] group-hover:text-tertiary-fixed transition-colors">rocket_launch</span>
+<span>Start Contributing</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors duration-200 scale-95 active:scale-90 transition-transform group" href="#">
+<span class="material-symbols-outlined text-[20px] group-hover:text-error transition-colors">bug_report</span>
+<span>Issues</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors duration-200 scale-95 active:scale-90 transition-transform group" href="#">
+<span class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">psychology</span>
+<span>Understand Code</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors duration-200 scale-95 active:scale-90 transition-transform group" href="#">
+<span class="material-symbols-outlined text-[20px] group-hover:text-secondary transition-colors">search_check</span>
+<span>Investigations</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors duration-200 scale-95 active:scale-90 transition-transform group" href="#">
+<span class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">account_tree</span>
+<span>Architecture</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-primary border-l-4 border-primary bg-primary-container/10 scale-95 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined text-[20px]">history</span>
+<span>GitStory</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors duration-200 scale-95 active:scale-90 transition-transform group" href="#">
+<span class="material-symbols-outlined text-[20px] group-hover:text-secondary-fixed transition-colors">auto_fix_high</span>
+<span>SkillPatch</span>
+</a>
+</div>
+</nav>
+<!-- Main Content Area -->
+<div class="flex-1 flex flex-col md:ml-sidebar relative z-0 h-screen overflow-hidden">
+<!-- TopAppBar -->
+<header aria-label="Top Application Bar" class="bg-surface/75 backdrop-blur-md text-primary dark:text-primary font-headline-sm text-headline-sm docked top-0 w-full border-b border-outline-variant flat no shadows flex justify-between items-center h-16 px-lg sticky top-0 z-50 w-full">
+<div class="flex items-center gap-xl">
+<!-- Mobile Menu Button (Visible only on mobile) -->
+<button class="md:hidden text-on-surface-variant hover:text-primary transition-colors cursor-pointer active:opacity-70 p-sm -ml-sm">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<div class="font-display-lg text-display-lg font-bold text-on-surface hidden md:block tracking-tight">RepoMind</div>
+<nav class="hidden md:flex gap-lg items-center ml-lg border-l border-outline-variant pl-lg">
+<a class="text-on-surface-variant hover:text-primary transition-colors cursor-pointer active:opacity-70" href="#">Docs</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors cursor-pointer active:opacity-70" href="#">Settings</a>
+</nav>
+</div>
+<div class="flex items-center gap-md">
+<!-- Global Search -->
+<div class="relative hidden sm:block w-64 group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px] group-focus-within:text-primary transition-colors">search</span>
+<input class="w-full bg-surface-container-low border border-outline-variant rounded-full py-1.5 pl-10 pr-4 text-body-sm text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all shadow-inner" placeholder="Search codebase, issues..." type="text"/>
+<div class="absolute right-3 top-1/2 -translate-y-1/2 flex gap-1">
+<kbd class="font-code-sm text-[10px] text-on-surface-variant bg-surface-container px-1.5 rounded border border-outline-variant">⌘</kbd>
+<kbd class="font-code-sm text-[10px] text-on-surface-variant bg-surface-container px-1.5 rounded border border-outline-variant">K</kbd>
+</div>
+</div>
+<div class="flex items-center gap-sm ml-sm">
+<button aria-label="notifications" class="text-on-surface-variant hover:text-primary transition-colors cursor-pointer active:opacity-70 p-sm rounded-full hover:bg-surface-container-high flex items-center justify-center relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-1.5 right-1.5 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<button aria-label="account_circle" class="text-on-surface-variant hover:text-primary transition-colors cursor-pointer active:opacity-70 p-sm rounded-full hover:bg-surface-container-high flex items-center justify-center">
+<span class="material-symbols-outlined">account_circle</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Canvas Area -->
+<main class="flex-1 flex overflow-hidden relative">
+<!-- Timeline Canvas -->
+<div class="flex-1 overflow-y-auto p-lg lg:p-xl custom-scrollbar" id="timeline-container">
+<!-- Header -->
+<div class="max-w-4xl mx-auto mb-xl">
+<div class="flex items-center gap-sm mb-sm text-primary">
+<span class="material-symbols-outlined">history</span>
+<span class="font-label-caps text-label-caps tracking-widest uppercase">Evolution Canvas</span>
+</div>
+<h1 class="font-display-xl text-display-xl text-on-surface mb-sm">GitStory</h1>
+<p class="text-on-surface-variant font-body-base max-w-2xl">Understand how the code evolved and why it exists. Tracing the architectural milestones of expressjs/express.</p>
+</div>
+<!-- Timeline -->
+<div class="max-w-4xl mx-auto relative timeline-line pl-xl py-md">
+<!-- Node 1: Active -->
+<div class="relative pl-xl mb-xl group cursor-pointer" onclick="openInspector('node-1')">
+<!-- Connecting Dot -->
+<div class="absolute left-[-16px] top-6 w-8 h-8 rounded-full bg-surface border-2 border-primary-container flex items-center justify-center z-10 node-glow transition-all duration-300">
+<span class="material-symbols-outlined text-[16px] text-primary-container">adjust</span>
+</div>
+<!-- Connecting Line Hover Effect (CSS visual hack) -->
+<div class="absolute left-0 top-10 w-6 h-px bg-primary-container/0 group-hover:bg-primary-container/30 transition-colors z-0"></div>
+<!-- Card -->
+<div class="bg-surface-container-low border border-primary/30 rounded-xl p-lg hover:border-primary/60 hover:bg-surface-container transition-all duration-300 shadow-[0_8px_32px_rgba(0,0,0,0.2)]">
+<div class="flex justify-between items-start mb-md">
+<div>
+<div class="flex items-center gap-sm mb-xs">
+<span class="font-code-sm text-on-surface-variant text-[11px] bg-surface px-2 py-0.5 rounded border border-outline-variant">Oct 14, 2023</span>
+<span class="font-label-caps text-primary text-[10px] uppercase px-2 py-0.5 rounded-full bg-primary/10 border border-primary/20">Core Refactor</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface group-hover:text-primary-fixed transition-colors">Introduction of Middleware System v5</h3>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity">arrow_forward</span>
+</div>
+<p class="text-body-sm text-on-surface-variant mb-md max-w-2xl line-clamp-2">Major overhaul of the request pipeline. Transitioned to a promise-aware middleware execution chain, fundamentally changing how async errors are handled without requiring next() catch blocks.</p>
+<div class="flex gap-lg border-t border-outline-variant/50 pt-sm mt-sm">
+<div class="flex items-center gap-xs text-on-surface-variant">
+<span class="material-symbols-outlined text-[14px]">commit</span>
+<span class="font-code-sm text-code-sm">124 commits</span>
+</div>
+<div class="flex items-center gap-xs text-on-surface-variant">
+<span class="material-symbols-outlined text-[14px]">folder</span>
+<span class="font-code-sm text-code-sm">lib/router</span>
+</div>
+<div class="flex items-center gap-xs text-on-surface-variant">
+<span class="material-symbols-outlined text-[14px]">bug_report</span>
+<span class="font-code-sm text-code-sm">#4582, #4910</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Node 2 -->
+<div class="relative pl-xl mb-xl group cursor-pointer" onclick="openInspector('node-2')">
+<div class="absolute left-[-12px] top-6 w-6 h-6 rounded-full bg-surface border-2 border-outline-variant flex items-center justify-center z-10 group-hover:border-secondary-container transition-all duration-300">
+<span class="w-2 h-2 rounded-full bg-outline-variant group-hover:bg-secondary-container transition-colors"></span>
+</div>
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg hover:border-secondary/50 hover:bg-surface-container-low transition-all duration-300">
+<div class="flex justify-between items-start mb-md">
+<div>
+<div class="flex items-center gap-sm mb-xs">
+<span class="font-code-sm text-on-surface-variant text-[11px] bg-surface px-2 py-0.5 rounded border border-outline-variant">Mar 22, 2021</span>
+<span class="font-label-caps text-secondary text-[10px] uppercase px-2 py-0.5 rounded-full bg-secondary/10 border border-secondary/20">Feature Launch</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface group-hover:text-secondary-fixed transition-colors">Native Route Parameter Validation</h3>
+</div>
+</div>
+<p class="text-body-sm text-on-surface-variant mb-md max-w-2xl">Added built-in support for regex-based route parameter validation directly within route definitions, reducing the need for preliminary middleware checks.</p>
+<div class="flex gap-lg border-t border-outline-variant/50 pt-sm mt-sm">
+<div class="flex items-center gap-xs text-on-surface-variant">
+<span class="material-symbols-outlined text-[14px]">commit</span>
+<span class="font-code-sm text-code-sm">45 commits</span>
+</div>
+<div class="flex items-center gap-xs text-on-surface-variant">
+<span class="material-symbols-outlined text-[14px]">folder</span>
+<span class="font-code-sm text-code-sm">lib/router/layer.js</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Node 3 -->
+<div class="relative pl-xl mb-xl group cursor-pointer">
+<div class="absolute left-[-12px] top-6 w-6 h-6 rounded-full bg-surface border-2 border-outline-variant flex items-center justify-center z-10 group-hover:border-outline transition-all duration-300">
+<span class="w-2 h-2 rounded-full bg-outline-variant group-hover:bg-outline transition-colors"></span>
+</div>
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg hover:bg-surface-container-low transition-all duration-300 opacity-70 group-hover:opacity-100">
+<div class="flex justify-between items-start mb-md">
+<div>
+<div class="flex items-center gap-sm mb-xs">
+<span class="font-code-sm text-on-surface-variant text-[11px] bg-surface px-2 py-0.5 rounded border border-outline-variant">Sep 10, 2018</span>
+<span class="font-label-caps text-outline text-[10px] uppercase px-2 py-0.5 rounded-full bg-surface-variant border border-outline-variant">Performance</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Query String Parser Optimization</h3>
+</div>
+</div>
+<p class="text-body-sm text-on-surface-variant">Switched default query string parsing to a faster, lighter implementation, significantly improving QPS on heavily parameterized routes.</p>
+</div>
+</div>
+<!-- Faded End Node -->
+<div class="relative pl-xl mb-xl opacity-40">
+<div class="absolute left-[-6px] top-4 w-3 h-3 rounded-full bg-outline-variant z-10"></div>
+<div class="pl-md py-sm">
+<span class="font-code-sm text-on-surface-variant">Initial Commit - Jan 2, 2010</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Evolution Inspector (Side Panel) -->
+<!-- Initial State: Hidden (translate-x-full). Added an ID to toggle. -->
+<aside class="w-inspector flex-shrink-0 inspector-glass border-l border-outline-variant h-full flex flex-col absolute right-0 top-0 transform translate-x-full transition-transform duration-300 ease-in-out shadow-[-12px_0_32px_rgba(0,0,0,0.5)] z-20" id="inspector-panel">
+<!-- Inspector Header -->
+<div class="p-md border-b border-outline-variant flex justify-between items-center bg-surface-container-low/50">
+<div class="flex items-center gap-sm text-primary">
+<span class="material-symbols-outlined text-[18px]">psychology</span>
+<span class="font-headline-sm text-headline-sm">Evolution Inspector</span>
+</div>
+<button class="text-on-surface-variant hover:text-on-surface p-1 rounded hover:bg-surface-variant transition-colors" onclick="closeInspector()">
+<span class="material-symbols-outlined text-[20px]">close</span>
+</button>
+</div>
+<!-- Inspector Content (Scrollable) -->
+<div class="flex-1 overflow-y-auto p-lg custom-scrollbar">
+<!-- Context Header -->
+<div class="mb-xl">
+<div class="font-code-sm text-primary-container text-[11px] mb-1">Oct 14, 2023 • Core Refactor</div>
+<h2 class="font-display-lg text-display-lg text-on-surface leading-tight mb-md">Introduction of Middleware System v5</h2>
+<!-- AI Match/Relevance Score -->
+<div class="flex items-center gap-sm bg-surface-container rounded-lg p-sm border border-outline-variant/50">
+<div class="w-8 h-8 rounded-full border-2 border-primary border-t-transparent flex items-center justify-center animate-[spin_3s_linear_infinite]">
+<div class="w-6 h-6 rounded-full border border-primary-container/50 flex items-center justify-center bg-surface">
+<span class="font-code-sm text-[9px] text-primary font-bold">92</span>
+</div>
+</div>
+<div class="text-xs text-on-surface-variant leading-tight">
+<strong class="text-on-surface block">High Relevance</strong>
+                                Matches your current investigation area.
+                            </div>
+</div>
+</div>
+<!-- What Changed -->
+<div class="mb-xl">
+<h4 class="font-headline-sm text-headline-sm text-on-surface mb-sm flex items-center gap-xs">
+<span class="material-symbols-outlined text-[16px] text-tertiary">swap_horiz</span>
+                            What changed?
+                        </h4>
+<ul class="space-y-2">
+<li class="flex items-start gap-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary mt-2 flex-shrink-0"></span>
+<span class="text-body-sm text-on-surface-variant">Promisified the internal routing core.</span>
+</li>
+<li class="flex items-start gap-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary mt-2 flex-shrink-0"></span>
+<span class="text-body-sm text-on-surface-variant">Removed need for explicit <code class="font-code-sm bg-surface-container px-1 py-0.5 rounded text-on-surface">try/catch</code> blocks in async route handlers.</span>
+</li>
+<li class="flex items-start gap-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary mt-2 flex-shrink-0"></span>
+<span class="text-body-sm text-on-surface-variant">Updated error propagation logic.</span>
+</li>
+</ul>
+</div>
+<!-- Why it matters -->
+<div class="mb-xl bg-surface-container-low p-md rounded-lg border border-outline-variant/50">
+<h4 class="font-headline-sm text-headline-sm text-on-surface mb-xs flex items-center gap-xs">
+<span class="material-symbols-outlined text-[16px] text-secondary">lightbulb</span>
+                            Why it matters
+                        </h4>
+<p class="text-body-sm text-on-surface-variant leading-relaxed">
+                            Historically, unhandled promise rejections in Express routes would crash the Node process. This refactor intercepts rejections automatically, routing them to the standard error-handling middleware, drastically improving default application stability.
+                        </p>
+</div>
+<!-- Affected Areas -->
+<div class="mb-xl">
+<h4 class="font-headline-sm text-headline-sm text-on-surface mb-sm flex items-center gap-xs">
+<span class="material-symbols-outlined text-[16px] text-primary-fixed">account_tree</span>
+                            Affected Architecture
+                        </h4>
+<div class="flex flex-wrap gap-2">
+<button class="flex items-center gap-xs px-2 py-1 rounded bg-primary-container/10 border border-primary/30 text-primary hover:bg-primary-container/20 transition-colors text-xs">
+<span class="material-symbols-outlined text-[14px]">account_tree</span>
+                                Router Core
+                            </button>
+<button class="flex items-center gap-xs px-2 py-1 rounded bg-surface-container border border-outline-variant text-on-surface-variant hover:text-on-surface transition-colors text-xs">
+<span class="material-symbols-outlined text-[14px]">account_tree</span>
+                                Application Layer
+                            </button>
+</div>
+</div>
+<!-- Relevant Commits -->
+<div class="mb-xl">
+<h4 class="font-headline-sm text-headline-sm text-on-surface mb-sm flex items-center gap-xs">
+<span class="material-symbols-outlined text-[16px] text-outline">commit</span>
+                            Key Commits
+                        </h4>
+<div class="space-y-1">
+<a class="block p-sm rounded bg-surface border border-outline-variant/30 hover:border-outline-variant hover:bg-surface-container transition-all group" href="#">
+<div class="flex justify-between items-center mb-1">
+<span class="font-code-sm text-[11px] text-primary">a1b2c3d</span>
+<span class="material-symbols-outlined text-[12px] text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity">open_in_new</span>
+</div>
+<div class="text-body-sm text-on-surface truncate">feat: native promise support in router</div>
+</a>
+<a class="block p-sm rounded bg-surface border border-outline-variant/30 hover:border-outline-variant hover:bg-surface-container transition-all group" href="#">
+<div class="flex justify-between items-center mb-1">
+<span class="font-code-sm text-[11px] text-primary">f9e8d7c</span>
+<span class="material-symbols-outlined text-[12px] text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity">open_in_new</span>
+</div>
+<div class="text-body-sm text-on-surface truncate">refactor: error propagation logic</div>
+</a>
+</div>
+</div>
+</div>
+<!-- Inspector Footer / Action -->
+<div class="p-md border-t border-outline-variant bg-surface-container-lowest">
+<h5 class="text-xs text-on-surface-variant mb-sm uppercase tracking-wider font-semibold">Next Steps</h5>
+<button class="w-full bg-surface-container border border-primary/50 text-primary py-sm px-md rounded-lg font-headline-sm flex items-center justify-between hover:bg-primary-container/10 transition-colors group relative overflow-hidden">
+<!-- AI Sparkle subtle background glow -->
+<div class="absolute inset-0 bg-gradient-to-r from-transparent via-primary/5 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]"></div>
+<span class="relative flex items-center gap-sm">
+<span class="material-symbols-outlined text-[18px]">bug_report</span>
+                            View 3 related open issues
+                        </span>
+<span class="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform relative">arrow_forward</span>
+</button>
+</div>
+</aside>
+<!-- Dimming overlay when inspector is open on smaller screens (optional, but good for focus) -->
+<div class="absolute inset-0 bg-background/50 backdrop-blur-sm z-10 hidden transition-opacity opacity-0" id="canvas-overlay" onclick="closeInspector()"></div>
+</main>
+</div>
+<script>
+        // Simple Interaction Logic for the Inspector Panel
+        const inspectorPanel = document.getElementById('inspector-panel');
+        const overlay = document.getElementById('canvas-overlay');
+        
+        function openInspector(nodeId) {
+            // In a real app, we'd fetch data based on nodeId and populate the inspector here.
+            
+            // Slide in
+            inspectorPanel.classList.remove('translate-x-full');
+            
+            // Show overlay (optional, enhances focus)
+            overlay.classList.remove('hidden');
+            // Small delay to allow display:block to apply before animating opacity
+            setTimeout(() => {
+                overlay.classList.remove('opacity-0');
+            }, 10);
+        }
+
+        function closeInspector() {
+            // Slide out
+            inspectorPanel.classList.add('translate-x-full');
+            
+            // Hide overlay
+            overlay.classList.add('opacity-0');
+            setTimeout(() => {
+                overlay.classList.add('hidden');
+            }, 300); // match transition duration
+        }
+        
+        // CSS Animation for the button shimmer
+        const style = document.createElement('style');
+        style.innerHTML = `
+            @keyframes shimmer {
+                100% { transform: translateX(100%); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body></html>
