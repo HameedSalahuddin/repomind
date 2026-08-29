@@ -59,15 +59,15 @@ export default function LandingPage() {
         {/* Repository Intelligence Badge */}
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#7C3AED]/30 bg-[#7C3AED]/10 text-[#8B5CF6] text-[11px] font-mono tracking-widest uppercase mb-8 shadow-sm">
           <span className="w-1.5 h-1.5 rounded-full bg-[#06B6D4] animate-pulse" />
-          <span>REPOSITORY INTELLIGENCE</span>
+          <span>OPEN SOURCE CONTRIBUTOR WORKSPACE</span>
         </div>
 
         {/* Hero Title & Purpose */}
         <h1 className="text-4xl sm:text-6xl font-extrabold text-[#E6E8EC] tracking-tight leading-tight mb-4">
-          Understand any codebase.
+          Your AI workspace for contributing to open source.
         </h1>
         <p className="text-base sm:text-lg text-[#8B929E] font-normal tracking-wide mb-12">
-          Map it. Trace it. Ask it.
+          Find an issue. Understand the code. Build a plan. Start contributing.
         </p>
 
         {/* Repository Input — Primary Focal Point */}
@@ -98,17 +98,17 @@ export default function LandingPage() {
         <div className="text-xs text-[#8B929E] font-mono tracking-wider uppercase flex flex-wrap justify-center items-center gap-2 sm:gap-3">
           <span>Architecture</span>
           <span className="text-[#5A606C]">•</span>
-          <span>GitStory</span>
+          <span>Contribution Opportunities</span>
           <span className="text-[#5A606C]">•</span>
-          <span>Evidence-based AI</span>
+          <span>AI Investigation</span>
           <span className="text-[#5A606C]">•</span>
-          <span>Onboarding Wiki</span>
+          <span>Contribution Plans</span>
         </div>
       </main>
 
       {/* Footer */}
       <footer className="relative z-10 py-6 text-center text-[11px] font-mono text-[#5A606C] border-t border-[#1E222A]/40">
-        RepoMind · AI-Powered Codebase Neural Intelligence
+        RepoMind · Your AI Workspace for Open Source Contribution
       </footer>
     </div>
   );

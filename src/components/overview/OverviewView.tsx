@@ -4,9 +4,11 @@ import { useState } from 'react';
 import { RepositoryAnalysis, RepositoryIssue } from '@/types';
 import { InvestigationResult } from '@/types/investigation';
 
+import { WorkspaceTab } from '@/components/layout/SideNavBar';
+
 interface OverviewViewProps {
   data: RepositoryAnalysis;
-  onNavigateTab?: (tab: 'overview' | 'architecture' | 'gitstory' | 'qna' | 'skillpatch') => void;
+  onNavigateTab?: (tab: WorkspaceTab) => void;
 }
 
 export default function OverviewView({ data, onNavigateTab }: OverviewViewProps) {

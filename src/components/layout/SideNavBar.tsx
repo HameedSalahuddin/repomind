@@ -9,8 +9,7 @@ export type WorkspaceTab =
   | 'investigations' 
   | 'plan'
   | 'architecture' 
-  | 'gitstory' 
-  | 'skillpatch';
+  | 'qna';
 
 interface SideNavBarProps {
   activeTab: WorkspaceTab;
@@ -144,32 +143,18 @@ export default function SideNavBar({ activeTab, onTabChange, repoUrl, selectedIs
           <span>Architecture</span>
         </Link>
 
-        {/* 6. GitStory */}
+        {/* 6. Ask AI Q&A */}
         <Link
-          href={`/app${currentRepoParam}&tab=gitstory`}
-          onClick={(e) => handleNav('gitstory', e)}
+          href={`/app${currentRepoParam}&tab=qna`}
+          onClick={(e) => handleNav('qna', e)}
           className={`flex items-center gap-2.5 px-3 py-2 rounded text-xs transition-all ${
-            activeTab === 'gitstory'
-              ? 'text-[#38BDF8] bg-[#38BDF8]/10 font-medium border-l-2 border-[#38BDF8]'
+            activeTab === 'qna'
+              ? 'text-[#818CF8] bg-[#818CF8]/10 font-medium border-l-2 border-[#818CF8]'
               : 'text-[#C6C5D5] hover:text-[#E5E1E4] hover:bg-[#1B1B1D]'
           }`}
         >
-          <span className="material-symbols-outlined text-[18px]">history</span>
-          <span>GitStory</span>
-        </Link>
-
-        {/* 7. SkillPatch */}
-        <Link
-          href={`/app${currentRepoParam}&tab=skillpatch`}
-          onClick={(e) => handleNav('skillpatch', e)}
-          className={`flex items-center gap-2.5 px-3 py-2 rounded text-xs transition-all ${
-            activeTab === 'skillpatch'
-              ? 'text-[#38BDF8] bg-[#38BDF8]/10 font-medium border-l-2 border-[#38BDF8]'
-              : 'text-[#C6C5D5] hover:text-[#E5E1E4] hover:bg-[#1B1B1D]'
-          }`}
-        >
-          <span className="material-symbols-outlined text-[18px]">auto_awesome</span>
-          <span>SkillPatch</span>
+          <span className="material-symbols-outlined text-[18px]">psychology</span>
+          <span>Ask AI</span>
         </Link>
       </div>
 
