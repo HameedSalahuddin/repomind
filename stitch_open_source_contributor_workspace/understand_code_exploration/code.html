@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>RepoMind - Understand Code</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&amp;family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-error-container": "#ffdad6",
+                      "on-primary": "#131e8c",
+                      "error-container": "#93000a",
+                      "on-secondary-container": "#d1a1ff",
+                      "tertiary-container": "#00ac58",
+                      "surface-container": "#201f21",
+                      "inverse-on-surface": "#313032",
+                      "on-secondary-fixed": "#2c0051",
+                      "surface-bright": "#39393b",
+                      "inverse-surface": "#e5e1e4",
+                      "on-primary-container": "#101b8a",
+                      "primary": "#bdc2ff",
+                      "on-error": "#690005",
+                      "inverse-primary": "#4953bc",
+                      "surface": "#131315",
+                      "surface-container-highest": "#353437",
+                      "on-tertiary-container": "#003617",
+                      "surface-container-high": "#2a2a2c",
+                      "on-secondary-fixed-variant": "#62259b",
+                      "on-surface-variant": "#c6c5d5",
+                      "secondary-fixed": "#f0dbff",
+                      "tertiary": "#4de082",
+                      "on-primary-fixed-variant": "#2f3aa3",
+                      "on-tertiary-fixed": "#00210c",
+                      "surface-container-lowest": "#0e0e10",
+                      "outline-variant": "#454653",
+                      "tertiary-fixed-dim": "#4de082",
+                      "surface-dim": "#131315",
+                      "primary-fixed-dim": "#bdc2ff",
+                      "secondary": "#ddb8ff",
+                      "on-tertiary-fixed-variant": "#005227",
+                      "on-background": "#e5e1e4",
+                      "on-surface": "#e5e1e4",
+                      "surface-container-low": "#1b1b1d",
+                      "surface-variant": "#353437",
+                      "tertiary-fixed": "#6dfe9c",
+                      "on-secondary": "#490081",
+                      "error": "#ffb4ab",
+                      "background": "#131315",
+                      "secondary-fixed-dim": "#ddb8ff",
+                      "on-tertiary": "#003919",
+                      "primary-fixed": "#e0e0ff",
+                      "on-primary-fixed": "#000767",
+                      "secondary-container": "#62259b",
+                      "surface-tint": "#bdc2ff",
+                      "outline": "#908f9e",
+                      "primary-container": "#818cf8"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "sidebar": "240px",
+                      "unit": "4px",
+                      "inspector": "340px",
+                      "sm": "8px",
+                      "gutter": "1px",
+                      "base": "16px",
+                      "xl": "32px",
+                      "sidebar-collapsed": "56px",
+                      "xs": "4px",
+                      "lg": "24px",
+                      "md": "12px"
+              },
+              "fontFamily": {
+                      "headline-md": [
+                              "Geist"
+                      ],
+                      "body-medium": [
+                              "Inter"
+                      ],
+                      "display-lg": [
+                              "Geist"
+                      ],
+                      "label-caps": [
+                              "JetBrains Mono"
+                      ],
+                      "body-base": [
+                              "Inter"
+                      ],
+                      "code-sm": [
+                              "JetBrains Mono"
+                      ],
+                      "code-base": [
+                              "JetBrains Mono"
+                      ],
+                      "body-sm": [
+                              "Inter"
+                      ],
+                      "display-xl": [
+                              "Geist"
+                      ],
+                      "headline-sm": [
+                              "Geist"
+                      ]
+              },
+              "fontSize": {
+                      "headline-md": [
+                              "18px",
+                              {
+                                      "lineHeight": "26px",
+                                      "letterSpacing": "-0.015em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-medium": [
+                              "14px",
+                              {
+                                      "lineHeight": "22px",
+                                      "letterSpacing": "-0.005em",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "display-lg": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "label-caps": [
+                              "11px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "body-base": [
+                              "14px",
+                              {
+                                      "lineHeight": "22px",
+                                      "letterSpacing": "-0.005em",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "code-sm": [
+                              "12px",
+                              {
+                                      "lineHeight": "18px",
+                                      "letterSpacing": "0",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "code-base": [
+                              "13px",
+                              {
+                                      "lineHeight": "20px",
+                                      "letterSpacing": "0",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "body-sm": [
+                              "12px",
+                              {
+                                      "lineHeight": "18px",
+                                      "letterSpacing": "0",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "display-xl": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "letterSpacing": "-0.025em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "headline-sm": [
+                              "15px",
+                              {
+                                      "lineHeight": "22px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "600"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+    </script>
+<style>
+        body { background-color: #0D0D0F; color: #e5e1e4; }
+        .glass-panel { background: rgba(24, 24, 29, 0.75); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45); }
+        .card-panel { background: #18181D; border: 1px solid #1F1F23; }
+        .hairline-border { border-color: #1F1F23; }
+    </style>
+</head>
+<body class="font-body-base text-body-base bg-background h-screen overflow-hidden flex">
+<!-- SideNavBar -->
+<nav class="fixed left-0 top-0 h-full flex flex-col py-lg z-50 bg-surface dark:bg-surface border-r border-outline-variant w-sidebar">
+<div class="px-lg pb-xl border-b border-outline-variant/50">
+<h1 class="font-display-lg text-display-lg font-bold text-on-surface dark:text-on-surface">RepoMind</h1>
+<p class="font-label-caps text-label-caps text-on-surface-variant mt-1">AI Workspace</p>
+</div>
+<ul class="flex flex-col mt-lg flex-grow overflow-y-auto">
+<li>
+<a class="flex items-center px-lg py-sm text-on-surface-variant dark:text-on-surface-variant hover:text-on-surface dark:hover:text-on-surface hover:bg-surface-container-high transition-all duration-200 ease-in-out group" href="#">
+<span class="material-symbols-outlined mr-md opacity-70 group-hover:opacity-100 transition-opacity">rocket_launch</span>
+<span class="font-label-caps text-label-caps tracking-wider">Start Contributing</span>
+</a>
+</li>
+<li>
+<a class="flex items-center px-lg py-sm text-on-surface-variant dark:text-on-surface-variant hover:text-on-surface dark:hover:text-on-surface hover:bg-surface-container-high transition-all duration-200 ease-in-out group" href="#">
+<span class="material-symbols-outlined mr-md opacity-70 group-hover:opacity-100 transition-opacity">bug_report</span>
+<span class="font-label-caps text-label-caps tracking-wider">Issues</span>
+</a>
+</li>
+<li class="relative">
+<a class="flex items-center px-lg py-sm text-primary dark:text-primary bg-surface-container-high/30 transition-all duration-200 ease-in-out group relative flex items-center justify-start after:absolute after:left-0 after:h-8 after:w-1 after:bg-primary after:shadow-[0_0_8px_rgba(189,194,255,0.8)]" href="#">
+<span class="material-symbols-outlined mr-md text-primary">menu_book</span>
+<span class="font-label-caps text-label-caps tracking-wider">Understand Code</span>
+</a>
+</li>
+<li>
+<a class="flex items-center px-lg py-sm text-on-surface-variant dark:text-on-surface-variant hover:text-on-surface dark:hover:text-on-surface hover:bg-surface-container-high transition-all duration-200 ease-in-out group" href="#">
+<span class="material-symbols-outlined mr-md opacity-70 group-hover:opacity-100 transition-opacity">troubleshoot</span>
+<span class="font-label-caps text-label-caps tracking-wider">Investigations</span>
+</a>
+</li>
+<li>
+<a class="flex items-center px-lg py-sm text-on-surface-variant dark:text-on-surface-variant hover:text-on-surface dark:hover:text-on-surface hover:bg-surface-container-high transition-all duration-200 ease-in-out group" href="#">
+<span class="material-symbols-outlined mr-md opacity-70 group-hover:opacity-100 transition-opacity">account_tree</span>
+<span class="font-label-caps text-label-caps tracking-wider">Architecture</span>
+</a>
+</li>
+<li>
+<a class="flex items-center px-lg py-sm text-on-surface-variant dark:text-on-surface-variant hover:text-on-surface dark:hover:text-on-surface hover:bg-surface-container-high transition-all duration-200 ease-in-out group" href="#">
+<span class="material-symbols-outlined mr-md opacity-70 group-hover:opacity-100 transition-opacity">history</span>
+<span class="font-label-caps text-label-caps tracking-wider">GitStory</span>
+</a>
+</li>
+<li>
+<a class="flex items-center px-lg py-sm text-on-surface-variant dark:text-on-surface-variant hover:text-on-surface dark:hover:text-on-surface hover:bg-surface-container-high transition-all duration-200 ease-in-out group" href="#">
+<span class="material-symbols-outlined mr-md opacity-70 group-hover:opacity-100 transition-opacity">military_tech</span>
+<span class="font-label-caps text-label-caps tracking-wider">SkillPatch</span>
+</a>
+</li>
+</ul>
+<div class="mt-auto px-lg pt-xl border-t border-outline-variant/50">
+<div class="flex items-center">
+<div class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center overflow-hidden border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="A professional looking avatar image of a developer, dark moody lighting, subtle blue rim light, highly detailed 8k resolution, modern workspace background out of focus." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDC93iFOW_UgKrestDWNVRrshOkfAHaeL7QHUP2BzHRbRTpRt0UrTFM1RcIT4ePgqa77qchstbysBWBy-ZS_UTkW5T3yZ7W6FdhaXdBbvciN66-o1OPWW2uBrAGeX3SUuvWEiamXrJl2Utvq245uI5kFcqOsQvC_u6e-Ucuc3SAwtOVausuGYlM86IvYqBmpuqR2Nqqgkf_JMeMGqBYMvgHN-cWB16CBgl5j6NYQlS20jXTMir5fhOu"/>
+</div>
+<div class="ml-sm">
+<p class="font-body-medium text-body-medium text-on-surface">DevUser</p>
+</div>
+</div>
+</div>
+</nav>
+<!-- Main Content Area -->
+<div class="flex-grow ml-sidebar flex flex-col h-full bg-[#0D0D0F]">
+<!-- TopAppBar -->
+<header class="fixed top-0 right-0 left-sidebar h-[64px] flex items-center justify-between px-lg z-40 bg-surface/75 dark:bg-surface/75 backdrop-blur-md shadow-sm border-b border-outline-variant">
+<div class="flex items-center">
+<span class="font-label-caps text-label-caps text-on-surface-variant bg-surface-container-low px-sm py-xs rounded border border-outline-variant/30 flex items-center shadow-sm">
+<span class="material-symbols-outlined text-[16px] mr-xs">folder</span>
+                    expressjs / express
+                </span>
+</div>
+<div class="flex items-center space-x-md">
+<div class="relative hidden md:block">
+<span class="material-symbols-outlined absolute left-sm top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">search</span>
+<input class="bg-surface-container-low border border-outline-variant/50 rounded-full py-xs pl-xl pr-sm text-body-medium text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/50 w-64 transition-all duration-200" placeholder="Search repository..." type="text"/>
+</div>
+<button class="w-8 h-8 rounded-full flex items-center justify-center text-on-surface-variant hover:text-primary hover:bg-surface-container-highest/50 transition-colors scale-95 active:scale-100">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">notifications</span>
+</button>
+<button class="w-8 h-8 rounded-full flex items-center justify-center text-on-surface-variant hover:text-primary hover:bg-surface-container-highest/50 transition-colors scale-95 active:scale-100">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">settings</span>
+</button>
+</div>
+</header>
+<!-- Main Canvas -->
+<main class="flex-grow mt-[64px] overflow-y-auto p-xl">
+<div class="max-w-5xl mx-auto">
+<!-- Page Header -->
+<div class="mb-xl">
+<h1 class="font-display-xl text-display-xl text-on-surface font-bold tracking-tight">Understand Code</h1>
+<p class="font-body-medium text-body-medium text-on-surface-variant mt-sm max-w-2xl">
+                        Explore the repository structure and see how different areas connect to active issues.
+                    </p>
+</div>
+<!-- Bento Grid for Code Areas -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-base">
+<!-- Card 1 -->
+<div class="card-panel rounded-lg p-base flex flex-col hover:border-outline transition-colors cursor-pointer group">
+<div class="flex justify-between items-start mb-md">
+<div class="flex items-center space-x-sm">
+<div class="w-8 h-8 rounded bg-primary-container/10 border border-primary-container/20 flex items-center justify-center text-primary-container">
+<span class="material-symbols-outlined text-[20px]">apps</span>
+</div>
+<h2 class="font-headline-md text-headline-md text-on-surface group-hover:text-primary transition-colors">Application</h2>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity">arrow_forward</span>
+</div>
+<p class="font-body-base text-body-base text-on-surface-variant mb-xl flex-grow">
+                            Handles Express application lifecycle and routing configuration.
+                        </p>
+<div class="flex items-center space-x-md pt-sm border-t border-outline-variant/30">
+<div class="flex items-center text-on-surface-variant font-code-sm text-code-sm">
+<span class="material-symbols-outlined text-[16px] mr-xs">description</span>
+                                4 files
+                            </div>
+<div class="flex items-center text-error font-code-sm text-code-sm bg-error-container/20 px-xs py-[2px] rounded border border-error-container/30 shadow-[0_0_8px_rgba(147,0,10,0.2)]">
+<span class="material-symbols-outlined text-[14px] mr-xs">bug_report</span>
+                                4 open issues
+                            </div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="card-panel rounded-lg p-base flex flex-col hover:border-outline transition-colors cursor-pointer group">
+<div class="flex justify-between items-start mb-md">
+<div class="flex items-center space-x-sm">
+<div class="w-8 h-8 rounded bg-tertiary-container/10 border border-tertiary-container/20 flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined text-[20px]">route</span>
+</div>
+<h2 class="font-headline-md text-headline-md text-on-surface group-hover:text-primary transition-colors">Router</h2>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity">arrow_forward</span>
+</div>
+<p class="font-body-base text-body-base text-on-surface-variant mb-xl flex-grow">
+                            Core request dispatcher and middleware mounting logic.
+                        </p>
+<div class="flex items-center space-x-md pt-sm border-t border-outline-variant/30">
+<div class="flex items-center text-on-surface-variant font-code-sm text-code-sm">
+<span class="material-symbols-outlined text-[16px] mr-xs">description</span>
+                                12 files
+                            </div>
+<div class="flex items-center text-error font-code-sm text-code-sm bg-error-container/20 px-xs py-[2px] rounded border border-error-container/30 shadow-[0_0_8px_rgba(147,0,10,0.2)]">
+<span class="material-symbols-outlined text-[14px] mr-xs">bug_report</span>
+                                8 open issues
+                            </div>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="card-panel rounded-lg p-base flex flex-col hover:border-outline transition-colors cursor-pointer group">
+<div class="flex justify-between items-start mb-md">
+<div class="flex items-center space-x-sm">
+<div class="w-8 h-8 rounded bg-secondary-container/20 border border-secondary-container/40 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[20px]">layers</span>
+</div>
+<h2 class="font-headline-md text-headline-md text-on-surface group-hover:text-primary transition-colors">Middleware</h2>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity">arrow_forward</span>
+</div>
+<p class="font-body-base text-body-base text-on-surface-variant mb-xl flex-grow">
+                            Built-in middleware functions for request processing.
+                        </p>
+<div class="flex items-center space-x-md pt-sm border-t border-outline-variant/30">
+<div class="flex items-center text-on-surface-variant font-code-sm text-code-sm">
+<span class="material-symbols-outlined text-[16px] mr-xs">description</span>
+                                6 files
+                            </div>
+<div class="flex items-center text-error font-code-sm text-code-sm bg-error-container/20 px-xs py-[2px] rounded border border-error-container/30 shadow-[0_0_8px_rgba(147,0,10,0.2)]">
+<span class="material-symbols-outlined text-[14px] mr-xs">bug_report</span>
+                                2 open issues
+                            </div>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="card-panel rounded-lg p-base flex flex-col hover:border-outline transition-colors cursor-pointer group">
+<div class="flex justify-between items-start mb-md">
+<div class="flex items-center space-x-sm">
+<div class="w-8 h-8 rounded bg-inverse-primary/20 border border-inverse-primary/40 flex items-center justify-center text-primary-fixed">
+<span class="material-symbols-outlined text-[20px]">sync_alt</span>
+</div>
+<h2 class="font-headline-md text-headline-md text-on-surface group-hover:text-primary transition-colors">Request/Response</h2>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity">arrow_forward</span>
+</div>
+<p class="font-body-base text-body-base text-on-surface-variant mb-xl flex-grow">
+                            Extended HTTP objects with convenience methods.
+                        </p>
+<div class="flex items-center space-x-md pt-sm border-t border-outline-variant/30">
+<div class="flex items-center text-on-surface-variant font-code-sm text-code-sm">
+<span class="material-symbols-outlined text-[16px] mr-xs">description</span>
+                                5 files
+                            </div>
+<div class="flex items-center text-error font-code-sm text-code-sm bg-error-container/20 px-xs py-[2px] rounded border border-error-container/30 shadow-[0_0_8px_rgba(147,0,10,0.2)]">
+<span class="material-symbols-outlined text-[14px] mr-xs">bug_report</span>
+                                3 open issues
+                            </div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>
