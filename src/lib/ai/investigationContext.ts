@@ -33,7 +33,7 @@ export interface InvestigationContext {
 }
 
 const MAX_SOURCE_FILES = 6;
-const MAX_FILE_CHARS = 5000;
+const MAX_FILE_CHARS = 4500;
 const MAX_RELATED_ISSUES = 5;
 
 function getGitHubHeaders(): Record<string, string> {
@@ -99,26 +99,33 @@ export async function buildIssueInvestigationContext(
       });
     });
 
-  // Search repository file tree for related test/doc candidates if issue references a module
+  // Keywords from issue title and body
   const issueText = `${targetIssue.title} ${targetIssue.body || ''}`.toLowerCase();
   const allTreePaths = analysis.fileTree.map((f) => f.path);
 
-  // Match test files
-  const testCandidates = allTreePaths.filter(
-    (p) => (p.toLowerCase().includes('test') || p.toLowerCase().includes('spec')) &&
-      Array.from(candidatePaths).some((cp) => {
-        const baseName = cp.split('/').pop()?.split('.')[0].toLowerCase();
-        return baseName && baseName.length > 3 && p.toLowerCase().includes(baseName);
-      })
-  );
-  testCandidates.slice(0, 2).forEach((tp) => candidatePaths.add(tp));
+  // If candidate set is sparse (< 3 files), scan tree for module files matching keywords
+  if (candidatePaths.size < 3) {
+    const keywords = issueText.match(/\b[a-z]{4,}\b/g) || [];
+    const ignoredKeywords = new Set(['this', 'that', 'with', 'from', 'have', 'your', 'about', 'issue', 'when', 'using', 'would']);
 
-  // Match doc files if issue refers to docs
-  if (/doc|readme|guide|usage|advanced/i.test(issueText)) {
-    const docCandidates = allTreePaths.filter(
-      (p) => p.startsWith('docs/') || p.endsWith('.rst') || p.endsWith('.md')
-    );
-    docCandidates.slice(0, 2).forEach((dp) => candidatePaths.add(dp));
+    const relevantKeywords = Array.from(new Set(keywords.filter((k) => !ignoredKeywords.has(k)))).slice(0, 5);
+
+    allTreePaths.forEach((path) => {
+      const lower = path.toLowerCase();
+      if (
+        (lower.startsWith('src/') || lower.startsWith('lib/') || lower.startsWith('requests/') || lower.includes('/')) &&
+        /\.(py|js|ts|tsx|jsx|go|rs|java)$/i.test(path)
+      ) {
+        if (relevantKeywords.some((kw) => lower.includes(kw))) {
+          candidatePaths.add(path);
+        }
+      }
+    });
+  }
+
+  // Add entry points if still sparse
+  if (candidatePaths.size < 2) {
+    (analysis.entryPoints || []).forEach((ep) => candidatePaths.add(ep));
   }
 
   const selectedFilePaths = Array.from(candidatePaths).slice(0, MAX_SOURCE_FILES);

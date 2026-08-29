@@ -25,9 +25,17 @@ export default function InvestigationView({
   onRetry,
   onBackToIssue,
 }: InvestigationViewProps) {
-  // Track completed checklist items for "What should I investigate?" & "Research Questions"
+  // Track completed checklist items for Learning Path files, Investigation steps, & Questions
+  const [understoodFiles, setUnderstoodFiles] = useState<Record<string, boolean>>({});
   const [completedSteps, setCompletedSteps] = useState<Record<number, boolean>>({});
   const [completedQuestions, setCompletedQuestions] = useState<Record<number, boolean>>({});
+
+  const toggleFileUnderstood = (path: string) => {
+    setUnderstoodFiles((prev) => ({
+      ...prev,
+      [path]: !prev[path],
+    }));
+  };
 
   const toggleStep = (index: number) => {
     setCompletedSteps((prev) => ({
@@ -86,7 +94,7 @@ export default function InvestigationView({
         <div className="w-12 h-12 rounded-full bg-[#FFB4AB]/10 text-[#FFB4AB] flex items-center justify-center mx-auto">
           <span className="material-symbols-outlined text-2xl">error_outline</span>
         </div>
-        <h3 className="text-base font-bold text-[#E5E1E4]">Investigation Failed</h3>
+        <h3 className="text-base font-bold text-[#E5E1E4]">AI guidance temporarily unavailable</h3>
         <p className="text-xs text-[#908F9E]">{error}</p>
         <div className="flex justify-center gap-3 pt-2">
           {onBackToIssue && (
@@ -126,6 +134,42 @@ export default function InvestigationView({
 
   return (
     <div className="max-w-5xl mx-auto space-y-8 pb-16">
+      {/* Top Progress Lifecycle Bar */}
+      <div className="p-4 rounded-xl bg-[#1B1B1D] border border-[#2A2A2C] space-y-2.5">
+        <div className="flex items-center justify-between font-mono text-xs">
+          <span className="text-[#E5E1E4] font-semibold flex items-center gap-2">
+            <span className="material-symbols-outlined text-[18px] text-[#4DE082]">route</span>
+            <span>Contributor Workflow Journey</span>
+          </span>
+          <span className="text-[#908F9E]">
+            Issue #{issue?.number}
+          </span>
+        </div>
+
+        {/* 6 Lifecycle Steps Bar */}
+        <div className="grid grid-cols-6 gap-1 font-mono text-[10px] text-center">
+          <div className="py-1 rounded bg-[#4DE082]/20 text-[#4DE082] font-semibold flex items-center justify-center gap-1">
+            <span>① Understand</span>
+            <span className="material-symbols-outlined text-[12px]">check</span>
+          </div>
+          <div className="py-1 rounded bg-[#818CF8] text-[#101B8A] font-semibold border-b-2 border-[#E5E1E4]">
+            ② Learn Code
+          </div>
+          <div className="py-1 rounded bg-[#201F21] text-[#908F9E]">
+            ③ Investigate
+          </div>
+          <div className="py-1 rounded bg-[#201F21] text-[#908F9E]">
+            ④ Reproduce
+          </div>
+          <div className="py-1 rounded bg-[#201F21] text-[#908F9E]">
+            ⑤ Plan
+          </div>
+          <div className="py-1 rounded bg-[#201F21] text-[#908F9E]">
+            ⑥ Contribute
+          </div>
+        </div>
+      </div>
+
       {/* Top Context Navigation */}
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-2">
@@ -175,23 +219,23 @@ export default function InvestigationView({
               onClick={onStartContributionPlan}
               className="px-5 py-2.5 rounded-xl bg-[#4DE082] hover:bg-[#6DFE9C] text-[#003617] font-bold text-xs shadow-lg transition-all shrink-0 flex items-center gap-2"
             >
-              <span className="material-symbols-outlined text-[18px]">rocket_launch</span>
-              <span>Start Contribution Plan</span>
+              <span className="material-symbols-outlined text-[18px]">task_alt</span>
+              <span>Build Contribution Plan →</span>
             </button>
           )}
         </div>
       </div>
 
-      {/* 🧭 BEGINNER LEARNING PATH SECTION */}
+      {/* 🧭 SECTION 1: WHAT SHOULD I UNDERSTAND FIRST? (LEARNING PATH) */}
       {learningPath && learningPath.files && learningPath.files.length > 0 && (
         <section className="p-6 rounded-xl bg-[#18181D] border border-[#818CF8]/30 shadow-xl space-y-6">
           <div>
             <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#818CF8] font-bold mb-1">
               <span className="material-symbols-outlined text-[20px]">explore</span>
-              <h2>🧭 What should I understand first? (Learning Path)</h2>
+              <h2>🧭 What should I understand first?</h2>
             </div>
             <p className="text-xs text-[#908F9E]">
-              You don&apos;t need to understand the whole repository. Start with these {learningPath.files.length} files in sequence.
+              You don&apos;t need to understand the whole repository. We&apos;ll guide you through the smallest useful part of the codebase.
             </p>
             {learningPath.goal && (
               <p className="mt-2 text-xs text-[#DDB8FF] font-mono bg-[#62259B]/20 px-3 py-1.5 rounded border border-[#62259B]/40 inline-block">
@@ -200,91 +244,116 @@ export default function InvestigationView({
             )}
           </div>
 
-          {/* Ordered File Sequence */}
+          {/* Ordered File Sequence Steps */}
           <div className="space-y-4">
-            {learningPath.files.map((file, idx) => (
-              <div
-                key={file.path}
-                className="p-5 rounded-lg bg-[#131315] border border-[#2A2A2C] hover:border-[#818CF8]/50 transition-all space-y-3"
-              >
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#2A2A2C] pb-3">
-                  <div className="flex items-center gap-3">
-                    <span className="w-6 h-6 rounded-full bg-[#818CF8]/20 text-[#818CF8] font-mono text-xs font-bold flex items-center justify-center border border-[#818CF8]/40">
-                      {idx + 1}
-                    </span>
-                    <span className="font-mono text-xs font-bold text-[#E5E1E4]">{file.path}</span>
-                  </div>
-
-                  <div className="flex items-center gap-2">
-                    <span
-                      className={`px-2 py-0.5 rounded text-[10px] font-mono uppercase font-bold ${
-                        file.relevance === 'primary'
-                          ? 'bg-[#4DE082]/15 text-[#4DE082] border border-[#4DE082]/30'
-                          : file.relevance === 'supporting'
-                          ? 'bg-[#818CF8]/15 text-[#818CF8] border border-[#818CF8]/30'
-                          : 'bg-[#908F9E]/15 text-[#908F9E] border border-[#908F9E]/30'
-                      }`}
-                    >
-                      {file.relevance}
-                    </span>
-
-                    {file.estimatedMinutes && (
-                      <span className="text-[10px] font-mono text-[#908F9E] bg-[#201F21] px-2 py-0.5 rounded border border-[#353437]">
-                        ~{file.estimatedMinutes} min
+            {learningPath.files.map((file, idx) => {
+              const isUnderstood = !!understoodFiles[file.path];
+              return (
+                <div
+                  key={file.path}
+                  className={`p-5 rounded-lg border transition-all space-y-3 ${
+                    isUnderstood
+                      ? 'bg-[#4DE082]/5 border-[#4DE082]/30 opacity-80'
+                      : 'bg-[#131315] border-[#2A2A2C] hover:border-[#818CF8]/50'
+                  }`}
+                >
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#2A2A2C] pb-3">
+                    <div className="flex items-center gap-3">
+                      <span className="font-mono text-xs font-bold text-[#818CF8] bg-[#818CF8]/10 px-2 py-0.5 rounded border border-[#818CF8]/30">
+                        STEP {idx + 1}
                       </span>
-                    )}
+                      <span className="font-mono text-xs font-bold text-[#E5E1E4]">{file.path}</span>
+                    </div>
 
-                    {onNavigateCode && (
-                      <button
-                        onClick={() => onNavigateCode(file.path)}
-                        className="px-3 py-1 rounded bg-[#818CF8]/10 hover:bg-[#818CF8]/20 text-[#818CF8] font-mono text-xs border border-[#818CF8]/30 transition-colors flex items-center gap-1"
+                    <div className="flex items-center gap-2">
+                      <span
+                        className={`px-2 py-0.5 rounded text-[10px] font-mono uppercase font-bold ${
+                          file.relevance === 'primary'
+                            ? 'bg-[#4DE082]/15 text-[#4DE082] border border-[#4DE082]/30'
+                            : file.relevance === 'supporting'
+                            ? 'bg-[#818CF8]/15 text-[#818CF8] border border-[#818CF8]/30'
+                            : 'bg-[#908F9E]/15 text-[#908F9E] border border-[#908F9E]/30'
+                        }`}
                       >
-                        <span>Open file</span>
-                        <span className="material-symbols-outlined text-[14px]">open_in_new</span>
-                      </button>
-                    )}
-                  </div>
-                </div>
+                        {file.relevance}
+                      </span>
 
-                <div className="space-y-1.5 text-xs">
-                  <div className="text-[#C6C5D5] leading-relaxed">
-                    <span className="font-semibold text-[#E5E1E4]">Why read this: </span>
-                    {file.reason}
+                      {file.estimatedMinutes && (
+                        <span className="text-[10px] font-mono text-[#908F9E] bg-[#201F21] px-2 py-0.5 rounded border border-[#353437]">
+                          ~{file.estimatedMinutes} min
+                        </span>
+                      )}
+
+                      {onNavigateCode && (
+                        <button
+                          onClick={() => onNavigateCode(file.path)}
+                          className="px-3 py-1 rounded bg-[#818CF8]/10 hover:bg-[#818CF8]/20 text-[#818CF8] font-mono text-xs border border-[#818CF8]/30 transition-colors flex items-center gap-1"
+                        >
+                          <span>Open file</span>
+                          <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
+                        </button>
+                      )}
+                    </div>
                   </div>
 
-                  {file.symbols && file.symbols.length > 0 && (
-                    <div className="font-mono text-[11px] text-[#908F9E] flex items-center gap-2">
-                      <span className="text-[#818CF8]">Key Symbols/Functions:</span>
-                      <div className="flex flex-wrap gap-1">
-                        {file.symbols.map((sym) => (
-                          <span key={sym} className="px-1.5 py-0.5 rounded bg-[#201F21] text-[#E5E1E4] border border-[#353437]">
-                            {sym}
-                          </span>
-                        ))}
+                  <div className="space-y-2 text-xs">
+                    <div className="text-[#C6C5D5] leading-relaxed">
+                      <span className="font-semibold text-[#E5E1E4]">
+                        {idx === 0 ? 'Why start here? ' : 'Why next? '}
+                      </span>
+                      {file.reason}
+                    </div>
+
+                    {file.symbols && file.symbols.length > 0 && (
+                      <div className="font-mono text-[11px] text-[#908F9E] flex items-center gap-2">
+                        <span className="text-[#818CF8]">Look for:</span>
+                        <div className="flex flex-wrap gap-1">
+                          {file.symbols.map((sym) => (
+                            <span key={sym} className="px-1.5 py-0.5 rounded bg-[#201F21] text-[#E5E1E4] border border-[#353437]">
+                              {sym}
+                            </span>
+                          ))}
+                        </div>
                       </div>
-                    </div>
-                  )}
+                    )}
 
-                  {file.lineStart && (
-                    <div className="font-mono text-[11px] text-[#908F9E]">
-                      Target Line Range: Lines {file.lineStart} - {file.lineEnd || file.lineStart}
+                    {file.lineStart && (
+                      <div className="font-mono text-[11px] text-[#908F9E]">
+                        Target line range: Lines {file.lineStart} - {file.lineEnd || file.lineStart}
+                      </div>
+                    )}
+
+                    {/* Local Toggle Mark Understood */}
+                    <div className="pt-2">
+                      <button
+                        onClick={() => toggleFileUnderstood(file.path)}
+                        className={`inline-flex items-center gap-1.5 px-3 py-1 rounded text-xs font-mono transition-colors ${
+                          isUnderstood
+                            ? 'bg-[#4DE082] text-[#003617] font-bold'
+                            : 'bg-[#201F21] hover:bg-[#2A2A2C] text-[#C6C5D5] border border-[#353437]'
+                        }`}
+                      >
+                        <span className="material-symbols-outlined text-[14px]">
+                          {isUnderstood ? 'check' : 'radio_button_unchecked'}
+                        </span>
+                        <span>{isUnderstood ? 'Understood' : 'Mark understood'}</span>
+                      </button>
                     </div>
-                  )}
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
-          {/* Concepts Section */}
+          {/* 🧠 Concepts Section */}
           {learningPath.concepts && learningPath.concepts.length > 0 && (
             <div className="pt-4 border-t border-[#2A2A2C] space-y-3">
               <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#DDB8FF] font-semibold">
-                <span className="material-symbols-outlined text-[18px]">psychology</span>
-                <h3>🧠 Concepts you'll encounter</h3>
+                <h2>🧠 Concepts you'll encounter</h2>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {learningPath.concepts.map((concept, cIdx) => (
-                  <div key={cIdx} className="p-3 rounded-lg bg-[#131315] border border-[#2A2A2C] text-xs space-y-1">
+                  <div key={cIdx} className="p-3.5 rounded-lg bg-[#131315] border border-[#2A2A2C] text-xs space-y-1">
                     <p className="text-[#C6C5D5] leading-relaxed">{concept}</p>
                   </div>
                 ))}
@@ -292,13 +361,12 @@ export default function InvestigationView({
             </div>
           )}
 
-          {/* Research Questions Section */}
+          {/* 🔬 Research Questions Section */}
           {learningPath.questions && learningPath.questions.length > 0 && (
             <div className="pt-4 border-t border-[#2A2A2C] space-y-3">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#38BDF8] font-semibold">
-                  <span className="material-symbols-outlined text-[18px]">science</span>
-                  <h3>🔬 Research Prompts to Answer</h3>
+                  <h2>❓ Research Prompts to Answer</h2>
                 </div>
                 <span className="text-[11px] font-mono text-[#908F9E]">
                   {Object.values(completedQuestions).filter(Boolean).length} / {learningPath.questions.length} completed
@@ -341,81 +409,32 @@ export default function InvestigationView({
 
       {/* Progressive Disclosure Sections */}
       <div className="space-y-6">
-        {/* 1. What is happening? */}
-        <section className="p-6 rounded-xl bg-[#1B1B1D] border border-[#2A2A2C] space-y-3">
-          <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#818CF8] font-semibold">
-            <span className="material-symbols-outlined text-[18px]">help_outline</span>
-            <h2>What is happening?</h2>
-          </div>
-          <p className="text-xs text-[#E5E1E4] leading-relaxed font-sans">
-            {result.whatIsHappening}
-          </p>
-          {result.likelyCause && (
-            <div className="mt-3 p-3 rounded-lg bg-[#201F21] border border-[#353437] text-xs space-y-1">
-              <span className="font-mono text-[#DDB8FF] font-semibold">Likely Cause:</span>
-              <p className="text-[#C6C5D5] leading-relaxed">{result.likelyCause}</p>
+        {/* 🧩 WHAT WE KNOW vs 🔎 WHAT WE'RE TRYING TO FIND OUT */}
+        <section className="p-6 rounded-xl bg-[#1B1B1D] border border-[#2A2A2C] space-y-4">
+          <div className="space-y-2">
+            <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#4DE082] font-semibold">
+              <h2>🧩 What we know (Facts)</h2>
             </div>
-          )}
-        </section>
-
-        {/* 2. Where should I look? (Affected Areas) */}
-        <section className="p-6 rounded-xl bg-[#1B1B1D] border border-[#2A2A2C] space-y-3">
-          <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#818CF8] font-semibold">
-            <span className="material-symbols-outlined text-[18px]">folder_open</span>
-            <h2>Where does this issue live?</h2>
+            <p className="text-xs text-[#E5E1E4] leading-relaxed font-sans bg-[#131315] p-4 rounded-lg border border-[#2A2A2C]">
+              {result.whatIsHappening}
+            </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {result.affectedAreas.map((area, idx) => (
-              <button
-                key={idx}
-                onClick={() => onNavigateCode && onNavigateCode(area.path)}
-                className="p-3 rounded-lg bg-[#131315] hover:bg-[#201F21] border border-[#2A2A2C] hover:border-[#818CF8]/50 text-left transition-all space-y-1 group"
-              >
-                <div className="flex items-center justify-between font-mono text-xs text-[#818CF8]">
-                  <span className="truncate font-semibold">{area.path}</span>
-                  <span className="material-symbols-outlined text-[14px] text-[#908F9E] group-hover:text-[#818CF8]">
-                    open_in_new
-                  </span>
-                </div>
-                <p className="text-[11px] text-[#908F9E] line-clamp-2">{area.reason}</p>
-              </button>
-            ))}
-          </div>
-        </section>
 
-        {/* 3. Evidence (Key Evidence) */}
-        {result.keyEvidence && result.keyEvidence.length > 0 && (
-          <section className="p-6 rounded-xl bg-[#1B1B1D] border border-[#2A2A2C] space-y-3">
+          <div className="space-y-2 pt-2 border-t border-[#2A2A2C]">
             <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#818CF8] font-semibold">
-              <span className="material-symbols-outlined text-[18px]">find_in_page</span>
-              <h2>Source Code Evidence</h2>
+              <h2>🔎 What we're trying to find out (Hypothesis)</h2>
             </div>
-            <div className="space-y-3">
-              {result.keyEvidence.map((evidence, idx) => (
-                <div key={idx} className="p-4 rounded-lg bg-[#131315] border border-[#2A2A2C] space-y-2">
-                  <div className="flex items-center justify-between font-mono text-xs">
-                    <span className="text-[#818CF8] font-semibold">{evidence.path}</span>
-                    {evidence.lineStart && (
-                      <span className="text-[#908F9E]">
-                        Lines {evidence.lineStart} - {evidence.lineEnd || evidence.lineStart}
-                      </span>
-                    )}
-                  </div>
-                  <p className="text-xs text-[#C6C5D5] font-sans leading-relaxed">
-                    {evidence.explanation}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </section>
-        )}
+            <p className="text-xs text-[#C6C5D5] leading-relaxed font-sans bg-[#131315] p-4 rounded-lg border border-[#2A2A2C]">
+              {result.likelyCause || 'Trace execution boundaries to determine where actual behavior diverges from expectations.'}
+            </p>
+          </div>
+        </section>
 
-        {/* 4. What should I investigate? (Actionable Checklist) */}
+        {/* 🔬 YOUR INVESTIGATION CHECKLIST */}
         <section className="p-6 rounded-xl bg-[#1B1B1D] border border-[#2A2A2C] space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#4DE082] font-semibold">
-              <span className="material-symbols-outlined text-[18px]">checklist</span>
-              <h2>What should I investigate? (Checklist)</h2>
+              <h2>🔬 Your investigation checklist</h2>
             </div>
             <span className="text-[11px] font-mono text-[#908F9E]">
               {Object.values(completedSteps).filter(Boolean).length} / {result.investigationSteps.length} completed
@@ -453,24 +472,25 @@ export default function InvestigationView({
           </div>
         </section>
 
-        {/* 5. Suggested Fix Direction & Testing Strategy */}
+        {/* 💡 POSSIBLE INVESTIGATION DIRECTIONS */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <section className="p-6 rounded-xl bg-[#1B1B1D] border border-[#2A2A2C] space-y-3">
-            <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#DDB8FF] font-semibold">
-              <span className="material-symbols-outlined text-[18px]">build</span>
-              <h2>Suggested Fix Direction</h2>
+            <div className="space-y-1">
+              <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#DDB8FF] font-semibold">
+                <h2>💡 Possible investigation directions</h2>
+              </div>
+              <p className="text-[11px] text-[#908F9E]">These are hypotheses to investigate — not confirmed solutions.</p>
             </div>
-            <p className="text-xs text-[#C6C5D5] leading-relaxed font-sans">
+            <p className="text-xs text-[#C6C5D5] leading-relaxed font-sans bg-[#131315] p-3.5 rounded-lg border border-[#2A2A2C]">
               {result.suggestedFixDirection}
             </p>
           </section>
 
           <section className="p-6 rounded-xl bg-[#1B1B1D] border border-[#2A2A2C] space-y-3">
             <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#38BDF8] font-semibold">
-              <span className="material-symbols-outlined text-[18px]">science</span>
-              <h2>Testing Strategy</h2>
+              <h2>🧪 How to verify locally</h2>
             </div>
-            <ul className="space-y-1.5 list-disc list-inside text-xs text-[#C6C5D5]">
+            <ul className="space-y-1.5 list-disc list-inside text-xs text-[#C6C5D5] bg-[#131315] p-3.5 rounded-lg border border-[#2A2A2C]">
               {result.testingStrategy.map((test, idx) => (
                 <li key={idx}>{test}</li>
               ))}
@@ -478,7 +498,36 @@ export default function InvestigationView({
           </section>
         </div>
 
-        {/* 6. Limitations */}
+        {/* 🏗 WHERE DOES THIS ISSUE LIVE? */}
+        <section className="p-6 rounded-xl bg-[#1B1B1D] border border-[#2A2A2C] space-y-3">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#818CF8] font-semibold">
+              <h2>🏗 Where does this issue live?</h2>
+            </div>
+            <p className="text-[11px] text-[#908F9E]">
+              This shows where the relevant files sit in the repository architecture.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {result.affectedAreas.map((area, idx) => (
+              <button
+                key={idx}
+                onClick={() => onNavigateCode && onNavigateCode(area.path)}
+                className="p-3 rounded-lg bg-[#131315] hover:bg-[#201F21] border border-[#2A2A2C] hover:border-[#818CF8]/50 text-left transition-all space-y-1 group"
+              >
+                <div className="flex items-center justify-between font-mono text-xs text-[#818CF8]">
+                  <span className="truncate font-semibold">{area.path}</span>
+                  <span className="material-symbols-outlined text-[14px] text-[#908F9E] group-hover:text-[#818CF8]">
+                    open_in_new
+                  </span>
+                </div>
+                <p className="text-[11px] text-[#908F9E] line-clamp-2">{area.reason}</p>
+              </button>
+            ))}
+          </div>
+        </section>
+
+        {/* Limitations */}
         {result.evidenceLimitations && result.evidenceLimitations.length > 0 && (
           <section className="p-4 rounded-lg bg-[#131315] border border-[#2A2A2C] text-xs text-[#908F9E] space-y-1">
             <span className="font-mono text-[#FFB4AB]">Note / Evidence Limitations:</span>

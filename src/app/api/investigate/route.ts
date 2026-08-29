@@ -4,7 +4,7 @@ import { buildIssueInvestigationContext } from '@/lib/ai/investigationContext';
 import { buildInvestigationMessages } from '@/lib/ai/investigationPrompt';
 import { generateJSONCompletion } from '@/lib/ai/llmClient';
 import { validateAndCleanCitations } from '@/lib/ai/citationValidator';
-import { InvestigationResult } from '@/types/investigation';
+import { InvestigationResult, RelevantFile } from '@/types/investigation';
 
 export async function POST(request: Request) {
   const tStart = Date.now();
@@ -51,12 +51,56 @@ export async function POST(request: Request) {
     // 4. Generate Structured JSON Completion via Real Gemini API
     const tGemini = Date.now();
     console.log(`[investigate] calling Gemini API...`);
-    const rawResult = await generateJSONCompletion<InvestigationResult>(messages, {
-      temperature: 0.1,
-      maxTokens: 2048,
-      timeoutMs: 20000,
-    });
-    console.log(`[investigate] Gemini response received (${Date.now() - tGemini}ms)`);
+
+    let rawResult: InvestigationResult;
+    try {
+      rawResult = await generateJSONCompletion<InvestigationResult>(messages, {
+        temperature: 0.1,
+        maxTokens: 2048,
+        timeoutMs: 20000,
+      });
+      console.log(`[investigate] Gemini response received (${Date.now() - tGemini}ms)`);
+    } catch (llmErr: any) {
+      console.warn(`[investigate] Gemini call failed (${llmErr?.message}). Constructing fallback learning path from deterministic evidence.`);
+
+      const sourcePaths = context.sourceFiles.map((f) => f.path);
+      const fallbackFiles: RelevantFile[] = sourcePaths.map((p: string, idx: number) => ({
+        path: p,
+        reason: 'Identified from deterministic repository path matching.',
+        relevance: (idx === 0 ? 'primary' : 'supporting') as 'primary' | 'supporting',
+        estimatedMinutes: 5,
+      }));
+
+      rawResult = {
+        issueSummary: `Issue #${context.issue.number}: ${context.issue.title}`,
+        whatIsHappening: context.issue.body || 'Review issue description and related repository files.',
+        likelyCause: 'AI guidance temporarily unavailable. Review evidence context below.',
+        confidence: 'low',
+        learningPath: {
+          goal: 'Understand the primary affected files in this repository.',
+          files: fallbackFiles,
+          concepts: ['Module Boundaries: Understand how request data flows through the subsystem.'],
+          questions: ['Where does execution enter this component?', 'How are responses handled?'],
+        },
+        affectedAreas: fallbackFiles.map((f: RelevantFile) => ({ path: f.path, reason: f.reason })),
+        keyEvidence: fallbackFiles.map((f: RelevantFile) => ({ path: f.path, lineStart: null, lineEnd: null, explanation: f.reason })),
+        relatedIssues: context.relatedIssues.map((r) => ({ number: r.number, reason: r.reason })),
+        investigationSteps: [
+          `1. Inspect file: ${fallbackFiles[0]?.path || 'repository entry point'}`,
+          `2. Read issue description for reproduction steps`,
+          `3. Run local unit tests`,
+        ],
+        suggestedFixDirection: 'Review related files and trace function execution paths.',
+        testingStrategy: ['Run existing unit tests for the affected module.'],
+        difficultyAssessment: {
+          level: (['beginner', 'intermediate', 'advanced'].includes(context.issue.difficulty)
+            ? context.issue.difficulty
+            : 'intermediate') as 'beginner' | 'intermediate' | 'advanced',
+          reason: 'Determined from GitHub labels and repository structure',
+        },
+        evidenceLimitations: [llmErr?.message || 'AI guidance temporarily unavailable.'],
+      };
+    }
 
     // 5. Validate & Clean Citations against Real File Tree
     const tValidate = Date.now();
@@ -81,20 +125,8 @@ export async function POST(request: Request) {
     const rawMsg = error?.message || 'An error occurred during issue investigation.';
     console.error(`[investigate] failed (${Date.now() - tStart}ms):`, rawMsg);
 
-    // Format specific user-friendly error messages
-    let userFacingError = rawMsg;
-    if (rawMsg.includes('GEMINI_API_KEY is missing')) {
-      userFacingError = 'Gemini authentication failed: GEMINI_API_KEY is missing in .env.local.';
-    } else if (rawMsg.includes('rate limit')) {
-      userFacingError = 'GitHub rate limit reached. Please set GITHUB_TOKEN in .env.local.';
-    } else if (rawMsg.includes('timed out') || rawMsg.includes('aborted')) {
-      userFacingError = 'AI request timed out while processing evidence packet. Please retry.';
-    } else if (rawMsg.includes('Failed to parse JSON')) {
-      userFacingError = 'AI returned an invalid JSON response format. Please retry.';
-    }
-
     return NextResponse.json(
-      { success: false, error: userFacingError },
+      { success: false, error: rawMsg },
       { status: 500 }
     );
   }
