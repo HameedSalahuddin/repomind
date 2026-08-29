@@ -28,6 +28,13 @@ export interface ArchitectureNode {
   type: 'package' | 'module' | 'service' | 'database' | 'external';
   description?: string;
   filePaths?: string[];
+  path?: string;
+  level?: number;
+  fileCount?: number;
+
+  // Issue / Contributor signals
+  issueCount?: number;
+  issues?: number[];
 }
 
 export interface ArchitectureEdge {
@@ -47,6 +54,27 @@ export interface ImportantFile {
   path: string;
   content: string;
   size?: number;
+}
+
+export interface RepositoryIssue {
+  id: number;
+  number: number;
+  title: string;
+  body: string | null;
+  state: 'open' | 'closed';
+  htmlUrl: string;
+  author: string;
+  labels: {
+    name: string;
+    color?: string;
+  }[];
+  comments: number;
+  createdAt: string;
+  updatedAt: string;
+  locked: boolean;
+  isPullRequest: boolean;
+  relatedPaths: string[];
+  difficulty: 'beginner' | 'intermediate' | 'advanced' | 'unknown';
 }
 
 export interface RepositoryAnalysis {
@@ -71,6 +99,7 @@ export interface RepositoryAnalysis {
 
   fileTree: FileTreeNode[];
   importantFiles: ImportantFile[];
+  issues: RepositoryIssue[];
 
   // Metadata compatibility
   metadata: RepositoryMetadata;

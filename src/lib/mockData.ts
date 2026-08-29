@@ -46,6 +46,26 @@ export const MOCK_REPO_ANALYSIS: RepositoryAnalysis = {
     }
   ],
 
+  issues: [
+    {
+      id: 101,
+      number: 42,
+      title: 'Fix auth token expiration handling in JWT middleware',
+      body: 'Token refresh fails when expiration header is set in `src/lib/auth.ts`.',
+      state: 'open',
+      htmlUrl: 'https://github.com/repomind-demo/task-craft-api/issues/42',
+      author: 'alexdev',
+      labels: [{ name: 'good first issue', color: '70c24a' }],
+      comments: 3,
+      createdAt: '2026-02-15T10:00:00Z',
+      updatedAt: '2026-02-16T12:00:00Z',
+      locked: false,
+      isPullRequest: false,
+      relatedPaths: ['src/lib/auth.ts'],
+      difficulty: 'beginner'
+    }
+  ],
+
   metadata: {
     owner: 'repomind-demo',
     name: 'task-craft-api',

@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { RepositoryAnalysis } from '@/types';
 
 interface OverviewViewProps {
@@ -9,6 +10,13 @@ interface OverviewViewProps {
 
 export default function OverviewView({ data, onNavigateTab }: OverviewViewProps) {
   const meta = data.metadata;
+  const issues = data.issues || [];
+  const [filterDifficulty, setFilterDifficulty] = useState<'all' | 'beginner' | 'intermediate' | 'advanced'>('all');
+
+  const filteredIssues = issues.filter((iss) => {
+    if (filterDifficulty === 'all') return true;
+    return iss.difficulty === filterDifficulty;
+  });
 
   return (
     <div className="max-w-5xl mx-auto space-y-10 py-2">
@@ -50,7 +58,14 @@ export default function OverviewView({ data, onNavigateTab }: OverviewViewProps)
               <div key={node.id} className="p-4 rounded bg-[#14171D] border border-[#1E222A] space-y-2">
                 <div className="flex items-center justify-between">
                   <span className="font-semibold text-xs text-[#E6E8EC]">{node.label}</span>
-                  <span className="text-[10px] font-mono text-[#8B929E] uppercase">{node.type}</span>
+                  <div className="flex items-center gap-2">
+                    {node.issueCount && node.issueCount > 0 ? (
+                      <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-[#8B5CF6]/20 text-[#8B5CF6] border border-[#8B5CF6]/30">
+                        {node.issueCount} {node.issueCount === 1 ? 'issue' : 'issues'}
+                      </span>
+                    ) : null}
+                    <span className="text-[10px] font-mono text-[#8B929E] uppercase">{node.type}</span>
+                  </div>
                 </div>
                 <p className="text-xs text-[#8B929E] line-clamp-2">{node.description}</p>
               </div>
@@ -64,8 +79,115 @@ export default function OverviewView({ data, onNavigateTab }: OverviewViewProps)
         </div>
       </div>
 
-      {/* 3. Secondary Metadata: Tech Stack & Entry Points */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-4 border-t border-[#1E222A]">
+      {/* 3. Contributor Opportunities / Open Issues */}
+      <div className="space-y-4 pt-6 border-t border-[#1E222A]">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-lg font-bold text-[#E6E8EC] tracking-tight">Open Contribution Opportunities</h2>
+            <p className="text-xs text-[#8B929E]">Discovered open issues mapped to repository codebase paths.</p>
+          </div>
+
+          {/* Difficulty Filter Tabs */}
+          <div className="flex gap-1.5 text-xs font-mono">
+            <button
+              onClick={() => setFilterDifficulty('all')}
+              className={`px-2.5 py-1 rounded border transition-colors ${
+                filterDifficulty === 'all'
+                  ? 'bg-[#14171D] text-[#E6E8EC] border-[#8B5CF6]'
+                  : 'bg-[#0E1014] text-[#8B929E] border-[#1E222A] hover:text-[#E6E8EC]'
+              }`}
+            >
+              All ({issues.length})
+            </button>
+            <button
+              onClick={() => setFilterDifficulty('beginner')}
+              className={`px-2.5 py-1 rounded border transition-colors ${
+                filterDifficulty === 'beginner'
+                  ? 'bg-[#14171D] text-[#06B6D4] border-[#06B6D4]'
+                  : 'bg-[#0E1014] text-[#8B929E] border-[#1E222A] hover:text-[#06B6D4]'
+              }`}
+            >
+              Good First Issue ({issues.filter((i) => i.difficulty === 'beginner').length})
+            </button>
+            <button
+              onClick={() => setFilterDifficulty('intermediate')}
+              className={`px-2.5 py-1 rounded border transition-colors ${
+                filterDifficulty === 'intermediate'
+                  ? 'bg-[#14171D] text-[#8B5CF6] border-[#8B5CF6]'
+                  : 'bg-[#0E1014] text-[#8B929E] border-[#1E222A] hover:text-[#8B5CF6]'
+              }`}
+            >
+              Intermediate ({issues.filter((i) => i.difficulty === 'intermediate').length})
+            </button>
+          </div>
+        </div>
+
+        {/* Issues List */}
+        {filteredIssues.length > 0 ? (
+          <div className="space-y-3">
+            {filteredIssues.slice(0, 10).map((issue) => (
+              <div
+                key={issue.id}
+                className="p-4 rounded-lg bg-[#0E1014] border border-[#1E222A] hover:border-[#1E222A]/80 transition-colors space-y-2"
+              >
+                <div className="flex items-start justify-between gap-4">
+                  <div className="space-y-1 flex-1">
+                    <div className="flex items-center gap-2">
+                      <a
+                        href={issue.htmlUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="font-semibold text-xs text-[#E6E8EC] hover:text-[#8B5CF6] transition-colors"
+                      >
+                        #{issue.number} {issue.title}
+                      </a>
+                    </div>
+                    <div className="text-[11px] font-mono text-[#5A606C] flex items-center gap-3">
+                      <span>opened by @{issue.author}</span>
+                      <span>•</span>
+                      <span>{issue.comments} comments</span>
+                    </div>
+                  </div>
+
+                  {/* Difficulty Tag */}
+                  <span
+                    className={`px-2 py-0.5 rounded text-[10px] font-mono uppercase font-bold shrink-0 ${
+                      issue.difficulty === 'beginner'
+                        ? 'bg-[#06B6D4]/15 text-[#06B6D4] border border-[#06B6D4]/30'
+                        : issue.difficulty === 'advanced'
+                        ? 'bg-red-500/15 text-red-400 border border-red-500/30'
+                        : 'bg-[#8B5CF6]/15 text-[#8B5CF6] border border-[#8B5CF6]/30'
+                    }`}
+                  >
+                    {issue.difficulty === 'beginner' ? 'Good First Issue' : issue.difficulty}
+                  </span>
+                </div>
+
+                {/* Mapped Related Paths */}
+                {issue.relatedPaths && issue.relatedPaths.length > 0 && (
+                  <div className="pt-2 border-t border-[#1E222A]/60 flex items-center gap-2 text-[11px] font-mono">
+                    <span className="text-[#5A606C]">Mapped Paths:</span>
+                    <div className="flex flex-wrap gap-1.5">
+                      {issue.relatedPaths.map((p) => (
+                        <span key={p} className="px-2 py-0.5 rounded bg-[#14171D] border border-[#1E222A] text-[#E6E8EC]">
+                          {p}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="p-6 rounded-lg bg-[#0E1014] border border-[#1E222A] text-center font-mono text-xs text-[#5A606C]">
+            No open issues matching filter '{filterDifficulty}'.
+          </div>
+        )}
+      </div>
+
+      {/* 4. Secondary Metadata: Tech Stack & Entry Points */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-6 border-t border-[#1E222A]">
         {/* Detected Tech Stack */}
         <div className="space-y-3">
           <span className="text-[11px] font-mono uppercase tracking-wider text-[#5A606C] block">

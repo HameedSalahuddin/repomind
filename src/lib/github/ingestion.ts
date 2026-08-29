@@ -3,6 +3,7 @@ import { parseGitHubUrl } from './urlParser';
 import { getFromCache, setInCache } from './cache';
 import { detectTechStack, detectEntryPoints } from '../analyzer/stackDetector';
 import { extractArchitectureGraph } from '../analyzer/architectureExtractor';
+import { fetchRepositoryIssues } from './issues';
 
 const GITHUB_API_BASE = 'https://api.github.com';
 
@@ -206,13 +207,17 @@ export async function fetchRepositoryAnalysis(rawUrl: string): Promise<Ingestion
 
   const entryPoints = detectEntryPoints(filePaths, importantContents);
 
-  // 6. Real Deterministic Architecture Graph Extraction
+  // 6. Fetch Open Repository Issues for Contributor Mapping
+  const issues = await fetchRepositoryIssues(parsed.owner, parsed.repo, filePaths);
+
+  // 7. Real Deterministic Architecture Graph Extraction with Issue Signals
   const architecture = extractArchitectureGraph({
     repoName: parsed.repo,
     filePaths,
     entryPoints,
     techStack,
     importantFiles: importantContents,
+    issues,
   });
 
   const analysisResult: RepositoryAnalysis = {
@@ -237,6 +242,7 @@ export async function fetchRepositoryAnalysis(rawUrl: string): Promise<Ingestion
 
     fileTree: rootFileTree,
     importantFiles,
+    issues,
 
     metadata: {
       owner: parsed.owner,

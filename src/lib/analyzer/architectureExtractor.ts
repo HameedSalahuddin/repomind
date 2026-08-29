@@ -1,4 +1,4 @@
-import { ArchitectureGraph, ArchitectureNode, ArchitectureEdge } from '@/types/repo';
+import { ArchitectureGraph, ArchitectureNode, ArchitectureEdge, RepositoryIssue } from '@/types/repo';
 
 export interface ArchitectureExtractionInput {
   repoName: string;
@@ -6,6 +6,7 @@ export interface ArchitectureExtractionInput {
   entryPoints: string[];
   techStack: string[];
   importantFiles?: Record<string, string>;
+  issues?: RepositoryIssue[];
 }
 
 // Common ignored or generated directory patterns
@@ -30,7 +31,7 @@ const IGNORED_PATH_SEGMENTS = new Set([
 ]);
 
 export function extractArchitectureGraph(input: ArchitectureExtractionInput): ArchitectureGraph {
-  const { repoName, filePaths, entryPoints, techStack } = input;
+  const { repoName, filePaths, entryPoints, techStack, issues = [] } = input;
 
   // Filter out noise / ignored paths
   const cleanPaths = filePaths.filter((path) => {
@@ -45,7 +46,6 @@ export function extractArchitectureGraph(input: ArchitectureExtractionInput): Ar
   cleanPaths.forEach((path) => {
     const parts = path.split('/');
     if (parts.length > 1) {
-      // Accumulate for all ancestor directories
       for (let i = 1; i < parts.length; i++) {
         const dirPath = parts.slice(0, i).join('/');
         dirFileCounts[dirPath] = (dirFileCounts[dirPath] || 0) + 1;
@@ -71,6 +71,8 @@ export function extractArchitectureGraph(input: ArchitectureExtractionInput): Ar
     type: 'package',
     description: `Repository root with ${cleanPaths.length} source files`,
     filePaths: [repoName],
+    issueCount: 0,
+    issues: [],
   });
   addedNodeIds.add(rootId);
 
@@ -79,7 +81,6 @@ export function extractArchitectureGraph(input: ArchitectureExtractionInput): Ar
     (a, b) => (dirFileCounts[b] || 0) - (dirFileCounts[a] || 0)
   );
 
-  // Check if monorepo container directory exists (e.g. packages, apps, modules, services)
   const monorepoContainers = topDirs.filter((dir) =>
     ['packages', 'apps', 'modules', 'services', 'crates', 'components'].includes(dir.toLowerCase())
   );
@@ -89,7 +90,6 @@ export function extractArchitectureGraph(input: ArchitectureExtractionInput): Ar
   if (monorepoContainers.length > 0) {
     monorepoContainers.forEach((container) => {
       const containerSubDirs = Array.from(subDirsMap[container] || []);
-      // Take top subdirectories inside packages/ apps/
       const subDirList = containerSubDirs
         .sort((a, b) => (dirFileCounts[b] || 0) - (dirFileCounts[a] || 0))
         .slice(0, 8);
@@ -98,14 +98,12 @@ export function extractArchitectureGraph(input: ArchitectureExtractionInput): Ar
         primaryArchitecturalNodes.push(subDir);
       });
 
-      // If container has files or subdirs, also add container itself if not empty
       if (subDirList.length === 0) {
         primaryArchitecturalNodes.push(container);
       }
     });
   }
 
-  // Add major top-level directories (e.g., src, lib, app, server, client, api)
   topDirs.forEach((dir) => {
     if (!monorepoContainers.includes(dir) && primaryArchitecturalNodes.length < 12) {
       if ((dirFileCounts[dir] || 0) >= 2) {
@@ -114,7 +112,6 @@ export function extractArchitectureGraph(input: ArchitectureExtractionInput): Ar
     }
   });
 
-  // Limit architectural nodes for clean visualization (max 12 major structural nodes)
   const selectedDirs = primaryArchitecturalNodes.slice(0, 12);
 
   selectedDirs.forEach((dirPath) => {
@@ -135,10 +132,11 @@ export function extractArchitectureGraph(input: ArchitectureExtractionInput): Ar
         type: nodeType,
         description: `Directory '${dirName}' containing ${count} files`,
         filePaths: [dirPath],
+        issueCount: 0,
+        issues: [],
       });
       addedNodeIds.add(nodeId);
 
-      // Edge from Root to Package/Directory
       edges.push({
         id: `e-${rootId}-${nodeId}`,
         source: rootId,
@@ -148,7 +146,6 @@ export function extractArchitectureGraph(input: ArchitectureExtractionInput): Ar
       });
     }
 
-    // Inspect nested sub-modules inside major directories (e.g. src/components, lib/router)
     const nestedSubDirs = Array.from(subDirsMap[dirPath] || [])
       .sort((a, b) => (dirFileCounts[b] || 0) - (dirFileCounts[a] || 0))
       .slice(0, 2);
@@ -165,6 +162,8 @@ export function extractArchitectureGraph(input: ArchitectureExtractionInput): Ar
           type: 'module',
           description: `Submodule '${subName}' (${subCount} files)`,
           filePaths: [subPath],
+          issueCount: 0,
+          issues: [],
         });
         addedNodeIds.add(subNodeId);
 
@@ -191,10 +190,11 @@ export function extractArchitectureGraph(input: ArchitectureExtractionInput): Ar
         type: 'module',
         description: `Verified entry point (${epPath})`,
         filePaths: [epPath],
+        issueCount: 0,
+        issues: [],
       });
       addedNodeIds.add(epNodeId);
 
-      // Find parent directory node if exists, else connect to root
       const epParentDir = epPath.split('/').slice(0, -1).join('/');
       const parentNode = nodes.find((n) => n.id.endsWith(epParentDir.replace(/[^a-zA-Z0-9_-]/g, '-')));
 
@@ -209,7 +209,7 @@ export function extractArchitectureGraph(input: ArchitectureExtractionInput): Ar
     }
   });
 
-  // 4. Add Database Service Node if DB tech detected
+  // 4. Add Database Service Node
   if (techStack.includes('Prisma') || techStack.includes('PostgreSQL') || techStack.includes('Redis') || techStack.includes('MongoDB')) {
     const dbNodeId = 'db-service';
     if (!addedNodeIds.has(dbNodeId)) {
@@ -218,10 +218,11 @@ export function extractArchitectureGraph(input: ArchitectureExtractionInput): Ar
         label: 'Database / Storage',
         type: 'database',
         description: `Inferred storage layer (${techStack.filter(t => ['Prisma', 'PostgreSQL', 'Redis', 'MongoDB'].includes(t)).join(', ')})`,
+        issueCount: 0,
+        issues: [],
       });
       addedNodeIds.add(dbNodeId);
 
-      // Connect to root or API layer
       const serviceNode = nodes.find((n) => n.type === 'service') || nodes[0];
       edges.push({
         id: `e-${serviceNode.id}-${dbNodeId}`,
@@ -232,6 +233,39 @@ export function extractArchitectureGraph(input: ArchitectureExtractionInput): Ar
       });
     }
   }
+
+  // 5. Map Issues to Architecture Nodes based on relatedPaths
+  issues.forEach((issue) => {
+    if (!issue.relatedPaths || issue.relatedPaths.length === 0) return;
+
+    issue.relatedPaths.forEach((relatedPath) => {
+      // Find matching node whose filePaths matches or is a prefix of relatedPath
+      const targetNode = nodes.find((n) => {
+        if (!n.filePaths) return false;
+        return n.filePaths.some(
+          (fp) => relatedPath === fp || relatedPath.startsWith(`${fp}/`) || fp.includes(relatedPath)
+        );
+      });
+
+      if (targetNode) {
+        targetNode.issueCount = (targetNode.issueCount || 0) + 1;
+        if (!targetNode.issues) targetNode.issues = [];
+        if (!targetNode.issues.includes(issue.number)) {
+          targetNode.issues.push(issue.number);
+        }
+      } else {
+        // Fallback: Increment root issue count
+        const rootNode = nodes.find((n) => n.id === rootId);
+        if (rootNode) {
+          rootNode.issueCount = (rootNode.issueCount || 0) + 1;
+          if (!rootNode.issues) rootNode.issues = [];
+          if (!rootNode.issues.includes(issue.number)) {
+            rootNode.issues.push(issue.number);
+          }
+        }
+      }
+    });
+  });
 
   return { nodes, edges };
 }
