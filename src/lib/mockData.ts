@@ -1,11 +1,4 @@
-<<<<<<< HEAD
-import { 
-  RepositoryAnalysis, 
-  QnaResponse 
-} from '@/types';
-=======
 import { RepositoryAnalysis } from '@/types';
->>>>>>> d7bf407 (refactor: remove GitStory, SkillPatch, QnA legacy product features and clean codebase)
 
 export const MOCK_REPO_ANALYSIS: RepositoryAnalysis = {
   owner: 'repomind-demo',
@@ -164,29 +157,3 @@ export const MOCK_REPO_ANALYSIS: RepositoryAnalysis = {
     ]
   }
 };
-<<<<<<< HEAD
-
-export const MOCK_QNA_RESPONSE: QnaResponse = {
-  question: 'How does authentication work in this codebase?',
-  answer: 'Authentication is implemented statelessly using JSON Web Tokens (JWT) inside `src/lib/auth.ts`. Incoming API calls pass a Bearer token in the Authorization header, which is verified against secret signing keys before granting access to route handlers.',
-  citations: [
-    {
-      type: 'file',
-      path: 'src/lib/auth.ts',
-      lines: [12, 45],
-      description: 'JWT validation and token payload extraction logic'
-    },
-    {
-      type: 'commit',
-      sha: '3c8e91d',
-      description: 'Milestone commit migrating from cookies to bearer JWTs'
-    }
-  ],
-  suggestedFollowUps: [
-    'Where are task permission scopes defined?',
-    'What happens when a user token expires?',
-    'Show me the user signup endpoint flow.'
-  ]
-};
-=======
->>>>>>> d7bf407 (refactor: remove GitStory, SkillPatch, QnA legacy product features and clean codebase)

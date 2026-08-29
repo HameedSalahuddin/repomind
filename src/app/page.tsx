@@ -64,17 +64,10 @@ export default function LandingPage() {
 
         {/* Hero Title & Purpose */}
         <h1 className="text-4xl sm:text-6xl font-extrabold text-[#E6E8EC] tracking-tight leading-tight mb-4">
-<<<<<<< HEAD
-          Your AI workspace for contributing to open source.
-        </h1>
-        <p className="text-base sm:text-lg text-[#8B929E] font-normal tracking-wide mb-12">
-          Find an issue. Understand the code. Build a plan. Start contributing.
-=======
           Make your first contribution.
         </h1>
         <p className="text-base sm:text-lg text-[#8B929E] font-normal tracking-wide mb-12">
           Discover opportunities. Trace the codebase. Build a contribution plan.
->>>>>>> d7bf407 (refactor: remove GitStory, SkillPatch, QnA legacy product features and clean codebase)
         </p>
 
         {/* Repository Input — Primary Focal Point */}
@@ -105,29 +98,17 @@ export default function LandingPage() {
         <div className="text-xs text-[#8B929E] font-mono tracking-wider uppercase flex flex-wrap justify-center items-center gap-2 sm:gap-3">
           <span>Issue Discovery</span>
           <span className="text-[#5A606C]">•</span>
-<<<<<<< HEAD
-          <span>Contribution Opportunities</span>
-          <span className="text-[#5A606C]">•</span>
-          <span>AI Investigation</span>
-          <span className="text-[#5A606C]">•</span>
-          <span>Contribution Plans</span>
-=======
           <span>Architecture Mapping</span>
           <span className="text-[#5A606C]">•</span>
           <span>AI Investigation</span>
           <span className="text-[#5A606C]">•</span>
           <span>Contribution Plan</span>
->>>>>>> d7bf407 (refactor: remove GitStory, SkillPatch, QnA legacy product features and clean codebase)
         </div>
       </main>
 
       {/* Footer */}
       <footer className="relative z-10 py-6 text-center text-[11px] font-mono text-[#5A606C] border-t border-[#1E222A]/40">
-<<<<<<< HEAD
-        RepoMind · Your AI Workspace for Open Source Contribution
-=======
         RepoMind · Open-Source Contributor Intelligence Workspace
->>>>>>> d7bf407 (refactor: remove GitStory, SkillPatch, QnA legacy product features and clean codebase)
       </footer>
     </div>
   );
