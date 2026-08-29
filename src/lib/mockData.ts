@@ -1,7 +1,11 @@
+<<<<<<< HEAD
 import { 
   RepositoryAnalysis, 
   QnaResponse 
 } from '@/types';
+=======
+import { RepositoryAnalysis } from '@/types';
+>>>>>>> d7bf407 (refactor: remove GitStory, SkillPatch, QnA legacy product features and clean codebase)
 
 export const MOCK_REPO_ANALYSIS: RepositoryAnalysis = {
   owner: 'repomind-demo',
@@ -160,6 +164,7 @@ export const MOCK_REPO_ANALYSIS: RepositoryAnalysis = {
     ]
   }
 };
+<<<<<<< HEAD
 
 export const MOCK_QNA_RESPONSE: QnaResponse = {
   question: 'How does authentication work in this codebase?',
@@ -183,3 +188,5 @@ export const MOCK_QNA_RESPONSE: QnaResponse = {
     'Show me the user signup endpoint flow.'
   ]
 };
+=======
+>>>>>>> d7bf407 (refactor: remove GitStory, SkillPatch, QnA legacy product features and clean codebase)

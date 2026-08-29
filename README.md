@@ -1,24 +1,29 @@
 # RepoMind
 
-> AI-powered contribution workspace for open-source contributors and beginners — "RepoMind helps developers understand open-source repositories, discover issues, investigate problems, and start contributing."
+> Guided AI workspace for understanding open-source repositories and preparing human developers to make confident contributions.
 
-[![Hackathon Project](https://img.shields.io/badge/Hackathon-RepoMind%20MVP-indigo)](#) [![Next.js](https://img.shields.io/badge/Next.js-16-black)](#) [![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)](#)
-
----
-
-## 📌 Project Status
-
-**Current Phase**: Technical Foundation Completed & Prepared for Public Submission.
-The repository is set up with Next.js App Router, clean modular interfaces, open issue ingestion, AI investigation, and contribution planning.
+[![Next.js](https://img.shields.io/badge/Next.js-16-black)](#) [![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)](#) [![Gemini](https://img.shields.io/badge/AI-Google%20Gemini-violet)](#)
 
 ---
 
-## 🚀 Key Features
+## 📌 Product Mission
 
-- **Repository Overview**: Instant metadata summary, detected tech stack, entry points, and open contribution opportunities.
-- **Architecture Extraction**: Interactive visual graph of internal components, API handlers, and external services linked to active issues.
-- **Contribution Opportunities**: Open issue ingestion, PR filtering, difficulty classification, and contribution signals.
-- **AI Investigation & Planning**: Context-grounded issue investigation, affected file identification, step-by-step contribution plans, and beginner explanations.
+RepoMind helps open-source contributors — especially beginners — go from **"I want to contribute"** to **"I understand this issue, I know where it lives in the codebase, and I have a clear plan to fix it."**
+
+The human developer remains the contributor. RepoMind acts as the researcher, mentor, and navigator.
+
+---
+
+## 🚀 Core Features
+
+- **Issue Discovery & Signals**: Ingests open GitHub issues with difficulty classification (`good-first-issue`, `intermediate`, `advanced`) and contribution indicators.
+- **Issue-to-Code Mapping**: Multi-signal path matching linking GitHub issues to specific source code files and architectural modules.
+- **Bounded AI Issue Investigation**: Uses Google Gemini to analyze issue context, affected source code, and existing module boundaries without hallucinated file paths.
+- **Interactive Contribution Workspace**: Guided step-by-step contribution flow:
+  1. **Understand**: Plain-English & technical issue explanations.
+  2. **Explore**: Code file explorer & spatial architecture graph.
+  3. **Reproduce**: Step-by-step issue reproduction guide.
+  4. **Contribution Plan**: Interactive checklist with verified source citations, fix direction, and testing strategies.
 
 ---
 
@@ -27,8 +32,8 @@ The repository is set up with Next.js App Router, clean modular interfaces, open
 - **Framework**: Next.js 16 (App Router)
 - **Language**: TypeScript 5
 - **Styling**: Tailwind CSS
-- **Component Libraries**: React 19, Lucide Icons
-- **Graphing & Visualization**: `@xyflow/react`
+- **AI Provider**: Google Gemini API (`gemini-3.5-flash-lite` / `gemini-3.5-flash`)
+- **API Ingestion**: GitHub REST API
 
 ---
 
@@ -41,8 +46,8 @@ The repository is set up with Next.js App Router, clean modular interfaces, open
 ### 2. Installation & Startup
 ```bash
 # Clone the repository
-git clone https://github.com/YOUR_USERNAME/Repomind.git
-cd Repomind
+git clone https://github.com/HameedSalahuddin/repomind.git
+cd repomind
 
 # Install dependencies
 npm install
@@ -60,43 +65,34 @@ Open [http://localhost:3000](http://localhost:3000) in your browser to view Repo
 
 ## 🔑 Environment Variables Setup
 
-Create a `.env.local` file in the root directory (copied from `.env.example`). No real secrets are required to run the initial foundation and mock mode.
+Create a `.env.local` file in the root directory (copied from `.env.example`).
 
 ```env
-# Optional: GitHub API access token to avoid rate limits on public repositories
+# Optional: GitHub access token to avoid unauthenticated API rate limits
 GITHUB_TOKEN=
 
-# Required for live LLM reasoning
-OPENAI_API_KEY=
+# Required for AI Issue Investigations
 GEMINI_API_KEY=
+GEMINI_MODEL=gemini-3.5-flash-lite
 ```
 
 ---
 
 ## 🏛️ Architecture Overview
 
-RepoMind runs entirely inside a unified Next.js application without requiring an external database:
-
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                             RepoMind Workspace                              │
-│         [ Overview ]   [ Architecture ]   [ Ask AI ]                        │
+│                       RepoMind Contributor Workspace                        │
+│     [ Start Contributing ]   [ Issues ]   [ Investigation ]   [ Plan ]      │
 └──────────────────────────────────────┬──────────────────────────────────────┘
                                        │
-                API Routes (/api/analyze, /api/investigate, /api/qna)
+                    API Routes (/api/analyze, /api/investigate)
                                        │
                                        ▼
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │                             RepoMind Core Engine                            │
 ├───────────────────┬───────────────────┬──────────────────┬──────────────────┤
-│  GitHub Ingestion │ Code Analysis     │ AI Investigation │ AI Reasoning     │
-│  (Octokit / REST) │ (AST & Tree)      │ (Issue Mapping)  │ (Context + LLM)  │
+│  GitHub Ingestion │ Code Analysis     │ Issue Matcher    │ AI Investigation │
+│  (Octokit / REST) │ (AST & Tree)      │ (Multi-Signal)   (Gemini + Context) │
 └───────────────────┴───────────────────┴──────────────────┴──────────────────┘
 ```
-
----
-
-## 🏆 Hackathon Attribution
-
-Developed as a hackathon project for RepoMind.
-Designed for high demo impact, zero-hallucination AI principles, and developer clarity.

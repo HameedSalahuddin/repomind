@@ -8,8 +8,12 @@ export type WorkspaceTab =
   | 'code' 
   | 'investigations' 
   | 'plan'
+<<<<<<< HEAD
   | 'architecture' 
   | 'qna';
+=======
+  | 'architecture';
+>>>>>>> d7bf407 (refactor: remove GitStory, SkillPatch, QnA legacy product features and clean codebase)
 
 interface SideNavBarProps {
   activeTab: WorkspaceTab;
@@ -142,6 +146,7 @@ export default function SideNavBar({ activeTab, onTabChange, repoUrl, selectedIs
           <span className="material-symbols-outlined text-[18px]">hub</span>
           <span>Architecture</span>
         </Link>
+<<<<<<< HEAD
 
         {/* 6. Ask AI Q&A */}
         <Link
@@ -156,6 +161,8 @@ export default function SideNavBar({ activeTab, onTabChange, repoUrl, selectedIs
           <span className="material-symbols-outlined text-[18px]">psychology</span>
           <span>Ask AI</span>
         </Link>
+=======
+>>>>>>> d7bf407 (refactor: remove GitStory, SkillPatch, QnA legacy product features and clean codebase)
       </div>
 
       {/* Footer Navigation Switcher */}

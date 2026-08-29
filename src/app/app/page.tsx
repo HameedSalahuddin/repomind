@@ -12,15 +12,11 @@ import IssueDetailView from '@/components/issues/IssueDetailView';
 import InvestigationView from '@/components/investigation/InvestigationView';
 import CodeExplorerView from '@/components/code/CodeExplorerView';
 import ArchitectureView from '@/components/architecture/ArchitectureView';
-import QnaView from '@/components/qna/QnaView';
 
 // Types and Mock Data
 import { RepositoryAnalysis, RepositoryIssue } from '@/types/repo';
 import { InvestigationResult } from '@/types/investigation';
-import { 
-  MOCK_REPO_ANALYSIS, 
-  MOCK_QNA_RESPONSE 
-} from '@/lib/mockData';
+import { MOCK_REPO_ANALYSIS } from '@/lib/mockData';
 
 function WorkspaceContent() {
   const searchParams = useSearchParams();
@@ -53,7 +49,6 @@ function WorkspaceContent() {
       'investigations',
       'plan',
       'architecture',
-      'qna',
     ];
     if (rawTab && validTabs.includes(rawTab)) {
       setActiveTab(rawTab);
@@ -146,7 +141,6 @@ function WorkspaceContent() {
     investigations: selectedIssue ? `Investigation #${selectedIssue.number}` : 'Investigations',
     plan: selectedIssue ? `Contribution Plan #${selectedIssue.number}` : 'Contribution Plan',
     architecture: 'Architecture',
-    qna: 'Ask AI',
   };
 
   return (
@@ -289,11 +283,6 @@ function WorkspaceContent() {
             {/* 5. Architecture Graph */}
             {activeTab === 'architecture' && (
               <ArchitectureView data={analysisData.architecture} />
-            )}
-
-            {/* 6. Ask AI Q&A */}
-            {activeTab === 'qna' && (
-              <QnaView initialData={MOCK_QNA_RESPONSE} />
             )}
           </>
         )}

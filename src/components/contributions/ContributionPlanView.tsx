@@ -10,7 +10,6 @@ interface ContributionPlanViewProps {
   investigation: InvestigationResult | null;
   onNavigateCode?: (filePath?: string) => void;
   onNavigateArchitecture?: () => void;
-  onNavigateGitStory?: () => void;
   onBackToWorkspace?: () => void;
 }
 
@@ -20,7 +19,6 @@ export default function ContributionPlanView({
   investigation,
   onNavigateCode,
   onNavigateArchitecture,
-  onNavigateGitStory,
   onBackToWorkspace,
 }: ContributionPlanViewProps) {
   const storageKey = `repomind_plan_progress_${analysis.fullName}_${issue.number}`;
@@ -199,7 +197,7 @@ export default function ContributionPlanView({
 
         {/* Lifecycle Steps Bar */}
         <div className="grid grid-cols-5 gap-1 pt-1 font-mono text-[10px] text-center">
-          {['UNDERSTAND', 'INVESTIGATE', 'IMPLEMENT', 'TEST', 'SUBMIT'].map((stage, idx) => {
+          {['UNDERSTAND', 'INVESTIGATE', 'IMPLEMENT', 'TEST', 'SUBMIT'].map((stage) => {
             const isCurrent = activeStage === stage;
             return (
               <div
@@ -232,53 +230,31 @@ export default function ContributionPlanView({
           <h2>Section 1 — What should I understand first?</h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-sans">
-          {/* Architecture context */}
-          <div className="p-4 rounded-lg bg-[#131315] border border-[#2A2A2C] space-y-2">
-            <span className="font-mono text-[#DDB8FF] text-[11px] uppercase font-semibold block">
-              Relevant Code Architecture Area
-            </span>
-            {relatedNodeObj ? (
-              <div className="space-y-1">
-                <div className="font-semibold text-[#E5E1E4]">{relatedNodeObj.label}</div>
-                <p className="text-[#908F9E] line-clamp-2">
-                  {relatedNodeObj.description || 'Verified package module boundary.'}
-                </p>
-                {onNavigateArchitecture && (
-                  <button
-                    onClick={onNavigateArchitecture}
-                    className="pt-1 text-[#818CF8] hover:underline font-mono text-[11px] flex items-center gap-1"
-                  >
-                    <span>Inspect in Architecture Graph</span>
-                    <span className="material-symbols-outlined text-[12px]">arrow_forward</span>
-                  </button>
-                )}
-              </div>
-            ) : (
-              <p className="text-[#908F9E]">
-                Mapped across repository core entry points: {analysis.entryPoints?.slice(0, 2).join(', ') || 'root package'}.
+        <div className="p-4 rounded-lg bg-[#131315] border border-[#2A2A2C] space-y-2 font-sans text-xs">
+          <span className="font-mono text-[#DDB8FF] text-[11px] uppercase font-semibold block">
+            Relevant Code Architecture Area
+          </span>
+          {relatedNodeObj ? (
+            <div className="space-y-1">
+              <div className="font-semibold text-[#E5E1E4]">{relatedNodeObj.label}</div>
+              <p className="text-[#908F9E] line-clamp-2">
+                {relatedNodeObj.description || 'Verified package module boundary.'}
               </p>
-            )}
-          </div>
-
-          {/* GitStory Milestone context */}
-          <div className="p-4 rounded-lg bg-[#131315] border border-[#2A2A2C] space-y-2">
-            <span className="font-mono text-[#38BDF8] text-[11px] uppercase font-semibold block">
-              How the code evolved
-            </span>
-            <p className="text-[#C6C5D5] leading-relaxed">
-              Review historical milestone commits to understand why this subsystem was structured this way.
+              {onNavigateArchitecture && (
+                <button
+                  onClick={onNavigateArchitecture}
+                  className="pt-1 text-[#818CF8] hover:underline font-mono text-[11px] flex items-center gap-1"
+                >
+                  <span>Inspect in Architecture Graph</span>
+                  <span className="material-symbols-outlined text-[12px]">arrow_forward</span>
+                </button>
+              )}
+            </div>
+          ) : (
+            <p className="text-[#908F9E]">
+              Mapped across repository core entry points: {analysis.entryPoints?.slice(0, 2).join(', ') || 'root package'}.
             </p>
-            {onNavigateGitStory && (
-              <button
-                onClick={onNavigateGitStory}
-                className="pt-1 text-[#38BDF8] hover:underline font-mono text-[11px] flex items-center gap-1"
-              >
-                <span>View GitStory Milestones</span>
-                <span className="material-symbols-outlined text-[12px]">arrow_forward</span>
-              </button>
-            )}
-          </div>
+          )}
         </div>
       </section>
 
