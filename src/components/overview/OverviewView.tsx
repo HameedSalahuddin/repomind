@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { RepositoryAnalysis } from '@/types';
+import { RepositoryAnalysis, RepositoryIssue } from '@/types';
+import { InvestigationResult } from '@/types/investigation';
 
 interface OverviewViewProps {
   data: RepositoryAnalysis;
@@ -12,6 +13,47 @@ export default function OverviewView({ data, onNavigateTab }: OverviewViewProps)
   const meta = data.metadata;
   const issues = data.issues || [];
   const [filterDifficulty, setFilterDifficulty] = useState<'all' | 'beginner' | 'intermediate' | 'advanced'>('all');
+
+  const [activeInvestigatingNumber, setActiveInvestigatingNumber] = useState<number | null>(null);
+  const [investigationResults, setInvestigationResults] = useState<Record<number, InvestigationResult>>({});
+  const [investigatingError, setInvestigationError] = useState<Record<number, string>>({});
+
+  const handleInvestigate = async (issue: RepositoryIssue) => {
+    setActiveInvestigatingNumber(issue.number);
+    setInvestigationError((prev) => ({ ...prev, [issue.number]: '' }));
+
+    try {
+      const res = await fetch('/api/investigate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          owner: meta.owner,
+          repo: meta.name,
+          issueNumber: issue.number,
+        }),
+      });
+
+      const json = await res.json();
+      if (json.success && json.result) {
+        setInvestigationResults((prev) => ({
+          ...prev,
+          [issue.number]: json.result,
+        }));
+      } else {
+        setInvestigationError((prev) => ({
+          ...prev,
+          [issue.number]: json.error || 'Failed to complete investigation.',
+        }));
+      }
+    } catch (err: any) {
+      setInvestigationError((prev) => ({
+        ...prev,
+        [issue.number]: err?.message || 'Error connecting to investigation service.',
+      }));
+    } finally {
+      setActiveInvestigatingNumber(null);
+    }
+  };
 
   const filteredIssues = issues.filter((iss) => {
     if (filterDifficulty === 'all') return true;
@@ -84,7 +126,7 @@ export default function OverviewView({ data, onNavigateTab }: OverviewViewProps)
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-lg font-bold text-[#E6E8EC] tracking-tight">Open Contribution Opportunities</h2>
-            <p className="text-xs text-[#8B929E]">Discovered open issues mapped to repository codebase paths.</p>
+            <p className="text-xs text-[#8B929E]">Select an open issue and click "Investigate" for AI contribution planning.</p>
           </div>
 
           {/* Difficulty Filter Tabs */}
@@ -124,60 +166,185 @@ export default function OverviewView({ data, onNavigateTab }: OverviewViewProps)
 
         {/* Issues List */}
         {filteredIssues.length > 0 ? (
-          <div className="space-y-3">
-            {filteredIssues.slice(0, 10).map((issue) => (
-              <div
-                key={issue.id}
-                className="p-4 rounded-lg bg-[#0E1014] border border-[#1E222A] hover:border-[#1E222A]/80 transition-colors space-y-2"
-              >
-                <div className="flex items-start justify-between gap-4">
-                  <div className="space-y-1 flex-1">
+          <div className="space-y-4">
+            {filteredIssues.slice(0, 10).map((issue) => {
+              const isInvestigating = activeInvestigatingNumber === issue.number;
+              const result = investigationResults[issue.number];
+              const err = investigatingError[issue.number];
+
+              return (
+                <div
+                  key={issue.id}
+                  className="p-4 rounded-lg bg-[#0E1014] border border-[#1E222A] transition-colors space-y-3"
+                >
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="space-y-1 flex-1">
+                      <div className="flex items-center gap-2">
+                        <a
+                          href={issue.htmlUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="font-semibold text-xs text-[#E6E8EC] hover:text-[#8B5CF6] transition-colors"
+                        >
+                          #{issue.number} {issue.title}
+                        </a>
+                      </div>
+                      <div className="text-[11px] font-mono text-[#5A606C] flex items-center gap-3">
+                        <span>opened by @{issue.author}</span>
+                        <span>•</span>
+                        <span>{issue.comments} comments</span>
+                        <span>•</span>
+                        <span className="uppercase text-[#8B5CF6]">{issue.contributionSignal}</span>
+                      </div>
+                    </div>
+
                     <div className="flex items-center gap-2">
-                      <a
-                        href={issue.htmlUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="font-semibold text-xs text-[#E6E8EC] hover:text-[#8B5CF6] transition-colors"
+                      <button
+                        onClick={() => handleInvestigate(issue)}
+                        disabled={isInvestigating}
+                        className="px-3 py-1.5 rounded bg-[#8B5CF6] hover:bg-[#7C3AED] text-white text-xs font-semibold transition-colors flex items-center gap-1.5 disabled:opacity-50"
                       >
-                        #{issue.number} {issue.title}
-                      </a>
-                    </div>
-                    <div className="text-[11px] font-mono text-[#5A606C] flex items-center gap-3">
-                      <span>opened by @{issue.author}</span>
-                      <span>•</span>
-                      <span>{issue.comments} comments</span>
+                        {isInvestigating ? (
+                          <>
+                            <span className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                            <span>Investigating...</span>
+                          </>
+                        ) : (
+                          <>
+                            <span className="material-symbols-outlined text-[14px]">psychology</span>
+                            <span>Investigate</span>
+                          </>
+                        )}
+                      </button>
+
+                      <span
+                        className={`px-2 py-1 rounded text-[10px] font-mono uppercase font-bold shrink-0 ${
+                          issue.difficulty === 'beginner'
+                            ? 'bg-[#06B6D4]/15 text-[#06B6D4] border border-[#06B6D4]/30'
+                            : issue.difficulty === 'advanced'
+                            ? 'bg-red-500/15 text-red-400 border border-red-500/30'
+                            : 'bg-[#8B5CF6]/15 text-[#8B5CF6] border border-[#8B5CF6]/30'
+                        }`}
+                      >
+                        {issue.difficulty === 'beginner' ? 'Good First Issue' : issue.difficulty}
+                      </span>
                     </div>
                   </div>
 
-                  {/* Difficulty Tag */}
-                  <span
-                    className={`px-2 py-0.5 rounded text-[10px] font-mono uppercase font-bold shrink-0 ${
-                      issue.difficulty === 'beginner'
-                        ? 'bg-[#06B6D4]/15 text-[#06B6D4] border border-[#06B6D4]/30'
-                        : issue.difficulty === 'advanced'
-                        ? 'bg-red-500/15 text-red-400 border border-red-500/30'
-                        : 'bg-[#8B5CF6]/15 text-[#8B5CF6] border border-[#8B5CF6]/30'
-                    }`}
-                  >
-                    {issue.difficulty === 'beginner' ? 'Good First Issue' : issue.difficulty}
-                  </span>
-                </div>
+                  {/* Mapped Related Paths */}
+                  {issue.relatedPaths && issue.relatedPaths.length > 0 && (
+                    <div className="pt-2 border-t border-[#1E222A]/60 flex items-center gap-2 text-[11px] font-mono">
+                      <span className="text-[#5A606C]">Mapped Code Paths:</span>
+                      <div className="flex flex-wrap gap-1.5">
+                        {issue.relatedPaths.map((p) => (
+                          <span key={p} className="px-2 py-0.5 rounded bg-[#14171D] border border-[#1E222A] text-[#E6E8EC]">
+                            {p}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
 
-                {/* Mapped Related Paths */}
-                {issue.relatedPaths && issue.relatedPaths.length > 0 && (
-                  <div className="pt-2 border-t border-[#1E222A]/60 flex items-center gap-2 text-[11px] font-mono">
-                    <span className="text-[#5A606C]">Mapped Paths:</span>
-                    <div className="flex flex-wrap gap-1.5">
-                      {issue.relatedPaths.map((p) => (
-                        <span key={p} className="px-2 py-0.5 rounded bg-[#14171D] border border-[#1E222A] text-[#E6E8EC]">
-                          {p}
+                  {/* Errors */}
+                  {err && (
+                    <div className="p-3 rounded bg-red-500/10 border border-red-500/30 text-xs text-red-400 font-mono">
+                      {err}
+                    </div>
+                  )}
+
+                  {/* Investigation Results Display Panel */}
+                  {result && (
+                    <div className="mt-4 p-5 rounded bg-[#14171D] border border-[#8B5CF6]/40 space-y-4">
+                      <div className="flex items-center justify-between border-b border-[#1E222A] pb-3">
+                        <div className="flex items-center gap-2">
+                          <span className="material-symbols-outlined text-[#8B5CF6] text-[18px]">psychology</span>
+                          <span className="font-bold text-xs text-[#E6E8EC]">RepoMind AI Investigation Report</span>
+                        </div>
+                        <span
+                          className={`text-[10px] font-mono px-2 py-0.5 rounded uppercase font-bold ${
+                            result.confidence === 'high'
+                              ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
+                              : result.confidence === 'medium'
+                              ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30'
+                              : 'bg-red-500/20 text-red-400 border border-red-500/30'
+                          }`}
+                        >
+                          Confidence: {result.confidence}
                         </span>
-                      ))}
+                      </div>
+
+                      {/* Summary & What is Happening */}
+                      <div className="space-y-1">
+                        <span className="text-[10px] font-mono uppercase text-[#8B5CF6]">Summary & What's Happening</span>
+                        <p className="text-xs text-[#E6E8EC] font-medium leading-relaxed">{result.issueSummary}</p>
+                        <p className="text-xs text-[#8B929E] leading-relaxed">{result.whatIsHappening}</p>
+                      </div>
+
+                      {/* Likely Cause */}
+                      <div className="space-y-1">
+                        <span className="text-[10px] font-mono uppercase text-[#8B5CF6]">Likely Cause</span>
+                        <p className="text-xs text-[#8B929E] leading-relaxed">{result.likelyCause}</p>
+                      </div>
+
+                      {/* Affected Code & Key Evidence */}
+                      {result.keyEvidence && result.keyEvidence.length > 0 && (
+                        <div className="space-y-2 pt-2 border-t border-[#1E222A]">
+                          <span className="text-[10px] font-mono uppercase text-[#8B5CF6]">Verified Evidence & Code Paths</span>
+                          <div className="space-y-1.5 font-mono text-xs text-[#8B929E]">
+                            {result.keyEvidence.map((ev, evIdx) => (
+                              <div key={evIdx} className="p-2 rounded bg-[#0E1014] border border-[#1E222A] flex justify-between items-center">
+                                <span className="text-[#E6E8EC] font-semibold">{ev.path}</span>
+                                <span className="text-[11px] text-[#5A606C]">{ev.explanation}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Step-by-Step Investigation Plan */}
+                      {result.investigationSteps && result.investigationSteps.length > 0 && (
+                        <div className="space-y-1.5 pt-2 border-t border-[#1E222A]">
+                          <span className="text-[10px] font-mono uppercase text-[#8B5CF6]">Contributor Next Steps</span>
+                          <ol className="list-decimal list-inside space-y-1 text-xs text-[#8B929E]">
+                            {result.investigationSteps.map((step, sIdx) => (
+                              <li key={sIdx}>{step}</li>
+                            ))}
+                          </ol>
+                        </div>
+                      )}
+
+                      {/* Suggested Fix Direction & Testing Strategy */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 border-t border-[#1E222A]">
+                        <div className="space-y-1">
+                          <span className="text-[10px] font-mono uppercase text-[#06B6D4]">Suggested Fix Direction</span>
+                          <p className="text-xs text-[#8B929E] leading-relaxed">{result.suggestedFixDirection}</p>
+                        </div>
+                        <div className="space-y-1">
+                          <span className="text-[10px] font-mono uppercase text-[#06B6D4]">Testing Strategy</span>
+                          <ul className="list-disc list-inside text-xs text-[#8B929E] space-y-0.5">
+                            {result.testingStrategy?.map((ts, tIdx) => (
+                              <li key={tIdx}>{ts}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
+
+                      {/* Limitations */}
+                      {result.evidenceLimitations && result.evidenceLimitations.length > 0 && (
+                        <div className="pt-2 border-t border-[#1E222A] text-[10px] font-mono text-[#5A606C]">
+                          <span className="uppercase block mb-1">Evidence Limitations:</span>
+                          <ul className="list-disc list-inside">
+                            {result.evidenceLimitations.map((lim, lIdx) => (
+                              <li key={lIdx}>{lim}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
                     </div>
-                  </div>
-                )}
-              </div>
-            ))}
+                  )}
+                </div>
+              );
+            })}
           </div>
         ) : (
           <div className="p-6 rounded-lg bg-[#0E1014] border border-[#1E222A] text-center font-mono text-xs text-[#5A606C]">
